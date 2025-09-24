@@ -65,5 +65,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'fir-4-ab276.firebasestorage.app',
     iosBundleId: 'com.cas.teamsStaff',
   );
-
 }

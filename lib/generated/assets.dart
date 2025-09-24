@@ -14,7 +14,7 @@ class Assets {
   static const String pngLogo12 = 'assets/images/png/logo12.png';
   static const String pngSplashLogo = 'assets/images/png/splash_logo.png';
   static const String pngThinkingSchoolLogo =
-      'assets/images/png/thinking_school_logo.png';
+      "assets/images/png/rubrics_logo.png";
   static const String svgAppLogo = 'assets/images/svg/app_logo.svg';
   static const String svgBgHomeScreen = 'assets/images/svg/bg_home_screen.svg';
   static const String svgBgHomeTabs = 'assets/images/svg/bg_home_tabs.svg';

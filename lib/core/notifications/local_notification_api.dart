@@ -6,10 +6,10 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class LocalNotificationsApi {
   final FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
 
-  LocalNotificationsApi(
-      {FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin})
-      : _flutterLocalNotificationsPlugin = flutterLocalNotificationsPlugin ??
-            FlutterLocalNotificationsPlugin();
+  LocalNotificationsApi({
+    FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin,
+  }) : _flutterLocalNotificationsPlugin =
+           flutterLocalNotificationsPlugin ?? FlutterLocalNotificationsPlugin();
 
   ///create channel
   final AndroidNotificationChannel _channel = const AndroidNotificationChannel(
@@ -24,28 +24,32 @@ class LocalNotificationsApi {
   Future<void> initialize() async {
     await _flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin
+        >()
         ?.createNotificationChannel(_channel);
     await _initSetting();
   }
 
   /// Show Notification
   void showNotification(
-      RemoteMessage remoteMessage, AndroidNotification? android) async {
+    RemoteMessage remoteMessage,
+    AndroidNotification? android,
+  ) async {
     RemoteNotification? notification = remoteMessage.notification;
 
     if (notification != null && android != null) {
       AndroidNotificationDetails androidNotificationDetails =
           AndroidNotificationDetails(
-        _channel.id,
-        _channel.name,
-        channelDescription: _channel.description,
-        importance: Importance.max,
-        priority: Priority.high,
-        ticker: 'ticker',
+            _channel.id,
+            _channel.name,
+            channelDescription: _channel.description,
+            importance: Importance.max,
+            priority: Priority.high,
+            ticker: 'ticker',
+          );
+      NotificationDetails notificationDetails = NotificationDetails(
+        android: androidNotificationDetails,
       );
-      NotificationDetails notificationDetails =
-          NotificationDetails(android: androidNotificationDetails);
       await _flutterLocalNotificationsPlugin.show(
         notification.hashCode,
         notification.title,
@@ -65,24 +69,24 @@ class LocalNotificationsApi {
   Future<void> _initSetting() async {
     // android
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
     // darwin/IOS
     final DarwinInitializationSettings initializationSettingsDarwin =
         DarwinInitializationSettings(
-      defaultPresentSound: true,
-      requestSoundPermission: true,
-      requestBadgePermission: true,
-      requestAlertPermission: true,
-      //onDidReceiveLocalNotification: _onDidReceiveLocalNotification,
-    );
+          defaultPresentSound: true,
+          requestSoundPermission: true,
+          requestBadgePermission: true,
+          requestAlertPermission: true,
+          //onDidReceiveLocalNotification: _onDidReceiveLocalNotification,
+        );
 
     // initializationSettings for Android/IOS
     final InitializationSettings initializationSettings =
         InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsDarwin,
-    );
+          android: initializationSettingsAndroid,
+          iOS: initializationSettingsDarwin,
+        );
     await _flutterLocalNotificationsPlugin.initialize(
       initializationSettings,
       onDidReceiveNotificationResponse: _onDidReceiveNotificationResponse,
@@ -91,11 +95,16 @@ class LocalNotificationsApi {
 
   /// For Darwin
   void _onDidReceiveLocalNotification(
-      int id, String? title, String? body, String? payload) async {}
+    int id,
+    String? title,
+    String? body,
+    String? payload,
+  ) async {}
 
   /// On select notification
   void _onDidReceiveNotificationResponse(
-      NotificationResponse notificationResponse) async {
+    NotificationResponse notificationResponse,
+  ) async {
     final String? payload = notificationResponse.payload;
     if (notificationResponse.payload != null) {}
   }
@@ -129,53 +138,44 @@ class PayloadModel {
   });
 
   factory PayloadModel.fromJson(Map<String, dynamic> json) => PayloadModel(
-        sender: NotificationSenderModel.fromJson(json["sender"]),
-        receiver: NotificationReceiverModel.fromJson(json["receiver"]),
-        post: json["post"],
-        type: json["type"],
-        content: json["content"],
-        title: json["title"],
-        read: json["read"],
-        id: json["_id"],
-        createdAt: DateTime.parse(json["createdAt"]),
-        updatedAt: DateTime.parse(json["updatedAt"]),
-        v: json["__v"],
-      );
+    sender: NotificationSenderModel.fromJson(json["sender"]),
+    receiver: NotificationReceiverModel.fromJson(json["receiver"]),
+    post: json["post"],
+    type: json["type"],
+    content: json["content"],
+    title: json["title"],
+    read: json["read"],
+    id: json["_id"],
+    createdAt: DateTime.parse(json["createdAt"]),
+    updatedAt: DateTime.parse(json["updatedAt"]),
+    v: json["__v"],
+  );
 
   Map<String, dynamic> toJson() => {
-        "sender": sender.toJson(),
-        "receiver": receiver.toJson(),
-        "post": post,
-        "type": type,
-        "content": content,
-        "title": title,
-        "read": read,
-        "_id": id,
-        "createdAt": createdAt.toIso8601String(),
-        "updatedAt": updatedAt.toIso8601String(),
-        "__v": v,
-      };
+    "sender": sender.toJson(),
+    "receiver": receiver.toJson(),
+    "post": post,
+    "type": type,
+    "content": content,
+    "title": title,
+    "read": read,
+    "_id": id,
+    "createdAt": createdAt.toIso8601String(),
+    "updatedAt": updatedAt.toIso8601String(),
+    "__v": v,
+  };
 }
 
 class NotificationReceiverModel {
   String id;
   String deviceId;
 
-  NotificationReceiverModel({
-    required this.id,
-    required this.deviceId,
-  });
+  NotificationReceiverModel({required this.id, required this.deviceId});
 
   factory NotificationReceiverModel.fromJson(Map<String, dynamic> json) =>
-      NotificationReceiverModel(
-        id: json["_id"],
-        deviceId: json["deviceId"],
-      );
+      NotificationReceiverModel(id: json["_id"], deviceId: json["deviceId"]);
 
-  Map<String, dynamic> toJson() => {
-        "_id": id,
-        "deviceId": deviceId,
-      };
+  Map<String, dynamic> toJson() => {"_id": id, "deviceId": deviceId};
 }
 
 class NotificationSenderModel {
@@ -203,10 +203,10 @@ class NotificationSenderModel {
       );
 
   Map<String, dynamic> toJson() => {
-        "_id": id,
-        "firstName": firstName,
-        "lastName": lastName,
-        "profileImage": profileImage,
-        "deviceId": deviceId,
-      };
+    "_id": id,
+    "firstName": firstName,
+    "lastName": lastName,
+    "profileImage": profileImage,
+    "deviceId": deviceId,
+  };
 }

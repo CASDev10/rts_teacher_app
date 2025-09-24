@@ -37,7 +37,7 @@ class SplashScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Image.asset(
-                    "assets/images/png/thinking_school_logo.png",
+                    "assets/images/png/rubrics_logo.png",
                     height: 100,
                   )
                 ],
