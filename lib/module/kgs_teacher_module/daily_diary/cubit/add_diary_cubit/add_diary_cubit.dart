@@ -1,0 +1,99 @@
+import 'package:bloc/bloc.dart';
+
+import '../../../../../core/api_result.dart';
+import '../../../../../core/failures/base_failures/base_failure.dart';
+import '../../../../../core/failures/high_priority_failure.dart';
+import '../../../base_resposne_model.dart';
+import '../../models/add_diary_input.dart';
+import '../../models/add_diary_response.dart';
+import '../../models/class_student_input.dart';
+import '../../models/diary_description_input.dart';
+import '../../models/student_diary_list_response.dart';
+import '../../repo/diary_repo.dart';
+import 'add_diary_state.dart';
+
+class AddDiaryCubit extends Cubit<AddDiaryState> {
+  AddDiaryCubit(this._repository) : super(AddDiaryState.initial());
+
+  DiaryRepository _repository;
+
+  Future addDiary(AddDiaryInput input) async {
+    emit(state.copyWith(addDiaryStatus: AddDiaryStatus.loading));
+    try {
+      AddDiaryResponseModel response = await _repository.addDiary(input);
+      if (response.result == ApiResult.success) {
+        emit(state.copyWith(addDiaryStatus: AddDiaryStatus.success));
+      } else {
+        emit(
+          state.copyWith(
+            addDiaryStatus: AddDiaryStatus.failure,
+            failure: HighPriorityException(response.message),
+          ),
+        );
+      }
+    } on BaseFailure catch (e) {
+      emit(
+        state.copyWith(
+          addDiaryStatus: AddDiaryStatus.failure,
+          failure: HighPriorityException(e.message),
+        ),
+      );
+    } catch (_) {}
+  }
+
+  Future uploadTeacherFileDiary(DiaryDescriptionInput input) async {
+    emit(state.copyWith(addDiaryStatus: AddDiaryStatus.loading));
+    try {
+      BaseResponseModel response = await _repository.uploadTeacherFile(input);
+      if (response.result == ApiResult.success) {
+        emit(state.copyWith(addDiaryStatus: AddDiaryStatus.success));
+        return true;
+      } else {
+        emit(
+          state.copyWith(
+            addDiaryStatus: AddDiaryStatus.failure,
+            failure: HighPriorityException(response.message),
+          ),
+        );
+      }
+    } on BaseFailure catch (e) {
+      emit(
+        state.copyWith(
+          addDiaryStatus: AddDiaryStatus.failure,
+          failure: HighPriorityException(e.message),
+        ),
+      );
+    } catch (_) {}
+  }
+
+  Future fetchDiaryStudentList(ClassStudentInput input) async {
+    emit(state.copyWith(addDiaryStatus: AddDiaryStatus.loading));
+    try {
+      DiaryStudentListResponse response = await _repository.getClassStudents(
+        input,
+      );
+      if (response.result == ApiResult.success) {
+        emit(
+          state.copyWith(
+            addDiaryStatus: AddDiaryStatus.success,
+            studentList: response.data,
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            addDiaryStatus: AddDiaryStatus.failure,
+            failure: HighPriorityException(response.message),
+          ),
+        );
+      }
+    } on BaseFailure catch (e) {
+      emit(
+        state.copyWith(
+          addDiaryStatus: AddDiaryStatus.failure,
+          failure: HighPriorityException(e.message),
+        ),
+      );
+    } catch (_) {}
+  }
+}
