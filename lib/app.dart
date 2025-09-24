@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:rts/app/splash/splash_screen.dart';
 import 'package:month_year_picker/month_year_picker.dart';
+import 'package:upgrader/upgrader.dart';
 
 import 'components/unfocus.dart';
 import 'config/routes/nav_router.dart';
@@ -27,7 +28,7 @@ class App extends StatelessWidget {
         return child;
       },
       navigatorObservers: [BotToastNavigatorObserver()],
-      home: SplashScreen(),
+      home: UpgradeAlert(child: SplashScreen()),
     );
   }
 }
