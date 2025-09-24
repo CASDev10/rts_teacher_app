@@ -4,43 +4,46 @@ import 'package:flutter/services.dart';
 import '../constants/app_colors.dart';
 
 class CustomTextField extends StatelessWidget {
-  const CustomTextField({
-    super.key,
-    required this.hintText,
-    this.enableBorderColor = Colors.orangeAccent,
-    this.focusBorderColor = Colors.orange,
-    this.readOnly = false,
-    this.prefixIcon,
-    this.suffixWidget,
-    this.fontSize = 14,
-    this.fontWeight = FontWeight.w400,
-    this.obscureText = false,
-    this.fillColor = Colors.white,
-    this.bottomMargin = 12,
-    this.height = 42,
-    this.onTap,
-    this.controller,
-    this.inputType,
-    this.inputFormatters,
-    this.onSaved,
-    this.onChange,
-    this.onValidate,
-    this.hasTitle = true,
-    this.maxLines = 1,
-    this.hintColor = AppColors.grey,
-    this.maxLength,
-    this.autoValidateMode = AutovalidateMode.disabled,
-  });
+  const CustomTextField(
+      {super.key,
+      required this.hintText,
+      this.enableBorderColor = Colors.transparent,
+      this.focusBorderColor = Colors.transparent,
+      this.borderColor = Colors.green,
+      this.readOnly = false,
+      this.prefixIcon,
+      this.suffixWidget,
+      this.fontSize = 14,
+      this.fontWeight = FontWeight.w400,
+      this.obscureText = false,
+      this.fillColor = Colors.white,
+      this.bottomMargin = 12,
+      this.height = 42,
+      this.onTap,
+      this.controller,
+      this.inputType,
+      this.inputFormatters,
+      this.onSaved,
+      this.onChange,
+      this.onValidate,
+      this.hasTitle = true,
+      this.maxLines = 1,
+      this.hintColor = AppColors.grey,
+      this.maxLength,
+      this.autoValidateMode = AutovalidateMode.disabled,
+      this.minHeight});
 
   final Color fillColor;
   final String hintText;
   final double bottomMargin;
   final double height;
+  final double? minHeight;
   final bool readOnly;
   final int maxLines;
   final int? maxLength;
   final Color enableBorderColor;
   final Color focusBorderColor;
+  final Color borderColor;
   final Color hintColor;
   final Widget? prefixIcon;
   final Widget? suffixWidget;
@@ -67,7 +70,7 @@ class CustomTextField extends StatelessWidget {
           readOnly: readOnly,
           style: TextStyle(
             fontSize: fontSize,
-            color: AppColors.primary,
+            color: AppColors.primaryGreen,
             fontWeight: fontWeight,
           ),
           autovalidateMode: autoValidateMode,
@@ -82,44 +85,44 @@ class CustomTextField extends StatelessWidget {
           cursorColor: AppColors.primaryLight,
           obscureText: obscureText,
           decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(color: Colors.transparent),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(color: Colors.transparent),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(14),
-              borderSide: BorderSide(color: Colors.transparent),
-            ),
-            filled: true,
-            fillColor: AppColors.lightGreyColor,
-            hintText: hintText,
-            counterText: "",
-            hintStyle: TextStyle(color: hintColor),
-            prefixIcon: Padding(
-              child: prefixIcon,
-              padding: EdgeInsets.only(left: 16),
-            ),
-            suffixIcon: Padding(
-              padding: EdgeInsets.only(right: 16),
-              child: suffixWidget,
-            ),
-            prefixIconConstraints: const BoxConstraints(
-              maxHeight: 44,
-              maxWidth: 44,
-            ),
-            suffixIconConstraints: const BoxConstraints(
-              maxHeight: 50,
-              maxWidth: 50,
-            ),
-            contentPadding: EdgeInsets.symmetric(vertical: 16, horizontal: 16),
-            constraints: BoxConstraints(minHeight: 50),
-          ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(color: borderColor),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(color: enableBorderColor),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(14),
+                borderSide: BorderSide(color: enableBorderColor),
+              ),
+              filled: true,
+              fillColor: fillColor,
+              hintText: hintText,
+              counterText: "",
+              hintStyle: TextStyle(color: hintColor),
+              prefixIcon: Padding(
+                child: prefixIcon,
+                padding: EdgeInsets.only(left: 16),
+              ),
+              suffixIcon: Padding(
+                padding: EdgeInsets.only(right: 16),
+                child: suffixWidget,
+              ),
+              prefixIconConstraints:
+                  const BoxConstraints(maxHeight: 44, maxWidth: 44),
+              suffixIconConstraints:
+                  const BoxConstraints(maxHeight: 50, maxWidth: 50),
+              contentPadding:
+                  EdgeInsets.symmetric(vertical: 16, horizontal: 16),
+              constraints: BoxConstraints(
+                minHeight: minHeight ?? 50,
+              )),
         ),
-        SizedBox(height: bottomMargin),
+        SizedBox(
+          height: bottomMargin,
+        ),
       ],
     );
   }

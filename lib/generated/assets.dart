@@ -11,10 +11,7 @@ class Assets {
   static const String pngBgSplash = 'assets/images/png/bg_splash.png';
   static const String pngIcLogout = 'assets/images/png/ic_logout.png';
   static const String pngIcSchool = 'assets/images/png/ic_school.png';
-  static const String pngImg = 'assets/images/png/img.png';
   static const String pngLogo12 = 'assets/images/png/logo12.png';
-  static const String pngRubricsLogo = 'assets/images/png/rubrics_logo.png';
-  static const String pngRubricsSplash = 'assets/images/png/rubrics_splash.jpg';
   static const String pngSplashLogo = 'assets/images/png/splash_logo.png';
   static const String pngThinkingSchoolLogo =
       'assets/images/png/thinking_school_logo.png';

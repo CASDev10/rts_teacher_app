@@ -1,13 +1,15 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:rts/module/kgs_teacher_module/base_resposne_model.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/repo/auth_repository.dart';
 
 import '../../../../constants/api_endpoints.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/failures/base_failures/base_failure.dart';
 import '../../../../core/network_service/network_service.dart';
-import '../../base_resposne_model.dart';
-import '../../kgs_teacher_auth/repo/auth_repository.dart';
 import '../model/add_update_leave_input.dart';
 import '../model/employee_leaves_response.dart';
 import '../model/leave_balance_response.dart';
@@ -20,12 +22,13 @@ class LeavesRepository {
     try {
       var response = await _networkService.get(
         Endpoints.getEmployeeLeaveBalance,
-        data: {"EmpId": _authRepository.user.userId, "Option": 0},
+        data: {
+          "EmpId": _authRepository.user.userId,
+          "Option": 0,
+        },
       );
-      LeaveBalanceResponse leaveBalanceResponse = await compute(
-        leaveBalanceResponseFromJson,
-        response,
-      );
+      LeaveBalanceResponse leaveBalanceResponse =
+          await compute(leaveBalanceResponseFromJson, response);
       return leaveBalanceResponse;
     } on BaseFailure catch (_) {
       rethrow;
@@ -35,16 +38,19 @@ class LeavesRepository {
     }
   }
 
-  Future<EmployeeLeavesResponse> getGetEmployeeLeaves() async {
+  Future<EmployeeLeavesResponse> getGetEmployeeLeaves(
+      {required int offSet, required int next}) async {
     try {
       var response = await _networkService.get(
         Endpoints.getEmployeeLeavesByEmpId,
-        data: {"EmpId": _authRepository.user.userId},
+        data: {
+          "EmpId": _authRepository.user.userId,
+          "OffSet": offSet,
+          "Next": next
+        },
       );
-      EmployeeLeavesResponse employeeLeavesResponse = await compute(
-        employeeLeavesResponseFromJson,
-        response,
-      );
+      EmployeeLeavesResponse employeeLeavesResponse =
+          await compute(employeeLeavesResponseFromJson, response);
       return employeeLeavesResponse;
     } on BaseFailure catch (_) {
       rethrow;
@@ -54,18 +60,23 @@ class LeavesRepository {
     }
   }
 
-  Future<BaseResponseModel> addUpdateEmployeeLeave({
-    required AddUpdateLeaveInput input,
-  }) async {
+  Future<BaseResponseModel?> addUpdateEmployeeLeave(
+      AddUpdateLeaveInput input) async {
     try {
+      FormData toFormData() => FormData.fromMap({
+            "LeaveData": jsonEncode(input).toString(),
+            "EmployeeFile": input.file,
+          });
       var response = await _networkService.post(
-        Endpoints.insertEmployeeLeave,
-        data: input.toJson(),
+        Endpoints.uploadLeave,
+        data: toFormData(),
       );
-      BaseResponseModel baseResponseModel = await compute(
-        baseResponseModelFromJson,
-        response,
-      );
+
+      if (response["result"] == "error") {
+        print("Api Hit Response is --> ${response["result"]}");
+      }
+      BaseResponseModel baseResponseModel =
+          await compute(baseResponseModelFromJson, response);
       return baseResponseModel;
     } on BaseFailure catch (_) {
       rethrow;
@@ -75,16 +86,32 @@ class LeavesRepository {
     }
   }
 
+  // Future<BaseResponseModel> addUpdateEmployeeLeave(
+  //     {required AddUpdateLeaveInput input}) async {
+  //   try {
+  //     var response = await _networkService.post(
+  //       Endpoints.insertEmployeeLeave,
+  //       data: input.toJson(),
+  //     );
+  //     BaseResponseModel baseResponseModel =
+  //         await compute(baseResponseModelFromJson, response);
+  //     return baseResponseModel;
+  //   } on BaseFailure catch (_) {
+  //     rethrow;
+  //   } on TypeError catch (e) {
+  //     log('TYPE error stackTrace :: ${e.stackTrace}');
+  //     rethrow;
+  //   }
+  // }
+
   Future<BaseResponseModel> deleteLeave({required int id}) async {
     try {
       var response = await _networkService.delete(
         Endpoints.deleteLeave,
         data: {"ID": id},
       );
-      BaseResponseModel baseResponseModel = await compute(
-        baseResponseModelFromJson,
-        response,
-      );
+      BaseResponseModel baseResponseModel =
+          await compute(baseResponseModelFromJson, response);
       return baseResponseModel;
     } on BaseFailure catch (_) {
       rethrow;

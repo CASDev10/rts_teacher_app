@@ -3,6 +3,10 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:rts/module/kgs_teacher_module/base_resposne_model.dart';
+import 'package:rts/module/kgs_teacher_module/file_sharing/models/file_sharing_input.dart';
+import 'package:rts/module/kgs_teacher_module/home/models/app_config_reponse.dart';
+import 'package:rts/module/kgs_teacher_module/parent_files/models/parent_file_input.dart';
 
 import '../../../../constants/api_endpoints.dart';
 import '../../../../constants/keys.dart';
@@ -10,11 +14,8 @@ import '../../../../core/di/service_locator.dart';
 import '../../../../core/failures/base_failures/base_failure.dart';
 import '../../../../core/network_service/network_service.dart';
 import '../../../../core/storage_service/storage_service.dart';
-import '../../base_resposne_model.dart';
-import '../../file_sharing/models/file_sharing_input.dart';
 import '../../kgs_teacher_auth/repo/auth_repository.dart';
 import '../../parent_files/models/parent_files_response.dart';
-import '../models/app_config_reponse.dart';
 
 class HomeRepository {
   final NetworkService _networkService = sl<NetworkService>();
@@ -26,17 +27,15 @@ class HomeRepository {
   Future<MobileAppConfigResponse> getAppConfig() async {
     try {
       Map<String, dynamic> input = {
-        "UC_SchoolId": _authRepository.user.schoolId,
+        "UC_SchoolId": _authRepository.user.schoolId
       };
       var response = await _networkService.get(
         Endpoints.getMobileAppConfig,
         data: input,
       );
 
-      MobileAppConfigResponse mobileAppConfigResponse = await compute(
-        mobileAppConfigResponseFromJson,
-        response,
-      );
+      MobileAppConfigResponse mobileAppConfigResponse =
+          await compute(mobileAppConfigResponseFromJson, response);
       saveAppConfigModel(mobileAppConfigResponse.data);
       return mobileAppConfigResponse;
     } on BaseFailure catch (_) {
@@ -47,20 +46,15 @@ class HomeRepository {
     }
   }
 
-  Future<ParentFilesResponse> getParentFiles() async {
+  Future<ParentFilesResponse> getParentFiles(ParentFileInput input) async {
     try {
-      Map<String, dynamic> input = {
-        "UC_LoginUserId": _authRepository.user.userId,
-      };
       var response = await _networkService.post(
         Endpoints.getParentFile,
-        data: input,
+        data: input.toJson(),
       );
 
-      ParentFilesResponse parentFilesResponse = await compute(
-        parentFilesResponseFromJson,
-        response,
-      );
+      ParentFilesResponse parentFilesResponse =
+          await compute(parentFilesResponseFromJson, response);
       return parentFilesResponse;
     } on BaseFailure catch (_) {
       rethrow;
@@ -80,18 +74,16 @@ class HomeRepository {
         "SectionIdFk": input.sectionId,
       };
       FormData toFormData() => FormData.fromMap({
-        "Description": jsonEncode(description),
-        "TeacherFile": input.file,
-      });
+            "Description": jsonEncode(description),
+            "TeacherFile": input.file,
+          });
       var response = await _networkService.post(
         Endpoints.uploadTeacherFile,
         data: toFormData(),
       );
 
-      BaseResponseModel baseResponseModel = await compute(
-        baseResponseModelFromJson,
-        response,
-      );
+      BaseResponseModel baseResponseModel =
+          await compute(baseResponseModelFromJson, response);
       return baseResponseModel;
     } on BaseFailure catch (_) {
       rethrow;
@@ -105,9 +97,7 @@ class HomeRepository {
     this.appConfigModel = appConfigModel;
     final appConfigModelJson = appConfigModel.toJson();
     await _storageService.setString(
-      StorageKeys.appConfig,
-      json.encode(appConfigModelJson),
-    );
+        StorageKeys.appConfig, json.encode(appConfigModelJson));
   }
 
   Future<void> getAppConfigModel() async {

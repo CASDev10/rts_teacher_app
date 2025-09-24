@@ -1,10 +1,12 @@
 import 'package:flutter/cupertino.dart';
+import 'package:rts/components/text_view.dart';
 import 'package:rts/module/kgs_teacher_module/exam_result/pages/show_result_screen.dart';
 
 import '../../../../components/base_scaffold.dart';
 import '../../../../components/custom_appbar.dart';
 import '../../../../components/custom_button.dart';
 import '../../../../components/custom_dropdown.dart';
+import '../../../../components/custom_textfield.dart';
 import '../../../../config/routes/nav_router.dart';
 import '../../../../constants/app_colors.dart';
 
@@ -14,73 +16,83 @@ class ProcessResultScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
-      appBar: const CustomAppbar('Process Result', centerTitle: true),
+      appBar: const CustomAppbar(
+        'Process Result',
+        centerTitle: true,
+      ),
       body: Container(
         width: double.infinity,
         decoration: const BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(50),
-            topRight: Radius.circular(50),
-          ),
+              topLeft: Radius.circular(50), topRight: Radius.circular(50)),
         ),
         child: Padding(
-          padding:
-              const EdgeInsets.symmetric(horizontal: 20) +
+          padding: const EdgeInsets.symmetric(horizontal: 20) +
               const EdgeInsets.symmetric(vertical: 30),
           child: Stack(
             children: [
               Column(
                 children: [
-                  const SizedBox(height: 10),
+                  const SizedBox(
+                    height: 10,
+                  ),
                   CustomDropDown(
                     allPadding: 0,
                     horizontalPadding: 15,
                     isOutline: false,
-                    hintColor: AppColors.primary,
-                    iconColor: AppColors.primary,
+                    hintColor: AppColors.primaryGreen,
+                    iconColor: AppColors.primaryGreen,
                     suffixIconPath: '',
                     hint: 'Select Class',
                     items: [],
                     onSelect: (String value) {},
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(
+                    height: 16,
+                  ),
                   CustomDropDown(
                     allPadding: 0,
                     horizontalPadding: 15,
                     isOutline: false,
-                    hintColor: AppColors.primary,
-                    iconColor: AppColors.primary,
+                    hintColor: AppColors.primaryGreen,
+                    iconColor: AppColors.primaryGreen,
                     suffixIconPath: '',
                     hint: 'Evaluation Type',
                     items: [],
                     onSelect: (String value) {},
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(
+                    height: 16,
+                  ),
                   CustomDropDown(
                     allPadding: 0,
                     horizontalPadding: 15,
                     isOutline: false,
-                    hintColor: AppColors.primary,
-                    iconColor: AppColors.primary,
+                    hintColor: AppColors.primaryGreen,
+                    iconColor: AppColors.primaryGreen,
                     suffixIconPath: '',
                     hint: 'Check Point',
                     items: [],
                     onSelect: (String value) {},
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(
+                    height: 20,
+                  ),
                   CustomDropDown(
                     allPadding: 0,
                     horizontalPadding: 15,
                     isOutline: false,
-                    hintColor: AppColors.primary,
-                    iconColor: AppColors.primary,
+                    hintColor: AppColors.primaryGreen,
+                    iconColor: AppColors.primaryGreen,
                     suffixIconPath: '',
                     hint: 'Evaluation',
                     items: [],
                     onSelect: (String value) {},
                   ),
-                  const SizedBox(height: 20),
+                  const SizedBox(
+                    height: 20,
+                  ),
                 ],
               ),
               Positioned(
@@ -102,7 +114,7 @@ class ProcessResultScreen extends StatelessWidget {
         ),
       ),
       hMargin: 0,
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.primaryGreen,
     );
   }
 }

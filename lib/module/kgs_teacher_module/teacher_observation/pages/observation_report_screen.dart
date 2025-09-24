@@ -1,16 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:rts/config/config.dart';
+import 'package:rts/module/kgs_teacher_module/exam_result/pages/show_result_screen.dart';
+import 'package:rts/module/kgs_teacher_module/teacher_observation/cubit/observation_report_cubit/observation_report_cubit.dart';
 import 'package:rts/module/kgs_teacher_module/teacher_observation/pages/show_report_screen.dart';
+import 'package:rts/utils/display/display_utils.dart';
 
 import '../../../../components/base_scaffold.dart';
 import '../../../../components/custom_appbar.dart';
 import '../../../../components/custom_button.dart';
 import '../../../../components/custom_textfield.dart';
-import '../../../../config/routes/nav_router.dart';
 import '../../../../constants/app_colors.dart';
+import '../../../../core/di/service_locator.dart';
 import '../../../../utils/custom_date_time_picker.dart';
-import '../../../../utils/display/display_utils.dart';
 
 class ObservationReportScreen extends StatefulWidget {
   const ObservationReportScreen({super.key});
@@ -41,23 +47,26 @@ class _ObservationReportScreenState extends State<ObservationReportScreen>
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
-      backgroundColor: AppColors.primary,
-      appBar: const CustomAppbar('Teacher Observation', centerTitle: true),
+      backgroundColor: AppColors.primaryGreen,
+      appBar: const CustomAppbar(
+        'Teacher Observation',
+        centerTitle: true,
+      ),
       body: Container(
         width: double.infinity,
         height: MediaQuery.of(context).size.height,
         decoration: const BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(50),
-            topRight: Radius.circular(50),
-          ),
+              topLeft: Radius.circular(50), topRight: Radius.circular(50)),
         ),
         child: SingleChildScrollView(
           padding: EdgeInsets.all(30),
           child: Column(
             children: [
-              SizedBox(height: 10),
+              SizedBox(
+                height: 10,
+              ),
               CustomTextField(
                 hintText: 'Start Date',
                 height: 50,
@@ -70,17 +79,19 @@ class _ObservationReportScreenState extends State<ObservationReportScreen>
                 hintColor: AppColors.blackColor,
                 suffixWidget: SvgPicture.asset(
                   'assets/images/svg/ic_drop_down.svg',
-                  color: AppColors.primary,
+                  color: AppColors.primaryGreen,
                 ),
                 onTap: () async {
-                  String date = await CustomDateTimePicker.selectDate(context);
+                  String date =
+                      await CustomDateTimePicker.selectDate(context);
                   DateTime dateTime = DateFormat("dd/MM/yyyy").parse(date);
-                  startDateTextController.text = DateFormat(
-                    "yyyy-MM-dd",
-                  ).format(dateTime);
+                  startDateTextController.text =
+                      DateFormat("yyyy-MM-dd").format(dateTime);
                 },
               ),
-              SizedBox(height: 16),
+              SizedBox(
+                height: 16,
+              ),
               CustomTextField(
                 hintText: 'End Date',
                 height: 50,
@@ -93,40 +104,41 @@ class _ObservationReportScreenState extends State<ObservationReportScreen>
                 hintColor: AppColors.blackColor,
                 suffixWidget: SvgPicture.asset(
                   'assets/images/svg/ic_drop_down.svg',
-                  color: AppColors.primary,
+                  color: AppColors.primaryGreen,
                 ),
                 onTap: () async {
-                  String date = await CustomDateTimePicker.selectDate(context);
+                  String date =
+                      await CustomDateTimePicker.selectDate(context);
                   DateTime dateTime = DateFormat("dd/MM/yyyy").parse(date);
-                  endDateTextController.text = DateFormat(
-                    "yyyy-MM-dd",
-                  ).format(dateTime);
+                  endDateTextController.text =
+                      DateFormat("yyyy-MM-dd").format(dateTime);
                 },
               ),
-              SizedBox(height: 16),
-              SizedBox(height: 70),
+              SizedBox(
+                height: 16,
+              ),
+              SizedBox(
+                height: 70,
+              ),
               CustomButton(
                 onPressed: () {
                   if (startDateTextController.text.isNotEmpty) {
                     if (endDateTextController.text.isNotEmpty) {
-                      NavRouter.push(
-                        context,
-                        ShowReportScreen(
-                          startDate:
-                              startDateTextController.text.trim().toString(),
-                          endDate: endDateTextController.text.trim().toString(),
-                        ),
-                      );
+                      NavRouter.push(context, ShowReportScreen(startDate: startDateTextController.text
+                          .trim()
+                          .toString(), endDate:  endDateTextController.text.trim().toString()));
                     } else {
-                      DisplayUtils.showSnackBar(context, "Please end date");
+                      DisplayUtils.showSnackBar(
+                          context, "Please end date");
                     }
                   } else {
-                    DisplayUtils.showSnackBar(context, "Please start date");
+                    DisplayUtils.showSnackBar(
+                        context, "Please start date");
                   }
                 },
                 title: 'Get Report',
                 height: 50,
-              ),
+              )
             ],
           ),
         ),

@@ -1,12 +1,18 @@
+import 'package:rts/module/kgs_teacher_module/student_result/models/class_name_response.dart';
+import 'package:rts/module/kgs_teacher_module/student_result/models/evaluation_type_response.dart';
+import 'package:rts/module/kgs_teacher_module/student_result/models/grade_response.dart';
+import 'package:rts/module/kgs_teacher_module/student_result/models/sections_name_response.dart';
+
 import '../../../../../../core/failures/base_failures/base_failure.dart';
-import '../../models/class_name_response.dart';
 import '../../models/evaluation_response.dart';
-import '../../models/evaluation_type_response.dart';
-import '../../models/grade_response.dart';
-import '../../models/sections_name_response.dart';
 import '../../models/subjects_response.dart';
 
-enum StudentResultStatus { none, loading, success, failure }
+enum StudentResultStatus {
+  none,
+  loading,
+  success,
+  failure,
+}
 
 class StudentResultState {
   final StudentResultStatus studentAttendanceStatus;

@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import '../../../../constants/app_colors.dart';
 
 class BuildDotIndicators extends StatelessWidget {
-  const BuildDotIndicators({Key? key, required this.selectedIndex})
-    : super(key: key);
+  const BuildDotIndicators({
+    Key? key,
+    required this.selectedIndex,
+  }) : super(key: key);
   final int selectedIndex;
 
   @override
@@ -13,7 +15,9 @@ class BuildDotIndicators extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         3,
-        (index) => DotIndicator(isActive: selectedIndex == index),
+        (index) => DotIndicator(
+          isActive: selectedIndex == index,
+        ),
       ),
     );
   }
@@ -30,16 +34,15 @@ class DotIndicator extends StatelessWidget {
       child: Container(
         margin: const EdgeInsets.symmetric(horizontal: 4.0),
         width: isActive ? 36 : 10,
-        decoration:
-            isActive
-                ? BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: AppColors.primary,
-                )
-                : const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.grey3,
-                ),
+        decoration: isActive
+            ? BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                color: AppColors.primaryGreen,
+              )
+            : const BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.grey3,
+              ),
       ),
     );
   }

@@ -1,13 +1,13 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/repo/auth_repository.dart';
 import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../core/di/service_locator.dart';
-import '../module/kgs_teacher_module/kgs_teacher_auth/repo/auth_repository.dart';
 
 AuthRepository _authRepository = sl<AuthRepository>();
 
@@ -22,10 +22,8 @@ Future<void> checkCameraPermission() async {
   }
 }
 
-Future<void> saveBase64ToFile2({
-  required String base64String,
-  required String fileName,
-}) async {
+Future<void> saveBase64ToFile2(
+    {required String base64String, required String fileName}) async {
   try {
     // Check and request permission to access storage (Android)
     var status = await Permission.manageExternalStorage.request();
@@ -89,7 +87,13 @@ Future<void> saveBase64ToFile2({
   }
 }
 
-enum ResultType { done, fileNotFound, noAppToOpen, permissionDenied, error }
+enum ResultType {
+  done,
+  fileNotFound,
+  noAppToOpen,
+  permissionDenied,
+  error,
+}
 
 Future<void> openUrlInBrowser(String url) async {
   final Uri uri = Uri.parse(url);
@@ -114,7 +118,6 @@ Future<void> openPdfFile(String filePath) async {
   } else {
     // If permission is denied, show a message or prompt user to allow permission
     print(
-      'Storage permission denied. Please grant permission to access the file.',
-    );
+        'Storage permission denied. Please grant permission to access the file.');
   }
 }

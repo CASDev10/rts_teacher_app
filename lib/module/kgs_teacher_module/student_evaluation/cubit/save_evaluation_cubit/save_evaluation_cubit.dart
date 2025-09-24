@@ -1,13 +1,13 @@
 import 'package:bloc/bloc.dart';
+import 'package:rts/module/kgs_teacher_module/base_resposne_model.dart';
 import 'package:rts/module/kgs_teacher_module/student_evaluation/cubit/save_evaluation_cubit/save_evaluation_state.dart';
+import 'package:rts/module/kgs_teacher_module/student_evaluation/models/save_evaluation_input.dart';
+import 'package:rts/module/kgs_teacher_module/student_evaluation/models/student_evaluation_list_input.dart';
 
 import '../../../../../core/api_result.dart';
 import '../../../../../core/failures/base_failures/base_failure.dart';
 import '../../../../../core/failures/high_priority_failure.dart';
 import '../../../../../utils/display/display_utils.dart';
-import '../../../base_resposne_model.dart';
-import '../../models/save_evaluation_input.dart';
-import '../../models/student_evaluation_list_input.dart';
 import '../../repo/student_evaluation_repository.dart';
 
 class SaveEvaluationCubit extends Cubit<SaveEvaluationState> {
@@ -21,32 +21,23 @@ class SaveEvaluationCubit extends Cubit<SaveEvaluationState> {
     emit(state.copyWith(studentEvaluationStatus: SaveEvaluationStatus.loading));
 
     try {
-      BaseResponseModel baseResponseModel = await _repository
-          .saveOutcomeResults(input: input);
+      BaseResponseModel baseResponseModel =
+          await _repository.saveOutcomeResults(input: input);
 
       if (baseResponseModel.result == ApiResult.success) {
-        emit(
-          state.copyWith(
+        emit(state.copyWith(
             studentEvaluationStatus: SaveEvaluationStatus.success,
-            result: baseResponseModel.result,
-          ),
-        );
+            result: baseResponseModel.result));
       } else {
-        emit(
-          state.copyWith(
+        emit(state.copyWith(
             studentEvaluationStatus: SaveEvaluationStatus.failure,
-            failure: HighPriorityException(baseResponseModel.message),
-          ),
-        );
+            failure: HighPriorityException(baseResponseModel.message)));
       }
       DisplayUtils.removeLoader();
     } on BaseFailure catch (e) {
-      emit(
-        state.copyWith(
+      emit(state.copyWith(
           studentEvaluationStatus: SaveEvaluationStatus.failure,
-          failure: HighPriorityException(e.message),
-        ),
-      );
+          failure: HighPriorityException(e.message)));
       DisplayUtils.removeLoader();
     } catch (_) {
       DisplayUtils.removeLoader();

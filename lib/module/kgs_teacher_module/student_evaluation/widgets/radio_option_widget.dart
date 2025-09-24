@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
-
-import '../../../../constants/app_colors.dart';
+import 'package:rts/constants/app_colors.dart';
 
 class RadioButtonSelector extends StatefulWidget {
-  const RadioButtonSelector({super.key, this.onSelected, this.selectedOption});
+  const RadioButtonSelector({
+    super.key,
+    this.onSelected,
+    this.selectedOption,
+  });
 
   final Function(String)? onSelected;
   final String? selectedOption;
@@ -28,21 +31,20 @@ class _RadioButtonSelectorState extends State<RadioButtonSelector> {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children:
-          options.map((b) {
-            return InkWell(
-              onTap: () {
-                setState(() {
-                  selectedOption = b;
-                });
-                widget.onSelected!(b);
-              },
-              child: CustomRadioButton(
-                isSelected: b == selectedOption,
-                name: b,
-              ),
-            );
-          }).toList(),
+      children: options.map((b) {
+        return InkWell(
+          onTap: () {
+            setState(() {
+              selectedOption = b;
+            });
+            widget.onSelected!(b);
+          },
+          child: CustomRadioButton(
+            isSelected: b == selectedOption,
+            name: b,
+          ),
+        );
+      }).toList(),
     );
   }
 }
@@ -69,17 +71,26 @@ class CustomRadioButton extends StatelessWidget {
             fontSize: 10.0,
           ),
         ),
-        SizedBox(height: 6.0),
+        SizedBox(
+          height: 6.0,
+        ),
         Container(
           height: 15,
           width: 15,
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.primary : Colors.transparent,
+            color: isSelected ? AppColors.primaryGreen : Colors.transparent,
             borderRadius: BorderRadius.circular(100.0),
-            border: Border.all(color: AppColors.primary, width: 1.5),
+            border: Border.all(
+              color: AppColors.primaryGreen,
+              width: 1.5,
+            ),
           ),
-          child: Icon(Icons.check_outlined, size: 10, color: Colors.white),
-        ),
+          child: Icon(
+            Icons.check_outlined,
+            size: 10,
+            color: Colors.white,
+          ),
+        )
       ],
     );
   }

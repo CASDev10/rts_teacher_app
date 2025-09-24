@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/repo/auth_repository.dart';
+
+import '../../core/di/service_locator.dart';
 
 enum SplashState {
   none, // none
@@ -14,9 +17,8 @@ class SplashCubit extends Cubit<SplashState> {
     debugPrint('splash ..init');
     await Future.delayed(const Duration(milliseconds: 2000));
 
-    // AuthRepository _repo = sl<AuthRepository>();
-    // bool isAuthenticate = await _repo.isAuthenticated();
-    bool isAuthenticate = false;
+    AuthRepository _repo = sl<AuthRepository>();
+    bool isAuthenticate = await _repo.isAuthenticated();
 
     if (isAuthenticate) {
       emit(SplashState.authenticated);

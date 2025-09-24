@@ -1,8 +1,14 @@
+import 'package:rts/module/kgs_teacher_module/student_result/models/student_list_input.dart';
+
 import '../../../../../../core/failures/base_failures/base_failure.dart';
-import '../../models/student_list_input.dart';
 import '../../models/student_list_response.dart';
 
-enum MarkingStudentStatus { none, loading, success, failure }
+enum MarkingStudentStatus {
+  none,
+  loading,
+  success,
+  failure,
+}
 
 class MarkingStudentState {
   final MarkingStudentStatus markingStudentStatus;
@@ -28,13 +34,12 @@ class MarkingStudentState {
     );
   }
 
-  MarkingStudentState copyWith({
-    MarkingStudentStatus? markingStudentStatus,
-    List<ExamDetailList>? examDetailList,
-    List<AwardListStatusList>? awardListStatusList,
-    BaseFailure? failure,
-    StudentListInput? examMaster,
-  }) {
+  MarkingStudentState copyWith(
+      {MarkingStudentStatus? markingStudentStatus,
+      List<ExamDetailList>? examDetailList,
+      List<AwardListStatusList>? awardListStatusList,
+      BaseFailure? failure,
+      StudentListInput? examMaster}) {
     return MarkingStudentState(
       markingStudentStatus: markingStudentStatus ?? this.markingStudentStatus,
       failure: failure ?? this.failure,

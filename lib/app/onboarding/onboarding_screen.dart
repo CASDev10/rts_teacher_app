@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:rts/components/base_scaffold.dart';
 import 'package:rts/components/h_padding.dart';
+import 'package:rts/components/text_view.dart';
+import 'package:rts/config/config.dart';
+import 'package:rts/constants/app_colors.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/pages/kgs_teacher_login_screen.dart';
 
 import '../../../components/custom_button.dart';
-import '../../components/base_scaffold.dart';
-import '../../components/text_view.dart';
-import '../../config/routes/nav_router.dart';
-import '../../constants/app_colors.dart';
-import '../../module/kgs_teacher_module/kgs_teacher_auth/pages/kgs_teacher_login_screen.dart';
 import 'widget/dot_indicators.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -25,13 +25,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(
-      const SystemUiOverlayStyle(
-        statusBarColor: AppColors.whiteColor,
-        statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
-        statusBarBrightness: Brightness.dark,
-      ),
-    );
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: AppColors.whiteColor,
+      statusBarIconBrightness: Brightness.dark, // For Android (dark icons)
+      statusBarBrightness: Brightness.dark,
+    ));
     return BaseScaffold(
       body: SafeArea(
         child: Container(
@@ -41,15 +39,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               Expanded(
                 child: PageView(
                   controller: pageController,
-                  onPageChanged:
-                      (index) => setState(() {
-                        selectedIndex = index;
-                        if (index == 2) {
-                          isLastPage = true;
-                        } else {
-                          isLastPage = false;
-                        }
-                      }),
+                  onPageChanged: (index) => setState(() {
+                    selectedIndex = index;
+                    if (index == 2) {
+                      isLastPage = true;
+                    } else {
+                      isLastPage = false;
+                    }
+                  }),
                   scrollDirection: Axis.horizontal,
                   children: [
                     PageviewChild(
@@ -70,8 +67,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ],
                 ),
               ),
-              BuildDotIndicators(selectedIndex: selectedIndex),
-              const SizedBox(height: 16),
+              BuildDotIndicators(
+                selectedIndex: selectedIndex,
+              ),
+              const SizedBox(
+                height: 16,
+              ),
               CustomButton(
                 title: !isLastPage ? "Next" : "Get Started",
                 height: 50,
@@ -79,12 +80,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   isLastPage
                       ? NavRouter.push(context, LoginScreen())
                       : pageController.nextPage(
-                        duration: const Duration(milliseconds: 500),
-                        curve: Curves.easeInOut,
-                      );
+                          duration: const Duration(milliseconds: 500),
+                          curve: Curves.easeInOut);
                 },
               ),
-              const SizedBox(height: 16),
+              const SizedBox(
+                height: 16,
+              ),
               GestureDetector(
                 onTap: () {
                   NavRouter.push(context, LoginScreen());
@@ -94,7 +96,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   color: AppColors.darkGreyColor,
                 ),
               ),
-              SizedBox(height: 20),
+              SizedBox(
+                height: 20,
+              ),
             ],
           ),
         ),
@@ -108,28 +112,35 @@ class PageviewChild extends StatelessWidget {
   final String title;
   final String subTitle;
 
-  const PageviewChild({
-    super.key,
-    required this.imagePath,
-    required this.title,
-    required this.subTitle,
-  });
+  const PageviewChild(
+      {super.key,
+      required this.imagePath,
+      required this.title,
+      required this.subTitle});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        SizedBox(height: 250, width: 250, child: SvgPicture.asset(imagePath)),
-        const SizedBox(height: 40),
+        SizedBox(
+          height: 250,
+          width: 250,
+          child: SvgPicture.asset(imagePath),
+        ),
+        const SizedBox(
+          height: 40,
+        ),
         TextView(
           title,
           textAlign: TextAlign.center,
           fontWeight: FontWeight.w600,
           fontSize: 30,
-          color: AppColors.primary,
+          color: AppColors.primaryGreen,
         ),
-        const SizedBox(height: 22),
+        const SizedBox(
+          height: 22,
+        ),
         TextView(
           subTitle,
           textAlign: TextAlign.center,

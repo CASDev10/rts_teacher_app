@@ -13,13 +13,17 @@ final ThemeData lightTheme = ThemeData(
   // Title: small = 14, medium = 16, large = 22
 
   // label: small = 11, medium = 12, large = 14
+
   textTheme: const TextTheme(
     headlineSmall: TextStyle(
       fontFamily: 'MyFont',
       color: AppColors.greyColor,
       letterSpacing: 1,
     ),
-  ).apply(bodyColor: AppColors.greyColor, displayColor: AppColors.greyColor),
+  ).apply(
+    bodyColor: AppColors.greyColor,
+    displayColor: AppColors.greyColor,
+  ),
 
   /// -------------------------- Color Scheme -------------------------- ///
   colorScheme: ColorScheme.fromSeed(
@@ -72,10 +76,7 @@ final ThemeData lightTheme = ThemeData(
     isDense: true,
     contentPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 10),
     hintStyle: const TextStyle(
-      fontWeight: FontWeight.w400,
-      fontSize: 12,
-      color: Colors.grey,
-    ),
+        fontWeight: FontWeight.w400, fontSize: 12, color: Colors.grey),
     filled: true,
     fillColor: AppColors.whiteColor,
     errorStyle: const TextStyle(color: AppColors.red),
@@ -87,17 +88,23 @@ final ThemeData lightTheme = ThemeData(
     errorBorder: _errorBorder,
     focusedErrorBorder: _errorBorder,
     focusedBorder: _outlineInputBorder.copyWith(
-      borderSide: const BorderSide(color: AppColors.primaryLight),
+      borderSide: const BorderSide(
+        color: AppColors.primaryLight,
+      ),
     ),
   ),
 );
 
 final _outlineInputBorder = OutlineInputBorder(
   borderRadius: BorderRadius.circular(50),
-  borderSide: const BorderSide(color: AppColors.greyColor),
+  borderSide: const BorderSide(
+    color: AppColors.greyColor,
+  ),
 );
 
 final _errorBorder = OutlineInputBorder(
   borderRadius: BorderRadius.circular(50),
-  borderSide: const BorderSide(color: AppColors.red),
+  borderSide: const BorderSide(
+    color: AppColors.red,
+  ),
 );

@@ -1,44 +1,50 @@
 import 'package:bloc/bloc.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/get_diary_input.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/repo/diary_repo.dart';
 
 import '../../../../../core/api_result.dart';
 import '../../../../../core/failures/base_failures/base_failure.dart';
 import '../../../../../core/failures/high_priority_failure.dart';
+import '../../../../../utils/display/display_utils.dart';
 import '../../models/diary_list_response.dart';
-import '../../repo/diary_repo.dart';
 import 'diary_list_state.dart';
 
 class DiaryListCubit extends Cubit<DiaryListState> {
   DiaryListCubit(this._repository) : super(DiaryListState.initial());
 
   DiaryRepository _repository;
-  Future fetchDiaryList(String school_id) async {
-    emit(state.copyWith(diaryListStatus: DiaryListStatus.loading));
+
+  List<DiaryModel> diaryList = [];
+
+  Future fetchDiaryList(GetDiaryInput input, {bool loadMore = false}) async {
+    emit(state.copyWith(
+        diaryListStatus:
+            loadMore ? DiaryListStatus.loadMore : DiaryListStatus.loading));
+    if (loadMore) {
+      DisplayUtils.showLoader();
+    } else {
+      diaryList.clear();
+    }
     try {
-      DiaryListResponseModel response = await _repository.getDiaryList(
-        school_id,
-      );
+      DiaryListResponseModel response = await _repository.getDiaryList(input);
       if (response.result == ApiResult.success) {
-        emit(
-          state.copyWith(
-            diaryListStatus: DiaryListStatus.success,
-            diaryList: response.data,
-          ),
-        );
+        diaryList.addAll(response.data);
+        emit(state.copyWith(
+          diaryListStatus: DiaryListStatus.success,
+          diaryList: diaryList,
+        ));
       } else {
-        emit(
-          state.copyWith(
-            diaryListStatus: DiaryListStatus.failure,
-            failure: HighPriorityException(response.message),
-          ),
-        );
+        emit(state.copyWith(
+            diaryListStatus: DiaryListStatus.success,
+            failure: HighPriorityException(response.message)));
       }
     } on BaseFailure catch (e) {
-      emit(
-        state.copyWith(
-          diaryListStatus: DiaryListStatus.failure,
-          failure: HighPriorityException(e.message),
-        ),
-      );
+      emit(state.copyWith(
+          diaryListStatus: DiaryListStatus.success,
+          failure: HighPriorityException(e.message)));
     } catch (_) {}
+    if (loadMore) {
+      DisplayUtils.removeLoader();
+    }
   }
 }

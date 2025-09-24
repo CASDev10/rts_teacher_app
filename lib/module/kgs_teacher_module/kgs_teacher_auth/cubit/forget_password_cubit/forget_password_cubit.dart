@@ -1,11 +1,12 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/models/forget_password_input.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/models/forget_password_response.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/repo/auth_repository.dart';
+import 'package:rts/module/kgs_teacher_module/base_resposne_model.dart';
 
 import '../../../../../core/api_result.dart';
 import '../../../../../core/failures/base_failures/base_failure.dart';
 import '../../../../../core/failures/high_priority_failure.dart';
-import '../../../base_resposne_model.dart';
-import '../../models/forget_password_input.dart';
-import '../../repo/auth_repository.dart';
 import 'forget_password_state.dart';
 
 class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
@@ -29,26 +30,21 @@ class ForgetPasswordCubit extends Cubit<ForgetPasswordState> {
   Future forgetPassword(ForgetPasswordInput input) async {
     emit(state.copyWith(forgetPasswordStatus: ForgetPasswordStatus.loading));
     try {
-      BaseResponseModel response = await _repository.forgetPassword(input);
+      BaseResponseModel response =
+          await _repository.forgetPassword(input);
       if (response.result == ApiResult.success) {
-        emit(
-          state.copyWith(forgetPasswordStatus: ForgetPasswordStatus.success),
-        );
+        emit(state.copyWith(
+          forgetPasswordStatus: ForgetPasswordStatus.success,
+        ));
       } else {
-        emit(
-          state.copyWith(
+        emit(state.copyWith(
             forgetPasswordStatus: ForgetPasswordStatus.failure,
-            failure: HighPriorityException(response.message),
-          ),
-        );
+            failure: HighPriorityException(response.message)));
       }
     } on BaseFailure catch (e) {
-      emit(
-        state.copyWith(
+      emit(state.copyWith(
           forgetPasswordStatus: ForgetPasswordStatus.failure,
-          failure: HighPriorityException(e.message),
-        ),
-      );
+          failure: HighPriorityException(e.message)));
     } catch (_) {}
   }
 }

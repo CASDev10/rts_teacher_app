@@ -3,9 +3,9 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/repo/auth_repository.dart';
 
 import '../../config/flavors/flavors.dart';
-import '../../module/kgs_teacher_module/kgs_teacher_auth/repo/auth_repository.dart';
 import '../core.dart';
 
 class NetworkService {
@@ -21,15 +21,13 @@ class NetworkService {
       ..options.responseType = ResponseType.json;
     // enable network_service interceptor for logs in debug mode
     if (kDebugMode) {
-      dio.interceptors.add(
-        LogInterceptor(
-          request: false,
-          requestHeader: false,
-          requestBody: true,
-          responseHeader: false,
-          responseBody: true,
-        ),
-      );
+      dio.interceptors.add(LogInterceptor(
+        request: false,
+        requestHeader: false,
+        requestBody: true,
+        responseHeader: false,
+        responseBody: true,
+      ));
     }
     log(" 'DIO' configured with baseUrl ${flavors.config.baseUrl} ✓");
   }
@@ -80,7 +78,10 @@ class NetworkService {
         url,
         data: data,
         queryParameters: queryParameters,
-        options: options ?? Options(headers: sl<AuthRepository>().getHeaders()),
+        options: options ??
+            Options(
+              headers: sl<AuthRepository>().getHeaders(),
+            ),
         cancelToken: cancelToken,
         onSendProgress: onSendProgress,
         onReceiveProgress: onReceiveProgress,

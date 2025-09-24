@@ -1,8 +1,15 @@
-import '../../../../../../core/failures/base_failures/base_failure.dart';
-import '../model/employee_leaves_response.dart';
-import '../model/leave_balance_response.dart';
+import 'package:rts/module/kgs_teacher_module/leaves/model/employee_leaves_response.dart';
+import 'package:rts/module/kgs_teacher_module/leaves/model/leave_balance_response.dart';
 
-enum TeacherLeaveStatus { none, loading, success, failure }
+import '../../../../../../core/failures/base_failures/base_failure.dart';
+
+enum TeacherLeaveStatus {
+  none,
+  loading,
+  loadMore,
+  success,
+  failure,
+}
 
 class TeacherLeaveState {
   final TeacherLeaveStatus studentAttendanceStatus;

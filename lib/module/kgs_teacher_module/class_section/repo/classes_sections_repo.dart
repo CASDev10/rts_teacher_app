@@ -1,14 +1,12 @@
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
+import 'package:rts/core/core.dart';
+import 'package:rts/module/kgs_teacher_module/class_section/model/sections_model.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/repo/auth_repository.dart';
 
 import '../../../../constants/api_endpoints.dart';
-import '../../../../core/di/service_locator.dart';
-import '../../../../core/failures/base_failures/base_failure.dart';
-import '../../../../core/network_service/network_service.dart';
-import '../../kgs_teacher_auth/repo/auth_repository.dart';
 import '../model/classes_model.dart';
-import '../model/sections_model.dart';
 
 class ClassesSectionsRepository {
   final NetworkService _networkService = sl<NetworkService>();
@@ -52,10 +50,8 @@ class ClassesSectionsRepository {
         data: input,
       );
 
-      SectionsModel sectionsModel = await compute(
-        sectionsModelFromJson,
-        response,
-      );
+      SectionsModel sectionsModel =
+          await compute(sectionsModelFromJson, response);
 
       return sectionsModel;
     } on BaseFailure catch (_) {

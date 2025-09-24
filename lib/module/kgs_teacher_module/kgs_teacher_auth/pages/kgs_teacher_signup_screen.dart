@@ -1,37 +1,42 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import '../../../../components/base_scaffold.dart';
-import '../../../../components/custom_button.dart';
-import '../../../../components/custom_textfield.dart';
-import '../../../../components/text_view.dart';
-import '../../../../config/routes/nav_router.dart';
-import '../../../../constants/app_colors.dart';
+import 'package:rts/components/base_scaffold.dart';
+import 'package:rts/components/custom_button.dart';
+import 'package:rts/components/custom_textfield.dart';
+import 'package:rts/components/text_view.dart';
+import 'package:rts/config/routes/nav_router.dart';
+import 'package:rts/constants/app_colors.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/cubit/user_schools_cubit/user_schools_cubit.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/pages/kgs_teacher_login_screen.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../utils/display/dialogs/widgets/dialogs.dart';
 import '../../../../utils/display/display_utils.dart';
 import '../../../../utils/validators/validation_utils.dart';
 import '../cubit/kgs_teacher_login_cubit/kgs_teacher_login_cubit.dart';
-import '../cubit/user_schools_cubit/user_schools_cubit.dart';
 import '../widget/password_suffix_widget.dart';
-import 'kgs_teacher_login_screen.dart';
 
 class SignupScreen extends StatefulWidget {
-  const SignupScreen({Key? key}) : super(key: key);
+  const SignupScreen(
+      {Key? key})
+      : super(key: key);
 
   @override
-  State<SignupScreen> createState() => _SignupScreenState();
+  State<SignupScreen>
+  createState() => _SignupScreenState();
 }
 
-class _SignupScreenState extends State<SignupScreen> {
+class _SignupScreenState
+    extends State<SignupScreen> {
   TextEditingController userNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController passwordController =  TextEditingController();
+  TextEditingController confirmPasswordController =  TextEditingController();
 
-  final _formKey = GlobalKey<FormState>();
-  bool isPasswordVisible = false;
+  final _formKey =
+  GlobalKey<FormState>();
+  bool isPasswordVisible =
+  false;
 
   void onSuccessfulSignup(BuildContext context) async {
     DisplayUtils.showLoader();
@@ -49,12 +54,19 @@ class _SignupScreenState extends State<SignupScreen> {
     }
   }
 
-  void _onLoginButtonPressed() {
-    if (_formKey.currentState!.validate()) {
-      FocusManager.instance.primaryFocus?.unfocus();
+
+  void
+  _onLoginButtonPressed() {
+    if (_formKey.currentState!
+        .validate()) {
+      FocusManager.instance
+          .primaryFocus
+          ?.unfocus();
 
       onSuccessfulSignup(context);
-    } else {}
+
+    } else {
+    }
   }
 
   @override
@@ -62,123 +74,198 @@ class _SignupScreenState extends State<SignupScreen> {
     super.initState();
   }
 
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(
+      BuildContext context) {
     return BlocProvider(
       create: (context) => UserSchoolsCubit(sl()),
-      child: BlocBuilder<LoginCubit, LoginState>(
-        builder: (context, state) {
+      child: BlocBuilder<
+          LoginCubit,
+          LoginState>(
+
+        builder:
+            (context, state) {
           return BaseScaffold(
-            backgroundColor: AppColors.whiteColor,
+            backgroundColor:
+            AppColors
+                .whiteColor,
             body: Form(
               key: _formKey,
-              child: SingleChildScrollView(
+              child:
+              SingleChildScrollView(
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                  crossAxisAlignment:
+                  CrossAxisAlignment
+                      .center,
                   children: [
-                    const SizedBox(height: 90),
+                    const SizedBox(
+                        height:
+                        90),
                     TextView(
-                      'Create an Account',
-                      textAlign: TextAlign.center,
-                      color: AppColors.primary,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w700,
-                    ),
-                    const SizedBox(height: 14),
+                        'Create an Account',
+                        textAlign: TextAlign
+                            .center,
+                        color: AppColors
+                            .primaryGreen,
+                        fontSize:
+                        30,
+                        fontWeight:
+                        FontWeight.w700),
+                    const SizedBox(
+                        height:
+                        14),
                     const TextView(
-                      'Hello, Welcome',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.grey4,
-                    ),
-                    const SizedBox(height: 14),
+                        'Hello, Welcome',
+                        fontSize:
+                        14,
+                        fontWeight: FontWeight
+                            .w400,
+                        color:
+                        AppColors.grey4),
+                    const SizedBox(
+                        height:
+                        14),
                     SizedBox(
-                      height: 245,
-                      width: 330,
+                      height:
+                      245,
+                      width:
+                      330,
                       child: SvgPicture.asset(
-                        "assets/images/svg/ic_login_screen.svg",
-                      ),
+                          "assets/images/svg/ic_login_screen.svg"),
                     ),
-                    const SizedBox(height: 50),
+                    const SizedBox(
+                        height:
+                        50),
                     CustomTextField(
-                      hintText: 'Email',
-                      inputType: TextInputType.emailAddress,
-                      controller: emailController,
-                      fillColor: AppColors.lightGreyColor,
-                      onValidate: (val) => ValidationUtils.validateEmail(val),
-                    ),
-                    const SizedBox(height: 4),
-                    CustomTextField(
-                      hintText: 'User Name',
-                      inputType: TextInputType.emailAddress,
-                      controller: userNameController,
-                      fillColor: AppColors.lightGreyColor,
+                      hintText:
+                      'Email',
+                      inputType:
+                      TextInputType.emailAddress,
+                      controller:
+                      emailController,
+                      fillColor:
+                      AppColors.lightGreyColor,
                       onValidate:
-                          (val) => ValidationUtils.validateUserName(val),
+                          (val) =>
+                          ValidationUtils.validateEmail(val),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(
+                        height:
+                        4),
                     CustomTextField(
-                      hintText: 'Password',
-                      controller: passwordController,
-                      fillColor: AppColors.lightGreyColor,
-                      inputType: TextInputType.visiblePassword,
-                      obscureText: state.isPasswordHidden,
+                      hintText:
+                      'User Name',
+                      inputType:
+                      TextInputType.emailAddress,
+                      controller:
+                      userNameController,
+                      fillColor:
+                      AppColors.lightGreyColor,
                       onValidate:
-                          (val) => ValidationUtils.validatePassword(val),
-                      suffixWidget: PasswordSuffixWidget(
-                        isPasswordVisible: state.isPasswordHidden,
-                        onTap: () {
+                          (val) =>
+                          ValidationUtils.validateUserName(val),
+                    ),
+                    const SizedBox(
+                        height:
+                        4),
+                    CustomTextField(
+                      hintText:
+                      'Password',
+                      controller:
+                      passwordController,
+                      fillColor:
+                      AppColors.lightGreyColor,
+                      inputType:
+                      TextInputType.visiblePassword,
+                      obscureText:
+                      state.isPasswordHidden,
+                      onValidate:
+                          (val) =>
+                          ValidationUtils.validatePassword(val),
+                      suffixWidget:
+                      PasswordSuffixWidget(
+                        isPasswordVisible:
+                        state.isPasswordHidden,
+                        onTap:
+                            () {
                           context.read<LoginCubit>().toggleShowPassword();
                         },
                       ),
                     ),
-                    const SizedBox(height: 4),
+                    const SizedBox(
+                        height:
+                        4),
                     CustomTextField(
-                      hintText: 'Confirm Password',
-                      controller: confirmPasswordController,
-                      fillColor: AppColors.lightGreyColor,
-                      inputType: TextInputType.visiblePassword,
-                      obscureText: state.isPasswordHidden,
+                      hintText:
+                      'Confirm Password',
+                      controller:
+                      confirmPasswordController,
+                      fillColor:
+                      AppColors.lightGreyColor,
+                      inputType:
+                      TextInputType.visiblePassword,
+                      obscureText:
+                      state.isPasswordHidden,
                       onValidate:
-                          (val) => ValidationUtils.validatePassword(val),
-                      suffixWidget: PasswordSuffixWidget(
-                        isPasswordVisible: state.isPasswordHidden,
-                        onTap: () {
+                          (val) =>
+                          ValidationUtils.validatePassword(val),
+                      suffixWidget:
+                      PasswordSuffixWidget(
+                        isPasswordVisible:
+                        state.isPasswordHidden,
+                        onTap:
+                            () {
                           context.read<LoginCubit>().toggleShowPassword();
                         },
                       ),
                     ),
-                    const SizedBox(height: 44),
+                    const SizedBox(
+                        height:
+                        44),
                     CustomButton(
-                      height: 54,
-                      title: 'Signup',
-                      onPressed: () {
+                      height:
+                      54,
+                      title:
+                      'Signup',
+                      onPressed:
+                          () {
                         _onLoginButtonPressed();
                         //_showCampusesDialog();
                       },
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(
+                        height:
+                        40),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const TextView(
                           'Already Have an Account? ',
-                          fontSize: 14,
-                          color: AppColors.grey,
-                          fontWeight: FontWeight.w600,
+                          fontSize:
+                          14,
+                          color:
+                          AppColors.grey,
+                          fontWeight:
+                          FontWeight.w600,
                         ),
                         TextView(
-                          onTap: () {
+                          onTap: (){
                             NavRouter.push(context, LoginScreen());
                           },
                           'Login Now',
-                          fontSize: 14,
-                          color: AppColors.grey,
-                          fontWeight: FontWeight.w600,
+                          fontSize:
+                          14,
+                          color:
+                          AppColors.grey,
+                          fontWeight:
+                          FontWeight.w600,
                         ),
                       ],
                     ),
-                    const SizedBox(height: 40),
+                    const SizedBox(
+                        height:
+                        40),
                   ],
                 ),
               ),

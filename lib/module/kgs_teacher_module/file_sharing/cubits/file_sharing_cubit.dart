@@ -2,14 +2,14 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rts/module/kgs_teacher_module/base_resposne_model.dart';
+import 'package:rts/module/kgs_teacher_module/file_sharing/models/file_sharing_input.dart';
+import 'package:rts/module/kgs_teacher_module/home/repo/home_repo.dart';
 
 import '../../../../../core/api_result.dart';
 import '../../../../../core/failures/base_failures/base_failure.dart';
 import '../../../../../core/failures/high_priority_failure.dart';
 import '../../../../utils/image_utils.dart';
-import '../../base_resposne_model.dart';
-import '../../home/repo/home_repo.dart';
-import '../models/file_sharing_input.dart';
 import 'file_sharing_state.dart';
 
 class FileSharingCubit extends Cubit<FileSharingState> {
@@ -25,38 +25,29 @@ class FileSharingCubit extends Cubit<FileSharingState> {
         if (image != null) {
           input.file = image;
         } else {
-          emit(
-            state.copyWith(
+          emit(state.copyWith(
               status: FileSharingStatus.failure,
               failure: const HighPriorityException(
-                "Image should be less than 2MB",
-              ),
-            ),
-          );
+                  "Image should be less than 2MB")));
           return;
         }
       }
-      BaseResponseModel baseResponseModel = await _repository.uploadTeacherFile(
-        input,
-      );
+      BaseResponseModel baseResponseModel =
+          await _repository.uploadTeacherFile(input);
 
       if (baseResponseModel.result == ApiResult.success) {
-        emit(state.copyWith(status: FileSharingStatus.success));
+        emit(state.copyWith(
+          status: FileSharingStatus.success,
+        ));
       } else {
-        emit(
-          state.copyWith(
+        emit(state.copyWith(
             status: FileSharingStatus.failure,
-            failure: HighPriorityException(baseResponseModel.message),
-          ),
-        );
+            failure: HighPriorityException(baseResponseModel.message)));
       }
     } on BaseFailure catch (e) {
-      emit(
-        state.copyWith(
+      emit(state.copyWith(
           status: FileSharingStatus.failure,
-          failure: HighPriorityException(e.message),
-        ),
-      );
+          failure: HighPriorityException(e.message)));
     } catch (_) {}
   }
 }

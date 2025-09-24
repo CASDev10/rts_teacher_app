@@ -48,6 +48,7 @@ class EmployeeLeaveModel {
   int empId;
   DateTime fromDate;
   String fromDateString;
+  String fileDownloadLink;
   DateTime toDate;
   String toDateString;
   String reason;
@@ -80,6 +81,7 @@ class EmployeeLeaveModel {
 
   EmployeeLeaveModel({
     required this.id,
+    required this.fileDownloadLink,
     required this.empId,
     required this.fromDate,
     required this.fromDateString,
@@ -125,6 +127,7 @@ class EmployeeLeaveModel {
     int? days,
     int? entityLeaveTypeId,
     String? entityLeaveType,
+    String? fileDownloadLink,
     bool? isDeleted,
     int? createdBy,
     DateTime? createdDate,
@@ -156,6 +159,7 @@ class EmployeeLeaveModel {
         fromDateString: fromDateString ?? this.fromDateString,
         toDate: toDate ?? this.toDate,
         toDateString: toDateString ?? this.toDateString,
+        fileDownloadLink: fileDownloadLink ?? this.fileDownloadLink,
         reason: reason ?? this.reason,
         days: days ?? this.days,
         entityLeaveTypeId: entityLeaveTypeId ?? this.entityLeaveTypeId,
@@ -188,6 +192,7 @@ class EmployeeLeaveModel {
   factory EmployeeLeaveModel.fromJson(Map<String, dynamic> json) =>
       EmployeeLeaveModel(
         id: json["ID"],
+        fileDownloadLink: json["FileDownloadLink"] ?? "",
         empId: json["EmpId"],
         fromDate: DateTime.parse(json["FromDate"]),
         fromDateString: json["FromDateString"],

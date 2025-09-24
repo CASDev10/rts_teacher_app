@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/models/forget_password_input.dart';
 
 import '../../../../../constants/api_endpoints.dart';
 import '../../../../../constants/keys.dart';
 import '../../../../../core/api_result.dart';
 import '../../../../../core/core.dart';
 import '../../base_resposne_model.dart';
-import '../models/forget_password_input.dart';
 import '../models/kgs_teacher_auth_response.dart';
 import '../models/kgs_teacher_login_input.dart';
 import '../models/signup_input.dart';
@@ -22,9 +22,7 @@ class AuthRepository {
   AuthRepository(this._networkService, this._storageService);
 
   Future<AuthResponse> login(
-    LoginInput loginInput,
-    bool isKeepMeLoggedIn,
-  ) async {
+      LoginInput loginInput, bool isKeepMeLoggedIn) async {
     try {
       var response = await _networkService.post(
         Endpoints.login,
@@ -74,10 +72,8 @@ class AuthRepository {
         Endpoints.forgetPassword,
         data: forgetPasswordInput.toJson(),
       );
-      BaseResponseModel baseResponseModel = await compute(
-        baseResponseModelFromJson,
-        response,
-      );
+      BaseResponseModel baseResponseModel =
+          await compute(baseResponseModelFromJson, response);
       return baseResponseModel;
     } on BaseFailure catch (_) {
       rethrow;
@@ -94,9 +90,7 @@ class AuthRepository {
 
   Future<void> setKeepMeLoggedIn(bool isKeepMeLoggedIn) async {
     await _storageService.setBool(
-      StorageKeys.isKeepMeLoggedIn,
-      isKeepMeLoggedIn,
-    );
+        StorageKeys.isKeepMeLoggedIn, isKeepMeLoggedIn);
   }
 
   String _getToken() {
@@ -138,11 +132,9 @@ class AuthRepository {
 
   Map<String, dynamic>? getHeaders() {
     //live
-    // String username = 'ThinkingApiExtPass';
-    String username = 'rubrics';
+    String username = 'ThinkingApiExtPass';
     //String password = '7A527#APIAB#@LlmX#1@LGES\$WEB';
-    // String password = "thinkingschool";
-    String password = "rubrics@Cyberasol";
+    String password = "thinkingschool";
 
     //test
     // String username = 'LgesApiExtPass';

@@ -1,7 +1,9 @@
+
 import 'package:flutter/cupertino.dart';
+import 'package:rts/components/text_view.dart';
 
 import '../../../../components/custom_button.dart';
-import '../../../../components/text_view.dart';
+import '../../../../config/routes/nav_router.dart';
 import '../../../../constants/app_colors.dart';
 
 class ResultTile extends StatelessWidget {
@@ -10,7 +12,7 @@ class ResultTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: 30, vertical: 14),
+      margin: EdgeInsets.symmetric(horizontal: 30,vertical: 14),
       decoration: const BoxDecoration(
         color: AppColors.whiteColor,
         borderRadius: BorderRadius.all(Radius.circular(15)),
@@ -20,127 +22,64 @@ class ResultTile extends StatelessWidget {
             blurRadius: 10,
             spreadRadius: 3.0,
             offset: Offset(0.0, 0.0),
-          ),
+          )
         ],
       ),
 
-      child: Column(
+      child:Column(
         children: [
           Container(
             color: AppColors.lightGreyColor,
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: EdgeInsets.symmetric(horizontal:20,vertical: 10),
             child: Row(
               children: [
-                Expanded(
-                  child: TextView(
-                    'Subject',
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    textAlign: TextAlign.start,
-                    color: AppColors.primary,
-                  ),
-                ),
-                Expanded(
-                  child: TextView(
-                    'Biology',
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                    textAlign: TextAlign.end,
-                    color: AppColors.primary,
-                  ),
-                ),
+                Expanded(child: TextView('Subject', fontSize: 14,fontWeight: FontWeight.bold,textAlign: TextAlign.start,color: AppColors.primaryGreen,)),
+                Expanded(child: TextView('Biology', fontSize: 14,fontWeight: FontWeight.normal,textAlign: TextAlign.end,color: AppColors.primaryGreen,)),
               ],
             ),
           ),
-          SizedBox(height: 6),
+          SizedBox(height: 6,),
           Container(
             color: AppColors.lightGreyColor,
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: EdgeInsets.symmetric(horizontal:20,vertical: 10),
             child: Row(
               children: [
-                Expanded(
-                  child: TextView(
-                    'Section',
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    textAlign: TextAlign.start,
-                    color: AppColors.primary,
-                  ),
-                ),
-                Expanded(
-                  child: TextView(
-                    'Red',
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                    textAlign: TextAlign.end,
-                    color: AppColors.primary,
-                  ),
-                ),
+                Expanded(child: TextView('Section', fontSize: 14,fontWeight: FontWeight.bold,textAlign: TextAlign.start,color: AppColors.primaryGreen,)),
+                Expanded(child: TextView('Red', fontSize: 14,fontWeight: FontWeight.normal,textAlign: TextAlign.end,color: AppColors.primaryGreen,)),
               ],
             ),
           ),
-          SizedBox(height: 6),
+          SizedBox(height: 6,),
           Container(
             color: AppColors.lightGreyColor,
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: EdgeInsets.symmetric(horizontal:20,vertical: 10),
             child: Row(
               children: [
-                Expanded(
-                  child: TextView(
-                    'Session',
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    textAlign: TextAlign.start,
-                    color: AppColors.primary,
-                  ),
-                ),
-                Expanded(
-                  child: TextView(
-                    '2023-2024',
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                    textAlign: TextAlign.end,
-                    color: AppColors.primary,
-                  ),
-                ),
+                Expanded(child: TextView('Session', fontSize: 14,fontWeight: FontWeight.bold,textAlign: TextAlign.start,color: AppColors.primaryGreen,)),
+                Expanded(child: TextView('2023-2024', fontSize: 14,fontWeight: FontWeight.normal,textAlign: TextAlign.end,color: AppColors.primaryGreen,)),
               ],
             ),
           ),
-          SizedBox(height: 6),
+          SizedBox(height: 6,),
           Container(
             color: AppColors.lightGreyColor,
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+            padding: EdgeInsets.symmetric(horizontal:20,vertical: 10),
             child: Row(
               children: [
-                Expanded(
-                  child: TextView(
-                    'Process',
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    textAlign: TextAlign.start,
-                    color: AppColors.primary,
-                  ),
-                ),
-                Expanded(
-                  child: TextView(
-                    'N',
-                    fontSize: 14,
-                    fontWeight: FontWeight.normal,
-                    textAlign: TextAlign.end,
-                    color: AppColors.primary,
-                  ),
-                ),
+                Expanded(child: TextView('Process', fontSize: 14,fontWeight: FontWeight.bold,textAlign: TextAlign.start,color: AppColors.primaryGreen,)),
+                Expanded(child: TextView('N', fontSize: 14,fontWeight: FontWeight.normal,textAlign: TextAlign.end,color: AppColors.primaryGreen,)),
               ],
             ),
           ),
           Container(
-            padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            padding: EdgeInsets.symmetric(horizontal:20,vertical: 12),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Padding(
                   child: CustomButton(
-                    onPressed: () {},
+                    onPressed: () {
+                    },
                     width: 100,
                     title: 'Process',
                     fontSize: 14,
@@ -149,7 +88,7 @@ class ResultTile extends StatelessWidget {
                   ),
                   padding: EdgeInsets.symmetric(vertical: 8),
                 ),
-                SizedBox(width: 10),
+                SizedBox(width: 10,),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: CustomButton(

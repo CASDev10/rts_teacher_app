@@ -1,12 +1,12 @@
 import 'package:bloc/bloc.dart';
+import 'package:rts/module/kgs_teacher_module/base_resposne_model.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/repo/auth_repository.dart';
+import 'package:rts/module/kgs_teacher_module/student_result/models/create_update_award_input.dart';
 
 import '../../../../../core/di/service_locator.dart';
 import '../../../../../core/failures/base_failures/base_failure.dart';
 import '../../../../../core/failures/high_priority_failure.dart';
 import '../../../../../utils/display/display_utils.dart';
-import '../../../base_resposne_model.dart';
-import '../../../kgs_teacher_auth/repo/auth_repository.dart';
-import '../../models/create_update_award_input.dart';
 import '../../models/student_list_input.dart';
 import '../../models/student_list_response.dart';
 import '../../repo/student_result_repo.dart';
@@ -17,10 +17,9 @@ class MarkingStudentCubit extends Cubit<MarkingStudentState> {
   StudentResultRepository _repository;
   final AuthRepository _authRepository = sl<AuthRepository>();
 
-  Future init({
-    required StudentListResponse response,
-    required StudentListInput input,
-  }) async {
+  Future init(
+      {required StudentListResponse response,
+      required StudentListInput input}) async {
     DisplayUtils.showLoader();
     emit(state.copyWith(markingStudentStatus: MarkingStudentStatus.loading));
 
@@ -44,9 +43,11 @@ class MarkingStudentCubit extends Cubit<MarkingStudentState> {
     emit(state.copyWith(markingStudentStatus: MarkingStudentStatus.loading));
 
     try {
-      BaseResponseModel response = await StudentResultRepository()
-          .createUpdateAwardList(input: input);
-      emit(state.copyWith(markingStudentStatus: MarkingStudentStatus.success));
+      BaseResponseModel response =
+          await StudentResultRepository().createUpdateAwardList(input: input);
+      emit(
+        state.copyWith(markingStudentStatus: MarkingStudentStatus.success),
+      );
 
       DisplayUtils.removeLoader();
       if (response.result == "success") {
@@ -54,12 +55,9 @@ class MarkingStudentCubit extends Cubit<MarkingStudentState> {
       }
     } on BaseFailure catch (e) {
       DisplayUtils.removeLoader();
-      emit(
-        state.copyWith(
+      emit(state.copyWith(
           markingStudentStatus: MarkingStudentStatus.failure,
-          failure: HighPriorityException(e.message),
-        ),
-      );
+          failure: HighPriorityException(e.message)));
     } catch (_) {
       DisplayUtils.removeLoader();
     }

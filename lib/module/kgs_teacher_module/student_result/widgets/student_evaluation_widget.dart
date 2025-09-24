@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:rts/components/custom_button.dart';
+import 'package:rts/components/custom_dropdown.dart';
+import 'package:rts/constants/app_colors.dart';
+import 'package:rts/module/kgs_teacher_module/student_result/models/student_list_response.dart';
+import 'package:rts/module/kgs_teacher_module/student_result/models/student_marking_object.dart';
+import 'package:rts/utils/display/display_utils.dart';
 
-import '../../../../components/custom_button.dart';
-import '../../../../components/custom_dropdown.dart';
 import '../../../../components/custom_textfield.dart';
-import '../../../../constants/app_colors.dart';
-import '../../../../utils/display/display_utils.dart';
-import '../models/student_list_response.dart';
-import '../models/student_marking_object.dart';
 
 class StudentEvaluationWidget extends StatefulWidget {
-  const StudentEvaluationWidget({
-    super.key,
-    required this.awardList,
-    required this.detail,
-    this.onSave,
-    this.onCancel,
-    required this.totalMarks,
-  });
+  const StudentEvaluationWidget(
+      {super.key,
+      required this.awardList,
+      required this.detail,
+      this.onSave,
+      this.onCancel,
+      required this.totalMarks});
   final List<AwardListStatusList> awardList;
   final ExamDetailList detail;
   final Function(StudentMarkingObject)? onSave;
@@ -60,11 +59,9 @@ class _StudentEvaluationWidgetState extends State<StudentEvaluationWidget> {
   }
 
   setDetails() {
-    double marks = double.parse(
-      _obtainedMarksController.text.isEmpty
-          ? "0"
-          : _obtainedMarksController.text,
-    );
+    double marks = double.parse(_obtainedMarksController.text.isEmpty
+        ? "0"
+        : _obtainedMarksController.text);
     double percentage = getPercentage(marks);
     String grade = getGrades(marks);
 
@@ -97,15 +94,26 @@ class _StudentEvaluationWidgetState extends State<StudentEvaluationWidget> {
       width: double.infinity,
       padding: EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(width: 1.0, color: AppColors.primary),
+        borderRadius: BorderRadius.circular(
+          8.0,
+        ),
+        border: Border.all(
+          width: 1.0,
+          color: AppColors.primaryGreen,
+        ),
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          _detailRow("Roll # : ", detail!.rollNumber),
+          _detailRow(
+            "Roll # : ",
+            detail!.rollNumber,
+          ),
           _spacer(),
-          _detailRow("Student Name : ", detail!.studentName),
+          _detailRow(
+            "Student Name : ",
+            detail!.studentName,
+          ),
           _spacer(),
           _detailRow(
             "Percentage : ",
@@ -121,9 +129,8 @@ class _StudentEvaluationWidgetState extends State<StudentEvaluationWidget> {
             "Obtained Marks : ",
             _obtainedMarksController.text.isEmpty
                 ? detail!.obtainedMarks.toStringAsFixed(2)
-                : double.parse(
-                  _obtainedMarksController.text,
-                ).toStringAsFixed(2),
+                : double.parse(_obtainedMarksController.text)
+                    .toStringAsFixed(2),
           ),
           if (isMarked == true) ...[
             _spacer(),
@@ -145,8 +152,8 @@ class _StudentEvaluationWidgetState extends State<StudentEvaluationWidget> {
               horizontalPadding: 15,
               height: 50.0,
               isOutline: false,
-              hintColor: AppColors.primary,
-              iconColor: AppColors.primary,
+              hintColor: AppColors.primaryGreen,
+              iconColor: AppColors.primaryGreen,
               suffixIconPath: '',
               onSelect: (v) {
                 setState(() {
@@ -206,7 +213,7 @@ class _StudentEvaluationWidgetState extends State<StudentEvaluationWidget> {
                 },
                 height: 40.0,
                 hintText: 'Obtained Marks',
-                hintColor: AppColors.primary,
+                hintColor: AppColors.primaryGreen,
                 inputType: TextInputType.number,
                 controller: _obtainedMarksController,
                 fillColor: AppColors.lightGreyColor,
@@ -226,10 +233,12 @@ class _StudentEvaluationWidgetState extends State<StudentEvaluationWidget> {
                       },
                       title: "Cancel",
                       backgroundColor: Colors.transparent,
-                      textColor: AppColors.primary,
+                      textColor: AppColors.primaryGreen,
                     ),
                   ),
-                  SizedBox(width: 10),
+                  SizedBox(
+                    width: 10,
+                  ),
                   Expanded(
                     child: CustomButton(
                       onPressed: () {
@@ -242,23 +251,19 @@ class _StudentEvaluationWidgetState extends State<StudentEvaluationWidget> {
                             obtainedPercentage: detail!.obtainedPercentage,
                             obtainedGrade: detail!.obtainedGrade,
                             attendanceStatusId: 2,
-                            awardListStatusId:
-                                selectedAward != null
-                                    ? selectedAward!.awardListStatusId
-                                    : 6,
+                            awardListStatusId: selectedAward != null
+                                ? selectedAward!.awardListStatusId
+                                : 6,
                           );
                           if (selectedAward?.awardListStatusId != 6) {
                             setState(() {
                               isMarked = true;
                             });
-                            widget.onSave!(
-                              object,
-                            ); // Call the callback function
+                            widget
+                                .onSave!(object); // Call the callback function
                           } else {
                             DisplayUtils.showToast(
-                              context,
-                              "Please Enter Obtained Marks",
-                            );
+                                context, "Please Enter Obtained Marks");
                           }
                         }
                       },
@@ -266,7 +271,7 @@ class _StudentEvaluationWidgetState extends State<StudentEvaluationWidget> {
                     ),
                   ),
                 ],
-              ),
+              )
           ],
           if (isMarked == true)
             CustomButton(
@@ -284,7 +289,7 @@ class _StudentEvaluationWidgetState extends State<StudentEvaluationWidget> {
               },
               title: "UnMark",
               backgroundColor: Colors.transparent,
-              textColor: AppColors.primary,
+              textColor: AppColors.primaryGreen,
             ),
         ],
       ),
@@ -298,10 +303,9 @@ class _StudentEvaluationWidgetState extends State<StudentEvaluationWidget> {
           child: Text(
             key,
             style: TextStyle(
-              color: Colors.green,
-              fontWeight: FontWeight.bold,
-              fontSize: 12.0,
-            ),
+                color: Colors.green,
+                fontWeight: FontWeight.bold,
+                fontSize: 12.0),
           ),
         ),
         SizedBox(width: 8.0), // Space between the key and the value
@@ -309,10 +313,9 @@ class _StudentEvaluationWidgetState extends State<StudentEvaluationWidget> {
           child: Text(
             value,
             style: TextStyle(
-              color: Colors.black,
-              fontWeight: FontWeight.normal,
-              fontSize: 12.0,
-            ),
+                color: Colors.black,
+                fontWeight: FontWeight.normal,
+                fontSize: 12.0),
           ),
         ),
       ],
@@ -320,6 +323,8 @@ class _StudentEvaluationWidgetState extends State<StudentEvaluationWidget> {
   }
 
   Widget _spacer({double? height}) {
-    return SizedBox(height: height ?? 6.0);
+    return SizedBox(
+      height: height ?? 6.0,
+    );
   }
 }

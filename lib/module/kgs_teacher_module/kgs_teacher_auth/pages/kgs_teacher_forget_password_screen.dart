@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rts/components/base_scaffold.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/cubit/forget_password_cubit/forget_password_cubit.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/cubit/forget_password_cubit/forget_password_state.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/models/forget_password_input.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/pages/kgs_teacher_login_screen.dart';
 
-import '../../../../components/base_scaffold.dart';
 import '../../../../components/custom_button.dart';
 import '../../../../components/custom_textfield.dart';
 import '../../../../components/text_view.dart';
@@ -12,11 +16,7 @@ import '../../../../config/routes/nav_router.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../utils/display/display_utils.dart';
 import '../../../../utils/validators/validation_utils.dart';
-import '../cubit/forget_password_cubit/forget_password_cubit.dart';
-import '../cubit/forget_password_cubit/forget_password_state.dart';
-import '../models/forget_password_input.dart';
 import '../widget/password_suffix_widget.dart';
-import 'kgs_teacher_login_screen.dart';
 
 class ForgetPasswordScreen extends StatefulWidget {
   const ForgetPasswordScreen({super.key});
@@ -74,20 +74,17 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 90),
-                    const TextView(
-                      'Forget Password',
-                      textAlign: TextAlign.center,
-                      color: AppColors.primary,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    const TextView('Forget Password',
+                        textAlign: TextAlign.center,
+                        color: AppColors.primaryGreen,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w700),
                     const SizedBox(height: 14),
                     SizedBox(
                       height: 245,
                       width: 330,
                       child: SvgPicture.asset(
-                        "assets/images/svg/ic_login_screen.svg",
-                      ),
+                          "assets/images/svg/ic_login_screen.svg"),
                     ),
                     const SizedBox(height: 50),
                     CustomTextField(
@@ -95,8 +92,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       inputType: TextInputType.emailAddress,
                       controller: userNameController,
                       fillColor: AppColors.lightGreyColor,
-                      onValidate:
-                          (val) => ValidationUtils.validateUserName(val),
+                      onValidate: (val) =>
+                          ValidationUtils.validateUserName(val),
                     ),
                     const SizedBox(height: 4),
                     CustomTextField(
@@ -105,8 +102,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       fillColor: AppColors.lightGreyColor,
                       inputType: TextInputType.visiblePassword,
                       obscureText: state.isPasswordHidden,
-                      onValidate:
-                          (val) => ValidationUtils.validatePassword(val),
+                      onValidate: (val) =>
+                          ValidationUtils.validatePassword(val),
                       suffixWidget: PasswordSuffixWidget(
                         isPasswordVisible: state.isPasswordHidden,
                         onTap: () {
@@ -123,8 +120,8 @@ class _ForgetPasswordScreenState extends State<ForgetPasswordScreen> {
                       fillColor: AppColors.lightGreyColor,
                       inputType: TextInputType.visiblePassword,
                       obscureText: state.isPasswordHidden,
-                      onValidate:
-                          (val) => ValidationUtils.validatePhoneNumber(val),
+                      onValidate: (val) =>
+                          ValidationUtils.validatePhoneNumber(val),
                     ),
                     const SizedBox(height: 44),
                     CustomButton(

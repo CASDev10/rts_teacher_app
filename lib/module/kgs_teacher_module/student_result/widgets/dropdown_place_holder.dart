@@ -19,12 +19,13 @@ class DropdownPlaceHolder extends StatelessWidget {
     return Container(
       width: double.infinity,
       height: 50,
-      padding:
-          EdgeInsets.all(paddingAll) +
+      padding: EdgeInsets.all(paddingAll) +
           EdgeInsets.symmetric(horizontal: horizontalPadding),
       decoration: BoxDecoration(
         color: AppColors.lightGreyColor,
-        borderRadius: BorderRadius.circular(10.0),
+        borderRadius: BorderRadius.circular(
+          10.0,
+        ),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -32,7 +33,7 @@ class DropdownPlaceHolder extends StatelessWidget {
           TextView(
             name,
             fontSize: 14.0,
-            color: AppColors.primary,
+            color: AppColors.primaryGreen,
             overflow: TextOverflow.ellipsis,
           ),
           // Text(
@@ -45,8 +46,8 @@ class DropdownPlaceHolder extends StatelessWidget {
           // ),
           SvgPicture.asset(
             'assets/images/svg/ic_drop_down.svg',
-            color: AppColors.primary,
-          ),
+            color: AppColors.primaryGreen,
+          )
         ],
       ),
     );

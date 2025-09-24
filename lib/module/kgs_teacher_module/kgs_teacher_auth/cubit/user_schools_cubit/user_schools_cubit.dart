@@ -1,11 +1,11 @@
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/repo/user_schools_repo.dart';
 
 import '../../../../../core/api_result.dart';
 import '../../../../../core/failures/base_failures/base_failure.dart';
 import '../../../../../core/failures/high_priority_failure.dart';
 import '../../models/user_schools_model.dart';
-import '../../repo/user_schools_repo.dart';
 
 part 'user_schools_state.dart';
 
@@ -20,52 +20,39 @@ class UserSchoolsCubit extends Cubit<UserSchoolsState> {
     emit(state.copyWith(userSchoolsStatus: UserSchoolsStatus.loading));
 
     try {
-      UserSchoolsModel userSchoolsModel = await _repository.getUserSchools(
-        input,
-      );
+      UserSchoolsModel userSchoolsModel =
+          await _repository.getUserSchools(input);
 
       if (userSchoolsModel.result == ApiResult.success) {
         filteredSchools = userSchoolsModel.data;
         schools = userSchoolsModel.data;
-        emit(
-          state.copyWith(
-            userSchoolsStatus: UserSchoolsStatus.success,
-            userSchools: userSchoolsModel.data,
-          ),
-        );
+        emit(state.copyWith(
+          userSchoolsStatus: UserSchoolsStatus.success,
+          userSchools: userSchoolsModel.data,
+        ));
       } else {
-        emit(
-          state.copyWith(
+        emit(state.copyWith(
             userSchoolsStatus: UserSchoolsStatus.failure,
-            failure: HighPriorityException(userSchoolsModel.message),
-          ),
-        );
+            failure: HighPriorityException(userSchoolsModel.message)));
       }
     } on BaseFailure catch (e) {
-      emit(
-        state.copyWith(
+      emit(state.copyWith(
           userSchoolsStatus: UserSchoolsStatus.failure,
-          failure: HighPriorityException(e.message),
-        ),
-      );
+          failure: HighPriorityException(e.message)));
     } catch (_) {}
   }
 
   void filterSearchResults(String query) {
-    filteredSchools =
-        schools
-            .where(
-              (item) => item.schoolName.toString().toLowerCase().contains(
-                query.toLowerCase(),
-              ),
-            )
-            .toList();
-    emit(
-      state.copyWith(
-        userSchoolsStatus: UserSchoolsStatus.success,
-        userSchools: filteredSchools,
-      ),
-    );
+    filteredSchools = schools
+        .where((item) => item.schoolName
+            .toString()
+            .toLowerCase()
+            .contains(query.toLowerCase()))
+        .toList();
+    emit(state.copyWith(
+      userSchoolsStatus: UserSchoolsStatus.success,
+      userSchools: filteredSchools,
+    ));
   }
 }
 
@@ -73,13 +60,18 @@ class UserSchoolsInput {
   final String entityId;
   final String userId;
 
-  UserSchoolsInput({required this.entityId, required this.userId});
+  UserSchoolsInput({
+    required this.entityId,
+    required this.userId,
+  });
 
   Map<String, dynamic> toJson() => {
-    "UC_EntityId": entityId,
-    "UC_LoginUserId": userId,
-  };
+        "UC_EntityId": entityId,
+        "UC_LoginUserId": userId,
+      };
 
-  FormData toFormData() =>
-      FormData.fromMap({"UC_EntityId": entityId, "UC_LoginUserId": userId});
+  FormData toFormData() => FormData.fromMap({
+        "UC_EntityId": entityId,
+        "UC_LoginUserId": userId,
+      });
 }

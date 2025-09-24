@@ -27,28 +27,22 @@ class CustomAppbar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       systemOverlayStyle: const SystemUiOverlayStyle(
-        statusBarColor: AppColors.primary,
+        statusBarColor: AppColors.primaryGreen,
         statusBarIconBrightness: Brightness.light,
         statusBarBrightness: Brightness.light,
       ),
-      backgroundColor: AppColors.primary,
+      backgroundColor: AppColors.primaryGreen,
       elevation: elevation,
       centerTitle: centerTitle,
       actions: actions,
-      leading:
-          leading ??
-          GestureDetector(
+      leading: leading ?? GestureDetector(
             onTap: () {
               NavRouter.pop(context);
             },
             child: Container(
               padding: const EdgeInsets.all(3),
               margin: const EdgeInsets.only(left: 20),
-              child: SvgPicture.asset(
-                "assets/images/svg/ic_back_arrow.svg",
-                height: 36,
-                width: 50,
-              ),
+              child: SvgPicture.asset("assets/images/svg/ic_back_arrow.svg", height: 36,width: 50,),
             ),
           ),
       title: TextView(

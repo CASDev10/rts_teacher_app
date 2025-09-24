@@ -1,24 +1,23 @@
 import 'dart:convert';
 
-AttendanceHistoryInput attendanceHistoryInputFromJson(dynamic json) =>
-    AttendanceHistoryInput.fromJson(json);
+import '../../../../core/di/service_locator.dart';
+import '../../kgs_teacher_auth/repo/auth_repository.dart';
 
 String attendanceHistoryInputToJson(AttendanceHistoryInput data) =>
     json.encode(data.toJson());
 
 class AttendanceHistoryInput {
+  final AuthRepository _authRepository = sl<AuthRepository>();
   String startDate;
   String endDate;
-  int empId;
-  int ucEntityId;
-  int ucSchoolId;
+  int offset;
+  int next;
 
   AttendanceHistoryInput({
     required this.startDate,
     required this.endDate,
-    required this.empId,
-    required this.ucEntityId,
-    required this.ucSchoolId,
+    required this.offset,
+    required this.next,
   });
 
   AttendanceHistoryInput copyWith({
@@ -27,29 +26,23 @@ class AttendanceHistoryInput {
     int? empId,
     int? ucEntityId,
     int? ucSchoolId,
+    int? offset,
+    int? next,
   }) =>
       AttendanceHistoryInput(
         startDate: startDate ?? this.startDate,
         endDate: endDate ?? this.endDate,
-        empId: empId ?? this.empId,
-        ucEntityId: ucEntityId ?? this.ucEntityId,
-        ucSchoolId: ucSchoolId ?? this.ucSchoolId,
-      );
-
-  factory AttendanceHistoryInput.fromJson(Map<String, dynamic> json) =>
-      AttendanceHistoryInput(
-        startDate: json["StartDate"],
-        endDate: json["EndDate"],
-        empId: json["EmpId"],
-        ucEntityId: json["UC_EntityId"],
-        ucSchoolId: json["UC_SchoolId"],
+        offset: offset ?? this.offset,
+        next: next ?? this.next,
       );
 
   Map<String, dynamic> toJson() => {
         "StartDate": startDate,
         "EndDate": endDate,
-        "EmpId": empId,
-        "UC_EntityId": ucEntityId,
-        "UC_SchoolId": ucSchoolId,
+        "EmpId": _authRepository.user.userId,
+        "UC_EntityId": _authRepository.user.entityId,
+        "UC_SchoolId": _authRepository.user.schoolId,
+        "OffSet": offset,
+        "Next": next
       };
 }

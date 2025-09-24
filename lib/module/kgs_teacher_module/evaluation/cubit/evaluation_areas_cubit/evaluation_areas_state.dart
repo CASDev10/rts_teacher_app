@@ -1,7 +1,14 @@
-import '../../../../../core/failures/base_failures/base_failure.dart';
-import '../../models/student_evaluation_areas_response.dart';
+import 'package:rts/module/kgs_teacher_module/evaluation/models/student_evaluation_areas_response.dart';
 
-enum EvaluationAreasStatus { none, loading, success, failure }
+import '../../../../../core/failures/base_failures/base_failure.dart';
+import '../../models/evaluation_areas_response.dart';
+
+enum EvaluationAreasStatus {
+  none,
+  loading,
+  success,
+  failure,
+}
 
 class EvaluationAreasState {
   final EvaluationAreasStatus evaluationAreasStatus;
@@ -25,11 +32,10 @@ class EvaluationAreasState {
   EvaluationAreasState copyWith({
     EvaluationAreasStatus? evaluationAreasStatus,
     BaseFailure? failure,
-    StudentEvaluationAreaModel? evaluationAreas,
+  StudentEvaluationAreaModel? evaluationAreas,
   }) {
     return EvaluationAreasState(
-      evaluationAreasStatus:
-          evaluationAreasStatus ?? this.evaluationAreasStatus,
+      evaluationAreasStatus: evaluationAreasStatus ?? this.evaluationAreasStatus,
       failure: failure ?? this.failure,
       evaluationAreas: evaluationAreas ?? this.evaluationAreas,
     );

@@ -16,16 +16,16 @@ class ClassesModel {
   });
 
   factory ClassesModel.fromJson(Map<String, dynamic> json) => ClassesModel(
-    result: json["result"],
-    message: json["message"],
-    data: List<Class>.from(json["data"].map((x) => Class.fromJson(x))),
-  );
+        result: json["result"],
+        message: json["message"],
+        data: List<Class>.from(json["data"].map((x) => Class.fromJson(x))),
+      );
 
   Map<String, dynamic> toJson() => {
-    "result": result,
-    "message": message,
-    "data": List<dynamic>.from(data.map((x) => x.toJson())),
-  };
+        "result": result,
+        "message": message,
+        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+      };
 }
 
 class Class {
@@ -40,14 +40,14 @@ class Class {
   });
 
   factory Class.fromJson(Map<String, dynamic> json) => Class(
-    classId: json["ClassId"],
-    className: json["ClassName"],
-    isActive: json["isActive"],
-  );
+        classId: json["ClassId"],
+        className: json["ClassName"],
+        isActive: json["isActive"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "ClassId": classId,
-    "ClassName": className,
-    "isActive": isActive,
-  };
+        "ClassId": classId,
+        "ClassName": className,
+        "isActive": isActive,
+      };
 }

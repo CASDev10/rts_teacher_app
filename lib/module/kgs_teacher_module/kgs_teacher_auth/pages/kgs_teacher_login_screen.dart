@@ -2,25 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rts/components/base_scaffold.dart';
+import 'package:rts/components/custom_button.dart';
+import 'package:rts/components/custom_textfield.dart';
+import 'package:rts/components/text_view.dart';
+import 'package:rts/config/routes/nav_router.dart';
+import 'package:rts/constants/app_colors.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/cubit/user_schools_cubit/user_schools_cubit.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/pages/kgs_teacher_forget_password_screen.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/pages/kgs_teacher_signup_screen.dart';
+import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/repo/auth_repository.dart';
+import 'package:rts/module/kgs_teacher_module/home/pages/home_screen.dart';
 
-import '../../../../components/base_scaffold.dart';
-import '../../../../components/custom_button.dart';
-import '../../../../components/custom_textfield.dart';
-import '../../../../components/text_view.dart';
-import '../../../../config/routes/nav_router.dart';
-import '../../../../constants/app_colors.dart';
 import '../../../../core/di/service_locator.dart';
 import '../../../../utils/display/display_utils.dart';
 import '../../../../utils/validators/validation_utils.dart';
-import '../../home/pages/home_screen.dart';
 import '../cubit/kgs_teacher_login_cubit/kgs_teacher_login_cubit.dart';
-import '../cubit/user_schools_cubit/user_schools_cubit.dart';
 import '../models/kgs_teacher_login_input.dart';
 import '../models/user_schools_model.dart';
-import '../repo/auth_repository.dart';
 import '../widget/password_suffix_widget.dart';
-import 'kgs_teacher_forget_password_screen.dart';
-import 'kgs_teacher_signup_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -44,10 +44,11 @@ class _LoginScreenState extends State<LoginScreen> {
     if (_formKey.currentState!.validate()) {
       FocusManager.instance.primaryFocus?.unfocus();
       LoginInput loginInput = LoginInput(
-        userId: emailController.text.trim(),
-        password: passwordController.text,
-        entityCode: "ThinkingSchool",
-        fcmToken: "",
+          userId: emailController.text.trim(),
+          password: passwordController.text,
+          entityCode: "ThinkingSchool",
+          fcmToken: ""
+
       );
       context.read<LoginCubit>().login(loginInput, isKeepMeLoggedIn);
     } else {
@@ -98,27 +99,22 @@ class _LoginScreenState extends State<LoginScreen> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     const SizedBox(height: 90),
-                    const TextView(
-                      'Login Account',
-                      textAlign: TextAlign.center,
-                      color: AppColors.primary,
-                      fontSize: 30,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    const TextView('Login Account',
+                        textAlign: TextAlign.center,
+                        color: AppColors.primaryGreen,
+                        fontSize: 30,
+                        fontWeight: FontWeight.w700),
                     const SizedBox(height: 14),
-                    const TextView(
-                      'Hello, Welcome Back',
-                      fontSize: 14,
-                      fontWeight: FontWeight.w400,
-                      color: AppColors.grey4,
-                    ),
+                    const TextView('Hello, Welcome Back',
+                        fontSize: 14,
+                        fontWeight: FontWeight.w400,
+                        color: AppColors.grey4),
                     const SizedBox(height: 14),
                     SizedBox(
                       height: 245,
                       width: 330,
                       child: SvgPicture.asset(
-                        "assets/images/svg/ic_login_screen.svg",
-                      ),
+                          "assets/images/svg/ic_login_screen.svg"),
                     ),
                     const SizedBox(height: 50),
                     CustomTextField(
@@ -126,8 +122,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       inputType: TextInputType.emailAddress,
                       controller: emailController,
                       fillColor: AppColors.lightGreyColor,
-                      onValidate:
-                          (val) => ValidationUtils.validateUserName(val),
+                      onValidate: (val) =>
+                          ValidationUtils.validateUserName(val),
                     ),
                     const SizedBox(height: 4),
                     CustomTextField(
@@ -136,8 +132,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       fillColor: AppColors.lightGreyColor,
                       inputType: TextInputType.visiblePassword,
                       obscureText: state.isPasswordHidden,
-                      onValidate:
-                          (val) => ValidationUtils.validatePassword(val),
+                      onValidate: (val) =>
+                          ValidationUtils.validatePassword(val),
                       suffixWidget: PasswordSuffixWidget(
                         isPasswordVisible: state.isPasswordHidden,
                         onTap: () {
@@ -148,8 +144,6 @@ class _LoginScreenState extends State<LoginScreen> {
                     Stack(
                       children: [
                         Positioned(
-                          right: 0,
-                          top: -18,
                           child: TextButton(
                             onPressed: () {
                               NavRouter.push(context, ForgetPasswordScreen());
@@ -161,6 +155,8 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
+                          right: 0,
+                          top: -18,
                         ),
                         GestureDetector(
                           onTap: () {
@@ -172,20 +168,17 @@ class _LoginScreenState extends State<LoginScreen> {
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-                                  shape: BoxShape.rectangle,
-                                  borderRadius: BorderRadius.circular(5),
-                                  border: Border.all(
-                                    color: AppColors.lightGreyColor,
-                                  ),
-                                  color: AppColors.lightGreyColor,
-                                ),
+                                    shape: BoxShape.rectangle,
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(
+                                        color: AppColors.lightGreyColor),
+                                    color: AppColors.lightGreyColor),
                                 child: Center(
                                   child: Icon(
                                     Icons.check,
-                                    color:
-                                        isKeepMeLoggedIn
-                                            ? AppColors.primary
-                                            : Colors.transparent,
+                                    color: isKeepMeLoggedIn
+                                        ? AppColors.primaryGreen
+                                        : Colors.transparent,
                                     size: 20,
                                   ),
                                 ),
@@ -214,24 +207,33 @@ class _LoginScreenState extends State<LoginScreen> {
                         //_showCampusesDialog();
                       },
                     ),
-                    const SizedBox(height: 20),
+
+                    const SizedBox(
+                        height:
+                        40),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const TextView(
                           'Don’t Have an Account? ',
-                          fontSize: 14,
-                          color: AppColors.grey,
-                          fontWeight: FontWeight.w600,
+                          fontSize:
+                          14,
+                          color:
+                          AppColors.grey,
+                          fontWeight:
+                          FontWeight.w600,
                         ),
                         TextView(
-                          onTap: () {
+                          onTap: (){
                             NavRouter.push(context, SignupScreen());
                           },
                           'SignUp Now',
-                          fontSize: 14,
-                          color: AppColors.grey,
-                          fontWeight: FontWeight.w600,
+                          fontSize:
+                          14,
+                          color:
+                          AppColors.grey,
+                          fontWeight:
+                          FontWeight.w600,
                         ),
                       ],
                     ),

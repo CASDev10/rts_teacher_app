@@ -1,9 +1,10 @@
 import 'package:bloc/bloc.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/subjects_input.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/subjects_response.dart';
 
 import '../../../../../core/api_result.dart';
 import '../../../../../core/failures/base_failures/base_failure.dart';
 import '../../../../../core/failures/high_priority_failure.dart';
-import '../../models/subjects_response.dart';
 import '../../repo/diary_repo.dart';
 
 part 'subjects_state.dart';
@@ -16,32 +17,23 @@ class SubjectsCubit extends Cubit<SubjectsState> {
     emit(state.copyWith(subjectsStatus: SubjectsStatus.loading));
 
     try {
-      SubjectsResponseModel responseModel = await _repository.getClassSubjects(
-        classId,
-      );
+      SubjectsResponseModel responseModel =
+          await _repository.getClassSubjects(classId);
 
       if (responseModel.result == ApiResult.success) {
-        emit(
-          state.copyWith(
-            subjectsStatus: SubjectsStatus.success,
-            subjects: responseModel.data,
-          ),
-        );
+        emit(state.copyWith(
+          subjectsStatus: SubjectsStatus.success,
+          subjects: responseModel.data,
+        ));
       } else {
-        emit(
-          state.copyWith(
+        emit(state.copyWith(
             subjectsStatus: SubjectsStatus.failure,
-            failure: HighPriorityException(responseModel.message),
-          ),
-        );
+            failure: HighPriorityException(responseModel.message)));
       }
     } on BaseFailure catch (e) {
-      emit(
-        state.copyWith(
+      emit(state.copyWith(
           subjectsStatus: SubjectsStatus.failure,
-          failure: HighPriorityException(e.message),
-        ),
-      );
+          failure: HighPriorityException(e.message)));
     } catch (_) {}
   }
 }

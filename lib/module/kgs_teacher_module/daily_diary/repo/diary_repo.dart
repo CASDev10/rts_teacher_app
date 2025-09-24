@@ -3,6 +3,15 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/add_diary_input.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/add_diary_response.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/assignment_input.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/class_student_input.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/diary_description_input.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/diary_list_response.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/get_diary_input.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/punishment_assignment_repsonse.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/subjects_response.dart';
 
 import '../../../../constants/api_endpoints.dart';
 import '../../../../core/di/service_locator.dart';
@@ -10,30 +19,20 @@ import '../../../../core/failures/base_failures/base_failure.dart';
 import '../../../../core/network_service/network_service.dart';
 import '../../base_resposne_model.dart';
 import '../../kgs_teacher_auth/repo/auth_repository.dart';
-import '../models/add_diary_input.dart';
-import '../models/add_diary_response.dart';
-import '../models/class_student_input.dart';
-import '../models/diary_description_input.dart';
-import '../models/diary_list_response.dart';
 import '../models/student_diary_list_response.dart';
-import '../models/subjects_response.dart';
 
 class DiaryRepository {
   final NetworkService _networkService = sl<NetworkService>();
   AuthRepository _authRepository = sl<AuthRepository>();
 
-  Future<DiaryListResponseModel> getDiaryList(String school_id) async {
+  Future<DiaryListResponseModel> getDiaryList(GetDiaryInput input) async {
     try {
-      Map<String, dynamic> input = {"UC_SchoolId": school_id};
-
       var response = await _networkService.get(
         Endpoints.getDiaryList,
-        data: input,
+        data: input.toJson(),
       );
-      DiaryListResponseModel diaryListResponseModel = await compute(
-        diaryListResponseModelFromJson,
-        response,
-      );
+      DiaryListResponseModel diaryListResponseModel =
+          await compute(diaryListResponseModelFromJson, response);
       return diaryListResponseModel;
     } on BaseFailure catch (_) {
       rethrow;
@@ -49,10 +48,8 @@ class DiaryRepository {
         Endpoints.addDiary,
         data: input.toJson(),
       );
-      AddDiaryResponseModel responseModel = await compute(
-        addDiaryResponseModelFromJson,
-        response,
-      );
+      AddDiaryResponseModel responseModel =
+          await compute(addDiaryResponseModelFromJson, response);
       return responseModel;
     } on BaseFailure catch (_) {
       rethrow;
@@ -63,22 +60,42 @@ class DiaryRepository {
   }
 
   Future<BaseResponseModel> uploadTeacherFile(
-    DiaryDescriptionInput input,
-  ) async {
+      DiaryDescriptionInput input) async {
     try {
       FormData toFormData() => FormData.fromMap({
-        "Description": jsonEncode(input),
-        "TeacherFile": input.file,
-      });
+            "Description": jsonEncode(input),
+            "TeacherFile": input.file,
+          });
       var response = await _networkService.post(
         Endpoints.uploadTeacherFile,
         data: toFormData(),
       );
 
-      BaseResponseModel baseResponseModel = await compute(
-        baseResponseModelFromJson,
-        response,
+      BaseResponseModel baseResponseModel =
+          await compute(baseResponseModelFromJson, response);
+      return baseResponseModel;
+    } on BaseFailure catch (_) {
+      rethrow;
+    } on TypeError catch (e) {
+      log('TYPE error stackTrace :: ${e.stackTrace}');
+      rethrow;
+    }
+  }
+
+  Future<BaseResponseModel> uploadTeacherAssignment(
+      DiaryDescriptionInput input) async {
+    try {
+      FormData toFormData() => FormData.fromMap({
+            "Description": jsonEncode(input),
+            "TeacherFile": input.file,
+          });
+      var response = await _networkService.post(
+        Endpoints.uploadTeacherAssignment,
+        data: toFormData(),
       );
+
+      BaseResponseModel baseResponseModel =
+          await compute(baseResponseModelFromJson, response);
       return baseResponseModel;
     } on BaseFailure catch (_) {
       rethrow;
@@ -99,10 +116,8 @@ class DiaryRepository {
         Endpoints.getSubjectOfClass,
         data: input,
       );
-      SubjectsResponseModel responseModel = await compute(
-        subjectsResponseModelFromJson,
-        response,
-      );
+      SubjectsResponseModel responseModel =
+          await compute(subjectsResponseModelFromJson, response);
       return responseModel;
     } on BaseFailure catch (_) {
       rethrow;
@@ -113,18 +128,33 @@ class DiaryRepository {
   }
 
   Future<DiaryStudentListResponse> getClassStudents(
-    ClassStudentInput input,
-  ) async {
+      ClassStudentInput input) async {
     try {
       var response = await _networkService.post(
         Endpoints.addUpdateKinderGartenTermOneResultPrep,
         data: input.toJson(),
       );
-      DiaryStudentListResponse diaryStudentListResponse = await compute(
-        diaryStudentListResponseFromJson,
-        response,
-      );
+      DiaryStudentListResponse diaryStudentListResponse =
+          await compute(diaryStudentListResponseFromJson, response);
       return diaryStudentListResponse;
+    } on BaseFailure catch (_) {
+      rethrow;
+    } on TypeError catch (e) {
+      log('TYPE error stackTrace :: ${e.stackTrace}');
+      rethrow;
+    }
+  }
+
+  Future<PunishmentAssignmentResponse> getAssignmentPunishment(
+      AssignmentInput input) async {
+    try {
+      var response = await _networkService.post(
+        Endpoints.getAssignmentOrPunishment,
+        data: input.toJson(),
+      );
+      PunishmentAssignmentResponse punishmentAssignmentResponse =
+          await compute(punishmentAssignmentResponseFromJson, response);
+      return punishmentAssignmentResponse;
     } on BaseFailure catch (_) {
       rethrow;
     } on TypeError catch (e) {

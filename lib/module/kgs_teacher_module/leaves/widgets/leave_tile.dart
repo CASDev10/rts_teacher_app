@@ -1,25 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rts/module/kgs_teacher_module/leaves/cubit/leaves_cubit.dart';
+import 'package:rts/module/kgs_teacher_module/student_result/widgets/leave_detail_dialoge.dart';
 
-import '../../student_result/widgets/leave_detail_dialoge.dart';
-import '../cubit/leaves_cubit.dart';
 import '../model/employee_leaves_response.dart';
 
 class LeaveTile extends StatelessWidget {
   const LeaveTile({super.key, required this.detail});
+
   final EmployeeLeaveModel detail;
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         showDialog(
-          context: context,
-          builder: (context) {
-            return LeaveDetailDialogue(model: detail);
-          },
-        ).then((v) async {
+            context: context,
+            builder: (context) {
+              return LeaveDetailDialogue(
+                model: detail,
+              );
+            }).then((v) async {
           if (v) {
-            await context.read<TeacherLeaveCubit>().fetchEmployeeLeaves();
+            Future.wait([
+              context
+                  .read<TeacherLeaveCubit>()
+                  .fetchEmployeeLeaves(offSet: 0, next: 10),
+              context.read<TeacherLeaveCubit>().fetchLeaveBalance()
+            ]);
+            // await context.read<TeacherLeaveCubit>().fetchEmployeeLeaves();
           }
         });
       },
@@ -41,10 +50,9 @@ class LeaveTile extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         _detailsColumn(
-                          name: 'Date',
-                          value:
-                              "${detail.fromDateString} - ${detail.toDateString}",
-                        ),
+                            name: 'Date',
+                            value:
+                                "${detail.fromDateString} - ${detail.toDateString}"),
                         returnStatus(
                           isApproved: detail.approved,
                           approval: detail.waitingForApproval,
@@ -53,7 +61,9 @@ class LeaveTile extends StatelessWidget {
                     ),
                   ),
                 ),
-                Divider(thickness: 0.5),
+                Divider(
+                  thickness: 0.5,
+                ),
                 Expanded(
                   child: Container(
                     color: Colors.transparent,
@@ -62,13 +72,9 @@ class LeaveTile extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         _detailsColumn(
-                          name: 'Apply Days',
-                          value: "${detail.days} Days",
-                        ),
+                            name: 'Apply Days', value: "${detail.days} Days"),
                         _detailsColumn(
-                          name: 'Leave Balance',
-                          value: "${detail.approved}",
-                        ),
+                            name: 'Leave Balance', value: "${detail.approved}"),
                         _detailsColumn(
                           name: 'Leave Type',
                           value: detail.entityLeaveType,
@@ -92,12 +98,20 @@ class LeaveTile extends StatelessWidget {
       children: [
         Text(
           name,
-          style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w400),
+          style: TextStyle(
+            fontSize: 12.0,
+            fontWeight: FontWeight.w400,
+          ),
         ),
-        SizedBox(height: 4.0),
+        SizedBox(
+          height: 4.0,
+        ),
         Text(
           value,
-          style: TextStyle(fontSize: 12.0, fontWeight: FontWeight.w900),
+          style: TextStyle(
+            fontSize: 12.0,
+            fontWeight: FontWeight.w900,
+          ),
         ),
       ],
     );
@@ -106,12 +120,16 @@ class LeaveTile extends StatelessWidget {
   returnStatus({required bool isApproved, required int approval}) {
     if (approval == 1 && isApproved == true) {
       return Container(
-        padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-        decoration: BoxDecoration(
-          // color: Colors.green,
-          border: Border.all(color: Colors.green),
-          borderRadius: BorderRadius.circular(4.0),
+        padding: EdgeInsets.symmetric(
+          vertical: 4.0,
+          horizontal: 8.0,
         ),
+        decoration: BoxDecoration(
+            // color: Colors.green,
+            border: Border.all(color: Colors.green),
+            borderRadius: BorderRadius.circular(
+              4.0,
+            )),
         child: Text(
           "Approved",
           style: TextStyle(
@@ -123,12 +141,16 @@ class LeaveTile extends StatelessWidget {
       );
     } else if (approval == 1 && isApproved == false) {
       return Container(
-        padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-        decoration: BoxDecoration(
-          // color: Colors.green,
-          border: Border.all(color: Colors.red),
-          borderRadius: BorderRadius.circular(4.0),
+        padding: EdgeInsets.symmetric(
+          vertical: 4.0,
+          horizontal: 8.0,
         ),
+        decoration: BoxDecoration(
+            // color: Colors.green,
+            border: Border.all(color: Colors.red),
+            borderRadius: BorderRadius.circular(
+              4.0,
+            )),
         child: Text(
           "Rejected",
           style: TextStyle(
@@ -140,12 +162,16 @@ class LeaveTile extends StatelessWidget {
       );
     } else {
       return Container(
-        padding: EdgeInsets.symmetric(vertical: 4.0, horizontal: 8.0),
-        decoration: BoxDecoration(
-          // color: Colors.green,
-          border: Border.all(color: Colors.orange),
-          borderRadius: BorderRadius.circular(4.0),
+        padding: EdgeInsets.symmetric(
+          vertical: 4.0,
+          horizontal: 8.0,
         ),
+        decoration: BoxDecoration(
+            // color: Colors.green,
+            border: Border.all(color: Colors.orange),
+            borderRadius: BorderRadius.circular(
+              4.0,
+            )),
         child: Text(
           "Pending",
           style: TextStyle(

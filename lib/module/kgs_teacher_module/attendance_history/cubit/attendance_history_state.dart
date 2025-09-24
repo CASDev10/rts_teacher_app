@@ -4,6 +4,7 @@ import '../models/attendance_history_model.dart';
 enum AttendanceHistoryStatus {
   none,
   loading,
+  loadMore,
   success,
   failure,
 }

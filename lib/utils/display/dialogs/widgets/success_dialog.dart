@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../../../../constants/app_colors.dart';
 
 class CongratulationsDialog extends StatelessWidget {
@@ -27,7 +26,7 @@ class CongratulationsDialog extends StatelessWidget {
               style: const TextStyle(
                 fontSize: 22,
                 fontWeight: FontWeight.bold,
-                color: AppColors.primary,
+                color: AppColors.primaryGreen,
               ),
             ),
             const SizedBox(height: 10),
@@ -40,13 +39,13 @@ class CongratulationsDialog extends StatelessWidget {
             ElevatedButton(
               onPressed: () => Navigator.pop(context),
               style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primary,
+                backgroundColor: AppColors.primaryGreen,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
               child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                padding:  EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Text(
                   "Okay",
                   style: TextStyle(fontSize: 18, color: Colors.white),

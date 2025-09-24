@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:intl/intl.dart'; // Import the intl package
+import 'package:rts/utils/custom_date_time_picker.dart';
 
 import '../../../../constants/app_colors.dart';
-import '../../../../utils/custom_date_time_picker.dart';
 
 class AddResultDatePicker extends StatefulWidget {
-  const AddResultDatePicker({
-    super.key,
-    required this.stringFunction,
-    required this.hintText,
-    this.isOutline = false,
-    this.selectedDate,
-  });
+  const AddResultDatePicker(
+      {super.key,
+      required this.stringFunction,
+      required this.hintText,
+      this.isOutline = false,
+      this.selectedDate});
   final Function(String) stringFunction;
   final String hintText;
   final bool isOutline;
@@ -35,19 +34,16 @@ class _AddResultDatePickerState extends State<AddResultDatePicker> {
     return InkWell(
       onTap: () async {
         // Pick the date and update the selectedDate variable
-        final String dateString = await CustomDateTimePicker.selectDate(
-          context,
-        );
+        final String dateString =
+            await CustomDateTimePicker.selectDate(context);
         if (dateString.isNotEmpty) {
           // Parse the selected date string ('dd/MM/yyyy') into DateTime object
-          final DateTime parsedDate = DateFormat(
-            'dd/MM/yyyy',
-          ).parse(dateString);
+          final DateTime parsedDate =
+              DateFormat('dd/MM/yyyy').parse(dateString);
 
           // Format the parsed DateTime into 'yyyy-MM-dd'
-          final String formattedDate = DateFormat(
-            'yyyy-MM-dd',
-          ).format(parsedDate);
+          final String formattedDate =
+              DateFormat('yyyy-MM-dd').format(parsedDate);
 
           setState(() {
             selectedDate = formattedDate;
@@ -60,19 +56,20 @@ class _AddResultDatePickerState extends State<AddResultDatePicker> {
       child: Container(
         height: 50,
         decoration: BoxDecoration(
-          color: AppColors.lightGreyColor,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: widget.isOutline ? AppColors.primary : Colors.transparent,
-          ),
-        ),
+            color: AppColors.lightGreyColor,
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: widget.isOutline
+                  ? AppColors.primaryGreen
+                  : Colors.transparent,
+            )),
         padding: EdgeInsets.all(8.0),
         child: Center(
           child: Row(
             children: [
               Icon(
                 Icons.calendar_month_rounded,
-                color: AppColors.primary,
+                color: AppColors.primaryGreen,
                 size: 22,
               ),
               SizedBox(width: 8.0),
@@ -81,7 +78,10 @@ class _AddResultDatePickerState extends State<AddResultDatePicker> {
                     ? selectedDate
                     : widget
                         .hintText, // Display the selected date in 'yyyy-MM-dd' format
-                style: TextStyle(fontSize: 14, color: AppColors.primary),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: AppColors.primaryGreen,
+                ),
               ),
             ],
           ),

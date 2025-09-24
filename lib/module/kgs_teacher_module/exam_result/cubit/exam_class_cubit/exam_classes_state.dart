@@ -1,7 +1,13 @@
-import '../../../../../core/failures/base_failures/base_failure.dart';
-import '../../models/exam_class_response.dart';
+import 'package:rts/module/kgs_teacher_module/exam_result/models/exam_class_response.dart';
 
-enum ExamClassesStatus { none, loading, success, failure }
+import '../../../../../core/failures/base_failures/base_failure.dart';
+
+enum ExamClassesStatus {
+  none,
+  loading,
+  success,
+  failure,
+}
 
 class ExamClassesState {
   final ExamClassesStatus examClassesStatus;
@@ -34,3 +40,4 @@ class ExamClassesState {
     );
   }
 }
+

@@ -1,49 +1,41 @@
 import 'package:bloc/bloc.dart';
+import 'package:rts/module/kgs_teacher_module/evaluation/models/evaluation_remarks_response.dart';
+import 'package:rts/module/kgs_teacher_module/evaluation/repo/evaluation_repo.dart';
+import 'package:meta/meta.dart';
 
 import '../../../../../core/api_result.dart';
 import '../../../../../core/failures/base_failures/base_failure.dart';
 import '../../../../../core/failures/high_priority_failure.dart';
-import '../../models/evaluation_remarks_response.dart';
-import '../../repo/evaluation_repo.dart';
 
 part 'evaluation_remarks_state.dart';
 
 class EvaluationRemarksCubit extends Cubit<EvaluationRemarksState> {
   EvaluationRemarksCubit(this.evaluationRepository)
-    : super(EvaluationRemarksState.initial());
+      : super(EvaluationRemarksState.initial());
 
   EvaluationRepository evaluationRepository;
   Future fetchEvaluationRemarks() async {
-    emit(
-      state.copyWith(evaluationRemarksStatus: EvaluationRemarksStatus.loading),
-    );
+    emit(state.copyWith(
+        evaluationRemarksStatus: EvaluationRemarksStatus.loading));
 
     try {
       EvaluationRemarksResponse responseModel =
           await evaluationRepository.getEvaluationRemarks();
 
       if (responseModel.result == ApiResult.success) {
-        emit(
-          state.copyWith(
-            evaluationRemarksStatus: EvaluationRemarksStatus.success,
-            evaluationRemarks: responseModel.data,
-          ),
-        );
+        emit(state.copyWith(
+          evaluationRemarksStatus: EvaluationRemarksStatus.success,
+          evaluationRemarks: responseModel.data,
+        ));
       } else {
-        emit(
-          state.copyWith(
+        emit(state.copyWith(
             evaluationRemarksStatus: EvaluationRemarksStatus.failure,
-            failure: HighPriorityException(responseModel.message),
-          ),
-        );
+            failure: HighPriorityException(responseModel.message)));
       }
     } on BaseFailure catch (e) {
-      emit(
-        state.copyWith(
+      emit(state.copyWith(
           evaluationRemarksStatus: EvaluationRemarksStatus.failure,
-          failure: HighPriorityException(e.message),
-        ),
-      );
+          failure: HighPriorityException(e.message)));
     } catch (_) {}
   }
 }

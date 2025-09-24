@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:rts/constants/app_colors.dart';
 import 'package:rts/module/kgs_teacher_module/student_evaluation/widgets/process_un_button.dart';
+import 'package:rts/utils/display/display_utils.dart';
 
-import '../../../../constants/app_colors.dart';
-import '../../../../utils/display/display_utils.dart';
 import '../models/student_evaluation_list_response.dart';
 
 class StudentEvaluationListTile extends StatelessWidget {
-  const StudentEvaluationListTile({
-    super.key,
-    required this.student,
-    this.onProcessClick,
-    this.onTap,
-  });
+  const StudentEvaluationListTile(
+      {super.key, required this.student, this.onProcessClick, this.onTap});
 
   final StudentEvaluationDataModel student;
   final VoidCallback? onProcessClick;
@@ -22,11 +18,16 @@ class StudentEvaluationListTile extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12.0),
-          border: Border.all(color: AppColors.primary),
+        padding: EdgeInsets.all(
+          12.0,
         ),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(
+              12.0,
+            ),
+            border: Border.all(
+              color: AppColors.primaryGreen,
+            )),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -37,21 +38,21 @@ class StudentEvaluationListTile extends StatelessWidget {
                     height: 40,
                     width: 40,
                     decoration: BoxDecoration(
-                      color: AppColors.primary,
+                      color: AppColors.primaryGreen,
                       borderRadius: BorderRadius.circular(12.0),
                     ),
                     child: Center(
-                      child: Text(
-                        student.studentName[0],
-                        style: TextStyle(
+                        child: Text(
+                      student.studentName[0],
+                      style: TextStyle(
                           fontSize: 22.0,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                          color: Colors.white),
+                    )),
                   ),
-                  SizedBox(width: 8.0),
+                  SizedBox(
+                    width: 8.0,
+                  ),
                   Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
@@ -69,10 +70,9 @@ class StudentEvaluationListTile extends StatelessWidget {
                       Text(
                         student.rollNumber,
                         style: TextStyle(
-                          fontSize: 12.0,
-                          fontWeight: FontWeight.w400,
-                          color: Colors.grey.shade700,
-                        ),
+                            fontSize: 12.0,
+                            fontWeight: FontWeight.w400,
+                            color: Colors.grey.shade700),
                       ),
                     ],
                   ),
@@ -81,8 +81,7 @@ class StudentEvaluationListTile extends StatelessWidget {
             ),
             ProcessUnButton(
               isProcessed: student.isProcessed,
-              onClick:
-                  onProcessClick ??
+              onClick: onProcessClick ??
                   () {
                     if (student.isProcessed) {
                       DisplayUtils.showToast(context, "Un Processing Result");
@@ -90,7 +89,7 @@ class StudentEvaluationListTile extends StatelessWidget {
                       DisplayUtils.showToast(context, "Processing Result");
                     }
                   },
-            ),
+            )
           ],
         ),
       ),

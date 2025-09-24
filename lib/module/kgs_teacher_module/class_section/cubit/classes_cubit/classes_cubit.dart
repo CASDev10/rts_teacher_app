@@ -1,10 +1,10 @@
 import 'package:bloc/bloc.dart';
+import 'package:rts/module/kgs_teacher_module/class_section/repo/classes_sections_repo.dart';
 
 import '../../../../../core/api_result.dart';
 import '../../../../../core/failures/base_failures/base_failure.dart';
 import '../../../../../core/failures/high_priority_failure.dart';
 import '../../model/classes_model.dart';
-import '../../repo/classes_sections_repo.dart';
 
 part 'classes_state.dart';
 
@@ -20,27 +20,19 @@ class ClassesCubit extends Cubit<ClassesState> {
       ClassesModel classesModel = await _repository.getClasses();
 
       if (classesModel.result == ApiResult.success) {
-        emit(
-          state.copyWith(
-            classesStatus: ClassesStatus.success,
-            classes: classesModel.data,
-          ),
-        );
+        emit(state.copyWith(
+          classesStatus: ClassesStatus.success,
+          classes: classesModel.data,
+        ));
       } else {
-        emit(
-          state.copyWith(
+        emit(state.copyWith(
             classesStatus: ClassesStatus.failure,
-            failure: HighPriorityException(classesModel.message),
-          ),
-        );
+            failure: HighPriorityException(classesModel.message)));
       }
     } on BaseFailure catch (e) {
-      emit(
-        state.copyWith(
+      emit(state.copyWith(
           classesStatus: ClassesStatus.failure,
-          failure: HighPriorityException(e.message),
-        ),
-      );
+          failure: HighPriorityException(e.message)));
     } catch (_) {}
   }
 }

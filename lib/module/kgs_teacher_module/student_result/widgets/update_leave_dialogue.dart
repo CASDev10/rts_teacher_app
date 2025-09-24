@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:rts/components/custom_textfield.dart';
+import 'package:rts/config/config.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/widgets/student_result_date_picker.dart';
+import 'package:rts/utils/display/display_utils.dart';
 
 import '../../../../components/custom_button.dart';
 import '../../../../components/custom_dropdown.dart';
-import '../../../../components/custom_textfield.dart';
-import '../../../../config/routes/nav_router.dart';
 import '../../../../constants/app_colors.dart';
-import '../../../../utils/display/display_utils.dart';
 import '../../leaves/model/employee_leaves_response.dart';
 import '../../leaves/model/leave_balance_response.dart';
 
@@ -79,7 +79,9 @@ class _UpdateLeaveDialogueState extends State<UpdateLeaveDialogue> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12.0),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(12.0),
         child: Column(
@@ -87,15 +89,20 @@ class _UpdateLeaveDialogueState extends State<UpdateLeaveDialogue> {
           children: [
             Text(
               "Update Leave",
-              style: TextStyle(fontWeight: FontWeight.w900, fontSize: 18.0),
+              style: TextStyle(
+                fontWeight: FontWeight.w900,
+                fontSize: 18.0,
+              ),
             ),
-            SizedBox(height: 12.0),
+            SizedBox(
+              height: 12.0,
+            ),
             GeneralCustomDropDown<LeaveModel>(
               allPadding: 0,
               horizontalPadding: 15,
               isOutline: true,
-              hintColor: AppColors.primary,
-              iconColor: AppColors.primary,
+              hintColor: AppColors.primaryGreen,
+              iconColor: AppColors.primaryGreen,
               suffixIconPath: '',
               displayField: (item) => item.leaveTypeName,
               hint: 'Select Evaluation',
@@ -108,7 +115,9 @@ class _UpdateLeaveDialogueState extends State<UpdateLeaveDialogue> {
                 });
               },
             ),
-            SizedBox(height: 12.0),
+            SizedBox(
+              height: 12.0,
+            ),
             Row(
               children: [
                 Expanded(
@@ -123,7 +132,9 @@ class _UpdateLeaveDialogueState extends State<UpdateLeaveDialogue> {
                     hintText: 'From',
                   ),
                 ),
-                SizedBox(width: 6.0),
+                SizedBox(
+                  width: 6.0,
+                ),
                 Expanded(
                   child: AddResultDatePicker(
                     selectedDate: formatDate(widget.model.toDateString),
@@ -138,44 +149,45 @@ class _UpdateLeaveDialogueState extends State<UpdateLeaveDialogue> {
                 ),
               ],
             ),
-            SizedBox(height: 12.0),
+            SizedBox(
+              height: 12.0,
+            ),
             Container(
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(12.0),
-                border: Border.all(color: AppColors.primary),
-              ),
+                  borderRadius: BorderRadius.circular(12.0),
+                  border: Border.all(color: AppColors.primaryGreen)),
               child: CustomTextField(
                 hintText: "Enter Reason",
                 maxLines: 4,
                 controller: _reasonController,
               ),
             ),
-            SizedBox(height: 12.0),
+            SizedBox(
+              height: 12.0,
+            ),
             Row(
               children: [
                 Expanded(
-                  child: CustomButton(
-                    onPressed: () {
-                      print(widget.model.id);
-                    },
-                    title: "Save",
-                    fontSize: 14.0,
-                  ),
-                ),
+                    child: CustomButton(
+                  onPressed: () {
+                    print(widget.model.id);
+                  },
+                  title: "Save",
+                  fontSize: 14.0,
+                )),
                 SizedBox(width: 8.0),
                 Expanded(
-                  child: CustomButton(
-                    fontSize: 14.0,
-                    onPressed: () {
-                      NavRouter.pop(context);
-                    },
-                    title: "Cancel ",
-                    backgroundColor: Colors.transparent,
-                    textColor: AppColors.primary,
-                  ),
-                ),
+                    child: CustomButton(
+                  fontSize: 14.0,
+                  onPressed: () {
+                    NavRouter.pop(context);
+                  },
+                  title: "Cancel ",
+                  backgroundColor: Colors.transparent,
+                  textColor: AppColors.primaryGreen,
+                )),
               ],
-            ),
+            )
           ],
         ),
       ),

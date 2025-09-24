@@ -24,6 +24,8 @@ class Endpoints {
   static const String addUpdateKinderGartenTermOneResultPrep =
       '/AddUpdateKinderGartenTermOneResultPrep';
   static const String insertEmployeeLeave = '/InsertEmployeeLeave';
+  static const String uploadLeave = '/UploadLeave';
+  static const String getAssignmentOrPunishment = '/GetAssignmentOrPunishment';
   static const String deleteLeave = '/Delete';
   static const String getSchoolClassesByGradeId = '/GetSchoolClassesByGradeId';
 
@@ -55,4 +57,5 @@ class Endpoints {
   static const String getObservationReport = '/GetObservationReport';
   static const String getParentFile = '/GetParentFile';
   static const String uploadTeacherFile = '/UploadTeacherFile';
+  static const String uploadTeacherAssignment = '/UploadTeacherAssignment';
 }

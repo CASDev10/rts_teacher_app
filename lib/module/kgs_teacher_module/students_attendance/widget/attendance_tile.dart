@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:rts/components/text_view.dart';
+import 'package:rts/module/kgs_teacher_module/students_attendance/models/attendance_reponse.dart';
 
-import '../../../../components/text_view.dart';
 import '../../../../constants/app_colors.dart';
-import '../models/attendance_reponse.dart';
 
 class AttendanceTile extends StatefulWidget {
-  const AttendanceTile({
-    super.key,
-    required this.attendanceModel,
-    required this.index,
-    this.onSelect,
-  });
+  const AttendanceTile(
+      {super.key,
+      required this.attendanceModel,
+      required this.index,
+      this.onSelect});
 
   final AttendanceModel attendanceModel;
   final int index;
@@ -31,7 +30,7 @@ class _AttendanceTileState extends State<AttendanceTile> {
           padding: const EdgeInsets.only(right: 3.0, left: 5.0),
           child: TextView(
             widget.index < 10 ? "0${widget.index}" : "${widget.index}",
-            color: AppColors.primary,
+            color: AppColors.primaryGreen,
             fontSize: 13,
           ),
         ),
@@ -39,10 +38,8 @@ class _AttendanceTileState extends State<AttendanceTile> {
           alignment: FractionalOffset.centerLeft,
           width: 95.0,
           padding: const EdgeInsets.only(right: 3.0, left: 5),
-          child: Text(
-            widget.attendanceModel.studentName.toString(),
-            style: TextStyle(color: Colors.grey[800], fontSize: 13),
-          ),
+          child: Text(widget.attendanceModel.studentName.toString(),
+              style: TextStyle(color: Colors.grey[800], fontSize: 13)),
         ),
         Expanded(
           child: Row(
@@ -54,9 +51,8 @@ class _AttendanceTileState extends State<AttendanceTile> {
                     widget.attendanceModel.attendanceStatusIdFk = 2;
                     if (widget.onSelect != null) {
                       widget.onSelect!(
-                        widget.attendanceModel.attendanceStatusIdFk,
-                        widget.attendanceModel.studentId,
-                      );
+                          widget.attendanceModel.attendanceStatusIdFk,
+                          widget.attendanceModel.studentId);
                     }
                   });
                 },
@@ -68,15 +64,13 @@ class _AttendanceTileState extends State<AttendanceTile> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color:
-                          widget.attendanceModel.attendanceStatusIdFk == 2
-                              ? AppColors.primary
-                              : AppColors.greyColor,
+                      color: widget.attendanceModel.attendanceStatusIdFk == 2
+                          ? AppColors.primaryGreen
+                          : AppColors.greyColor,
                     ),
-                    color:
-                        widget.attendanceModel.attendanceStatusIdFk == 2
-                            ? AppColors.primary
-                            : AppColors.transparent,
+                    color: widget.attendanceModel.attendanceStatusIdFk == 2
+                        ? AppColors.primaryGreen
+                        : AppColors.transparent,
                   ),
                   child: Visibility(
                     visible: widget.attendanceModel.attendanceStatusIdFk == 2,
@@ -94,9 +88,8 @@ class _AttendanceTileState extends State<AttendanceTile> {
                     widget.attendanceModel.attendanceStatusIdFk = 1;
                     if (widget.onSelect != null) {
                       widget.onSelect!(
-                        widget.attendanceModel.attendanceStatusIdFk,
-                        widget.attendanceModel.studentId,
-                      );
+                          widget.attendanceModel.attendanceStatusIdFk,
+                          widget.attendanceModel.studentId);
                     }
                   });
                 },
@@ -108,15 +101,13 @@ class _AttendanceTileState extends State<AttendanceTile> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color:
-                          widget.attendanceModel.attendanceStatusIdFk == 1
-                              ? AppColors.primary
-                              : AppColors.greyColor,
+                      color: widget.attendanceModel.attendanceStatusIdFk == 1
+                          ? AppColors.primaryGreen
+                          : AppColors.greyColor,
                     ),
-                    color:
-                        widget.attendanceModel.attendanceStatusIdFk == 1
-                            ? AppColors.primary
-                            : AppColors.transparent,
+                    color: widget.attendanceModel.attendanceStatusIdFk == 1
+                        ? AppColors.primaryGreen
+                        : AppColors.transparent,
                   ),
                   child: Visibility(
                     visible: widget.attendanceModel.attendanceStatusIdFk == 1,
@@ -134,9 +125,8 @@ class _AttendanceTileState extends State<AttendanceTile> {
                     widget.attendanceModel.attendanceStatusIdFk = 3;
                     if (widget.onSelect != null) {
                       widget.onSelect!(
-                        widget.attendanceModel.attendanceStatusIdFk,
-                        widget.attendanceModel.studentId,
-                      );
+                          widget.attendanceModel.attendanceStatusIdFk,
+                          widget.attendanceModel.studentId);
                     }
                   });
                 },
@@ -148,15 +138,13 @@ class _AttendanceTileState extends State<AttendanceTile> {
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
                     border: Border.all(
-                      color:
-                          widget.attendanceModel.attendanceStatusIdFk == 3
-                              ? AppColors.primary
-                              : AppColors.greyColor,
+                      color: widget.attendanceModel.attendanceStatusIdFk == 3
+                          ? AppColors.primaryGreen
+                          : AppColors.greyColor,
                     ),
-                    color:
-                        widget.attendanceModel.attendanceStatusIdFk == 3
-                            ? AppColors.primary
-                            : AppColors.transparent,
+                    color: widget.attendanceModel.attendanceStatusIdFk == 3
+                        ? AppColors.primaryGreen
+                        : AppColors.transparent,
                   ),
                   child: Visibility(
                     visible: widget.attendanceModel.attendanceStatusIdFk == 3,

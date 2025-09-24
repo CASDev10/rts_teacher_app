@@ -3,28 +3,28 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+import 'package:rts/components/base_scaffold.dart';
+import 'package:rts/components/custom_appbar.dart';
 import 'package:rts/components/h_padding.dart';
+import 'package:rts/components/loading_indicator.dart';
+import 'package:rts/components/search_textfield.dart';
+import 'package:rts/components/text_view.dart';
+import 'package:rts/config/config.dart';
+import 'package:rts/constants/app_colors.dart';
+import 'package:rts/core/di/service_locator.dart';
+import 'package:rts/module/kgs_teacher_module/home/repo/home_repo.dart';
+import 'package:rts/module/kgs_teacher_module/students_attendance/cubit/student_attendance_cubit/student_attendance_cubit.dart';
+import 'package:rts/module/kgs_teacher_module/students_attendance/cubit/submit_attendance_cubit/submit_attendance_cubit.dart';
+import 'package:rts/module/kgs_teacher_module/students_attendance/models/attendance_input.dart';
+import 'package:rts/module/kgs_teacher_module/students_attendance/models/attendance_reponse.dart';
+import 'package:rts/module/kgs_teacher_module/students_attendance/models/submit_attendance_input.dart';
 import 'package:rts/utils/extensions/extended_string.dart';
 
-import '../../../../components/base_scaffold.dart';
-import '../../../../components/custom_appbar.dart';
 import '../../../../components/custom_button.dart';
-import '../../../../components/loading_indicator.dart';
-import '../../../../components/search_textfield.dart';
-import '../../../../components/text_view.dart';
-import '../../../../config/routes/nav_router.dart';
-import '../../../../constants/app_colors.dart';
 import '../../../../constants/keys.dart';
-import '../../../../core/di/service_locator.dart';
 import '../../../../utils/display/display_utils.dart';
-import '../../home/repo/home_repo.dart';
 import '../../kgs_teacher_auth/repo/auth_repository.dart';
-import '../cubit/student_attendance_cubit/student_attendance_cubit.dart';
 import '../cubit/student_attendance_cubit/student_attendance_state.dart';
-import '../cubit/submit_attendance_cubit/submit_attendance_cubit.dart';
-import '../models/attendance_input.dart';
-import '../models/attendance_reponse.dart';
-import '../models/submit_attendance_input.dart';
 import '../widget/attendance_tile.dart';
 
 class AttendanceScreen extends StatefulWidget {
@@ -71,16 +71,10 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
 
   bool isAttendanceTimeRemaining() {
     List<String> startTimeString = homeRepository
-        .appConfigModel
-        .attendanceTime
-        .first
-        .attendanceStartTime
+        .appConfigModel.attendanceTime.first.attendanceStartTime
         .split(":");
     List<String> endTimeString = homeRepository
-        .appConfigModel
-        .attendanceTime
-        .first
-        .attendanceEndTime
+        .appConfigModel.attendanceTime.first.attendanceEndTime
         .split(":");
     int startTimeHours = int.parse(startTimeString[0]);
     int startTimeMinutes = int.parse(startTimeString[1]);
@@ -88,10 +82,8 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     int endTimeHours = int.parse(endTimeString[0]);
     int endTimeMinutes = int.parse(endTimeString[1]);
     // Create a TimeOfDay object
-    TimeOfDay startTime = TimeOfDay(
-      hour: startTimeHours,
-      minute: startTimeMinutes,
-    );
+    TimeOfDay startTime =
+        TimeOfDay(hour: startTimeHours, minute: startTimeMinutes);
     TimeOfDay endTime = TimeOfDay(hour: endTimeHours, minute: endTimeMinutes);
 
     DateTime currentDateTime = DateTime.now();
@@ -110,34 +102,30 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       endTime.hour,
       endTime.minute,
     );
-    bool isBetween =
-        currentDateTime.isAfter(startDateTime) &&
+    bool isBetween = currentDateTime.isAfter(startDateTime) &&
         currentDateTime.isBefore(endDateTime);
     return isBetween;
   }
 
   SubmitAttendanceInput _onSubmitButtonPressed() {
     Attendance attendance = Attendance(
-      classIdFk: widget.attendanceInput.classIdFk.toString(),
-      schoolIdFk: authRepository.user.schoolId.toString(),
-      sectionIdFk: widget.attendanceInput.sectionIdFk.toString(),
-      attendanceDate: widget.attendanceInput.attendanceDate.toString(),
-    );
+        classIdFk: widget.attendanceInput.classIdFk.toString(),
+        schoolIdFk: authRepository.user.schoolId.toString(),
+        sectionIdFk: widget.attendanceInput.sectionIdFk.toString(),
+        attendanceDate: widget.attendanceInput.attendanceDate.toString());
     List<AttendanceListModel> attendanceList = [];
     for (var i = 0; i < studentAttendanceList.length; i++) {
       AttendanceListModel attendanceListModel = AttendanceListModel(
-        attendanceStatusIdFk:
-            studentAttendanceList[i].attendanceStatusIdFk.toString(),
-        studentIdFk: studentAttendanceList[i].studentId.toString(),
-      );
+          attendanceStatusIdFk:
+              studentAttendanceList[i].attendanceStatusIdFk.toString(),
+          studentIdFk: studentAttendanceList[i].studentId.toString());
       attendanceList.add(attendanceListModel);
     }
     SubmitAttendanceInput submitAttendanceInput = SubmitAttendanceInput(
-      ucEntityId: authRepository.user.entityId.toString(),
-      ucLoginUserId: authRepository.user.userId.toString(),
-      attendance: attendance,
-      attendanceList: attendanceList,
-    );
+        ucEntityId: authRepository.user.entityId.toString(),
+        ucLoginUserId: authRepository.user.userId.toString(),
+        attendance: attendance,
+        attendanceList: attendanceList);
     return submitAttendanceInput;
   }
 
@@ -146,157 +134,152 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
     DateTime now = DateTime.now();
     String formattedDate = DateFormat('d, MMMM yyyy').format(now);
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create:
-              (context) =>
-                  StudentAttendanceCubit(sl())
-                    ..fetchStudentAttendanceList(widget.attendanceInput),
-        ),
-        BlocProvider(create: (context) => SubmitAttendanceCubit(sl())),
-      ],
-      child: BaseScaffold(
-        appBar: const CustomAppbar('Attendance', centerTitle: true),
-        body: Container(
-          width: double.infinity,
-          decoration: const BoxDecoration(
-            color: AppColors.whiteColor,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(50),
-              topRight: Radius.circular(50),
-            ),
+        providers: [
+          BlocProvider(
+            create: (context) => StudentAttendanceCubit(sl())
+              ..fetchStudentAttendanceList(widget.attendanceInput),
           ),
-          child: BlocBuilder<StudentAttendanceCubit, StudentAttendanceState>(
-            builder: (context, state) {
-              if (state.studentAttendanceStatus ==
-                  StudentAttendanceStatus.loading) {
-                return Center(child: LoadingIndicator());
-              } else if (state.studentAttendanceStatus ==
-                  StudentAttendanceStatus.success) {
-                filterStudentAttendanceList = state.attendanceList;
-                studentAttendanceList = state.attendanceList;
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 20) +
-                      const EdgeInsets.only(top: 30),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          const Expanded(
-                            flex: 1,
-                            child: TextView(
-                              "Attendance",
-                              color: AppColors.primary,
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
+          BlocProvider(create: (context) => SubmitAttendanceCubit(sl())),
+        ],
+        child: BaseScaffold(
+          appBar: const CustomAppbar(
+            'Attendance',
+            centerTitle: true,
+          ),
+          body: Container(
+            width: double.infinity,
+            decoration: const BoxDecoration(
+              color: AppColors.whiteColor,
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(50), topRight: Radius.circular(50)),
+            ),
+            child: BlocBuilder<StudentAttendanceCubit, StudentAttendanceState>(
+              builder: (context, state) {
+                if (state.studentAttendanceStatus ==
+                    StudentAttendanceStatus.loading) {
+                  return Center(
+                    child: LoadingIndicator(),
+                  );
+                } else if (state.studentAttendanceStatus ==
+                    StudentAttendanceStatus.success) {
+                  filterStudentAttendanceList = state.attendanceList;
+                  studentAttendanceList = state.attendanceList;
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 20) +
+                        const EdgeInsets.only(top: 30),
+                    child: Column(
+                      children: [
+                        Row(
+                          children: [
+                            const Expanded(
+                              flex: 1,
+                              child: TextView(
+                                "Attendance",
+                                color: AppColors.primaryGreen,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                SvgPicture.asset(
-                                  "assets/images/svg/ic_calendar.svg",
-                                ),
-                                const SizedBox(width: 5),
-                                TextView(
-                                  formattedDate,
-                                  textAlign: TextAlign.end,
-                                  color: AppColors.darkGreyColor,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w400,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 15),
-                      SearchTextField(
-                        hint: "Search Student",
-                        readOnly: false,
-                        onValueChange: (String value) {
-                          context
-                              .read<StudentAttendanceCubit>()
-                              .filterSearchResults(value);
-                        },
-                      ).hPadding(padding: 10),
-                      const SizedBox(height: 15),
-                      Expanded(
-                        child: Container(
+                            Expanded(
+                                flex: 1,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    SvgPicture.asset(
+                                        "assets/images/svg/ic_calendar.svg"),
+                                    const SizedBox(
+                                      width: 5,
+                                    ),
+                                    TextView(
+                                      formattedDate,
+                                      textAlign: TextAlign.end,
+                                      color: AppColors.darkGreyColor,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w400,
+                                    )
+                                  ],
+                                ))
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        SearchTextField(
+                          hint: "Search Student",
+                          readOnly: false,
+                          onValueChange: (String value) {
+                            context
+                                .read<StudentAttendanceCubit>()
+                                .filterSearchResults(value);
+                          },
+                        ).hPadding(padding: 10),
+                        const SizedBox(
+                          height: 15,
+                        ),
+                        Expanded(
+                            child: Container(
                           decoration: const BoxDecoration(
-                            color: AppColors.lightGreyColor,
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(15),
-                              topRight: Radius.circular(15),
-                            ),
-                          ),
+                              color: AppColors.lightGreyColor,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(15),
+                                topRight: Radius.circular(15),
+                              )),
                           child: Column(
                             children: [
                               Container(
                                 margin: const EdgeInsets.fromLTRB(8, 8, 8, 0),
                                 padding: const EdgeInsets.all(15),
                                 decoration: const BoxDecoration(
-                                  color: AppColors.primary,
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(12),
-                                  ),
-                                ),
+                                    color: AppColors.primaryGreen,
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(12))),
                                 child: Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: const [
                                     Expanded(
-                                      flex: 2,
-                                      child: TextView(
-                                        "Student List",
-                                        textAlign: TextAlign.start,
-                                        color: AppColors.whiteColor,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
+                                        flex: 2,
+                                        child: TextView(
+                                          "Student List",
+                                          textAlign: TextAlign.start,
+                                          color: AppColors.whiteColor,
+                                          fontSize: 14,
+                                          fontWeight: FontWeight.w500,
+                                        )),
                                     Expanded(
-                                      child: TextView(
-                                        "Absent",
-                                        textAlign: TextAlign.center,
-                                        color: AppColors.whiteColor,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
+                                        child: TextView(
+                                      "Absent",
+                                      textAlign: TextAlign.center,
+                                      color: AppColors.whiteColor,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    )),
                                     Expanded(
-                                      child: TextView(
-                                        "Present",
-                                        textAlign: TextAlign.center,
-                                        color: AppColors.whiteColor,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
+                                        child: TextView(
+                                      "Present",
+                                      textAlign: TextAlign.center,
+                                      color: AppColors.whiteColor,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    )),
                                     Expanded(
-                                      child: TextView(
-                                        "Leave",
-                                        textAlign: TextAlign.center,
-                                        color: AppColors.whiteColor,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w500,
-                                      ),
-                                    ),
+                                        child: TextView(
+                                      "Leave",
+                                      textAlign: TextAlign.center,
+                                      color: AppColors.whiteColor,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w500,
+                                    )),
                                   ],
                                 ),
                               ),
                               Expanded(
                                 child: Container(
-                                  child:
-                                      filterStudentAttendanceList.isNotEmpty
-                                          ? ListView.separated(
+                                    child: filterStudentAttendanceList
+                                            .isNotEmpty
+                                        ? ListView.separated(
                                             padding: const EdgeInsets.symmetric(
-                                              horizontal: 12,
-                                              vertical: 12,
-                                            ),
+                                                horizontal: 12, vertical: 12),
                                             itemCount:
                                                 filterStudentAttendanceList
                                                     .length,
@@ -304,46 +287,41 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                                             itemBuilder: (context, index) {
                                               return AttendanceTile(
                                                 attendanceModel:
-                                                    filterStudentAttendanceList[index],
+                                                    filterStudentAttendanceList[
+                                                        index],
                                                 index: index + 1,
-                                                onSelect: (
-                                                  studentStatus,
-                                                  studentId,
-                                                ) {
+                                                onSelect:
+                                                    (studentStatus, studentId) {
                                                   final index =
                                                       studentAttendanceList
-                                                          .indexWhere(
-                                                            (element) =>
-                                                                element
-                                                                    .studentId ==
-                                                                studentId,
-                                                          );
+                                                          .indexWhere((element) =>
+                                                              element
+                                                                  .studentId ==
+                                                              studentId);
                                                   studentAttendanceList[index]
                                                           .attendanceStatusIdFk =
                                                       studentStatus;
                                                 },
                                               );
                                             },
-                                            separatorBuilder: (
-                                              BuildContext context,
-                                              int index,
-                                            ) {
-                                              return SizedBox(height: 20);
+                                            separatorBuilder:
+                                                (BuildContext context,
+                                                    int index) {
+                                              return SizedBox(
+                                                height: 20,
+                                              );
                                             },
                                           )
-                                          : Center(
+                                        : Center(
                                             child: TextView(
                                               "No results found",
                                               fontSize: 24,
                                               color: AppColors.greyColor,
                                             ),
-                                          ),
-                                ),
+                                          )),
                               ),
-                              BlocConsumer<
-                                SubmitAttendanceCubit,
-                                SubmitAttendanceState
-                              >(
+                              BlocConsumer<SubmitAttendanceCubit,
+                                  SubmitAttendanceState>(
                                 listener: (context, state) {
                                   if (state.submitAttendanceStatus ==
                                       SubmitAttendanceStatus.loading) {
@@ -352,23 +330,20 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                                       SubmitAttendanceStatus.success) {
                                     DisplayUtils.removeLoader();
                                     Fluttertoast.showToast(
-                                      msg: "Attendance submitted successfully!",
-                                    );
+                                        msg:
+                                            "Attendance submitted successfully!");
                                     NavRouter.pop(context);
                                   } else if (state.submitAttendanceStatus ==
                                       SubmitAttendanceStatus.failure) {
                                     DisplayUtils.removeLoader();
                                     DisplayUtils.showSnackBar(
-                                      context,
-                                      state.failure.message,
-                                    );
+                                        context, state.failure.message);
                                   }
                                 },
                                 builder: (context, state) {
                                   return Container(
                                     padding: const EdgeInsets.symmetric(
-                                      horizontal: 8,
-                                    ),
+                                        horizontal: 8),
                                     child: CustomButton(
                                       height: 50,
                                       borderRadius: 10,
@@ -376,23 +351,21 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                                         if (canSubmitAttendance()) {
                                           if (isAttendanceTimeRemaining()) {
                                             SubmitAttendanceInput
-                                            submitAttendanceInput =
+                                                submitAttendanceInput =
                                                 _onSubmitButtonPressed();
                                             context
                                                 .read<SubmitAttendanceCubit>()
                                                 .submitAttendance(
-                                                  submitAttendanceInput,
-                                                );
+                                                    submitAttendanceInput);
                                           } else {
                                             Fluttertoast.showToast(
-                                              msg: "Attendance time is over!",
-                                            );
+                                                msg:
+                                                    "Attendance time is over!");
                                           }
                                         } else {
                                           Fluttertoast.showToast(
-                                            msg:
-                                                "You are not allowed to add attendance!",
-                                          );
+                                              msg:
+                                                  "You are not allowed to add attendance!");
                                         }
                                       },
                                       title: 'Submit',
@@ -401,25 +374,27 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
                                   );
                                 },
                               ),
-                              SizedBox(height: 20),
+                              SizedBox(
+                                height: 20,
+                              ),
                             ],
                           ),
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              } else if (state.studentAttendanceStatus ==
-                  StudentAttendanceStatus.failure) {
-                return Center(child: Text(state.failure.message));
-              }
-              return SizedBox();
-            },
+                        ))
+                      ],
+                    ),
+                  );
+                } else if (state.studentAttendanceStatus ==
+                    StudentAttendanceStatus.failure) {
+                  return Center(
+                    child: Text(state.failure.message),
+                  );
+                }
+                return SizedBox();
+              },
+            ),
           ),
-        ),
-        hMargin: 0,
-        backgroundColor: AppColors.primary,
-      ),
-    );
+          hMargin: 0,
+          backgroundColor: AppColors.primaryGreen,
+        ));
   }
 }

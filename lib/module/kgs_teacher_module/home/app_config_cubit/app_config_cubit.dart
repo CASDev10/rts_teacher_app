@@ -1,10 +1,10 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:rts/module/kgs_teacher_module/home/repo/home_repo.dart';
 
 import '../../../../core/api_result.dart';
 import '../../../../core/failures/base_failures/base_failure.dart';
 import '../../../../core/failures/high_priority_failure.dart';
 import '../models/app_config_reponse.dart';
-import '../repo/home_repo.dart';
 import 'app_config_state.dart';
 
 class AppConfigCubit extends Cubit<AppConfigState> {
@@ -18,22 +18,18 @@ class AppConfigCubit extends Cubit<AppConfigState> {
     try {
       MobileAppConfigResponse response = await _repository.getAppConfig();
       if (response.result == ApiResult.success) {
-        emit(state.copyWith(appConfigStatus: AppConfigStatus.success));
+        emit(state.copyWith(
+          appConfigStatus: AppConfigStatus.success,
+        ));
       } else {
-        emit(
-          state.copyWith(
+        emit(state.copyWith(
             appConfigStatus: AppConfigStatus.failure,
-            failure: HighPriorityException(response.message),
-          ),
-        );
+            failure: HighPriorityException(response.message)));
       }
     } on BaseFailure catch (e) {
-      emit(
-        state.copyWith(
+      emit(state.copyWith(
           appConfigStatus: AppConfigStatus.failure,
-          failure: HighPriorityException(e.message),
-        ),
-      );
+          failure: HighPriorityException(e.message)));
     } catch (_) {}
   }
 }

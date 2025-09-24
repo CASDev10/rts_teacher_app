@@ -1,20 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rts/module/kgs_teacher_module/teacher_observation/models/observation_levels_response.dart';
 
 import '../../../../components/custom_button.dart';
 import '../../../../components/text_view.dart';
 import '../../../../constants/app_colors.dart';
-import '../models/observation_levels_response.dart';
 
 class ObservationLevelTile extends StatefulWidget {
   final ObservationLevelModel observationLevelModel;
   final void Function(bool value)? onButtonPressYes;
 
-  const ObservationLevelTile({
-    super.key,
-    required this.observationLevelModel,
-    this.onButtonPressYes,
-  });
+  const ObservationLevelTile({super.key, required this.observationLevelModel, this.onButtonPressYes});
 
   @override
   State<ObservationLevelTile> createState() => _ObservationLevelTileState();
@@ -36,7 +32,7 @@ class _ObservationLevelTileState extends State<ObservationLevelTile> {
             blurRadius: 8,
             spreadRadius: .5,
             offset: Offset(0.0, 0.0),
-          ),
+          )
         ],
       ),
       child: Column(
@@ -47,9 +43,7 @@ class _ObservationLevelTileState extends State<ObservationLevelTile> {
             decoration: BoxDecoration(
               color: AppColors.lightGreyColor,
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(15),
-                topRight: Radius.circular(15),
-              ),
+                  topLeft: Radius.circular(15), topRight: Radius.circular(15)),
             ),
             child: TextView(
               'Level',
@@ -68,7 +62,7 @@ class _ObservationLevelTileState extends State<ObservationLevelTile> {
               fontSize: 14,
               fontWeight: FontWeight.normal,
               textAlign: TextAlign.start,
-              color: AppColors.primary,
+              color: AppColors.primaryGreen,
             ),
           ),
           Container(
@@ -89,7 +83,9 @@ class _ObservationLevelTileState extends State<ObservationLevelTile> {
                   ),
                   padding: EdgeInsets.symmetric(vertical: 8),
                 ),
-                SizedBox(width: 10),
+                SizedBox(
+                  width: 10,
+                ),
                 Padding(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   child: CustomButton(
@@ -112,4 +108,5 @@ class _ObservationLevelTileState extends State<ObservationLevelTile> {
       ),
     );
   }
+
 }

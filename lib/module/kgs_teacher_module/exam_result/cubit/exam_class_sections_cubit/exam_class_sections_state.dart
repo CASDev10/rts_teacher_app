@@ -1,7 +1,14 @@
-import '../../../../../core/failures/base_failures/base_failure.dart';
-import '../../models/exam_class_sections_response.dart';
+import 'package:rts/module/kgs_teacher_module/exam_result/models/exam_class_response.dart';
+import 'package:rts/module/kgs_teacher_module/exam_result/models/exam_class_sections_response.dart';
 
-enum ExamClassSectionsStatus { none, loading, success, failure }
+import '../../../../../core/failures/base_failures/base_failure.dart';
+
+enum ExamClassSectionsStatus {
+  none,
+  loading,
+  success,
+  failure,
+}
 
 class ExamClassSectionsState {
   final ExamClassSectionsStatus examClassSectionsStatus;
@@ -28,10 +35,10 @@ class ExamClassSectionsState {
     List<ExamClassSectionModel>? classSections,
   }) {
     return ExamClassSectionsState(
-      examClassSectionsStatus:
-          examClassSectionsStatus ?? this.examClassSectionsStatus,
+      examClassSectionsStatus: examClassSectionsStatus ?? this.examClassSectionsStatus,
       failure: failure ?? this.failure,
       classSections: classSections ?? this.classSections,
     );
   }
 }
+

@@ -3,6 +3,7 @@ import '../models/parent_files_response.dart';
 enum ParentFilesStatus {
   none,
   loading,
+  loadMore,
   success,
   failure,
 }
@@ -10,7 +11,7 @@ enum ParentFilesStatus {
 class ParentFilesState {
   final ParentFilesStatus status;
   final String message;
-  final List<ParentsFileModel> parentFiles;
+  final List<ParentsFileList> parentFiles;
 
   ParentFilesState({
     required this.status,
@@ -26,7 +27,7 @@ class ParentFilesState {
   ParentFilesState copyWith(
       {ParentFilesStatus? status,
       String? message,
-      List<ParentsFileModel>? parentFiles}) {
+      List<ParentsFileList>? parentFiles}) {
     return ParentFilesState(
       status: status ?? this.status,
       message: message ?? this.message,

@@ -1,40 +1,49 @@
 import 'package:bloc/bloc.dart';
+import 'package:rts/module/kgs_teacher_module/base_resposne_model.dart';
+import 'package:rts/module/kgs_teacher_module/leaves/model/add_update_leave_input.dart';
+import 'package:rts/module/kgs_teacher_module/leaves/model/employee_leaves_response.dart';
+import 'package:rts/module/kgs_teacher_module/leaves/model/leave_balance_response.dart';
+import 'package:rts/module/kgs_teacher_module/leaves/repo/leaves_repo.dart';
 
 import '../../../../../core/failures/base_failures/base_failure.dart';
 import '../../../../../core/failures/high_priority_failure.dart';
 import '../../../../../utils/display/display_utils.dart';
-import '../../base_resposne_model.dart';
-import '../model/add_update_leave_input.dart';
-import '../model/employee_leaves_response.dart';
-import '../model/leave_balance_response.dart';
-import '../repo/leaves_repo.dart';
 import 'leaves_state.dart';
 
 class TeacherLeaveCubit extends Cubit<TeacherLeaveState> {
   TeacherLeaveCubit(this._repository) : super(TeacherLeaveState.initial());
   LeavesRepository _repository;
+  List<EmployeeLeaveModel> employeeLeaves = [];
 
-  Future fetchEmployeeLeaves() async {
+  Future fetchEmployeeLeaves(
+      {required int offSet, required int next, bool loadMore = false}) async {
     DisplayUtils.showLoader();
-    emit(state.copyWith(studentAttendanceStatus: TeacherLeaveStatus.loading));
+    emit(state.copyWith(
+        studentAttendanceStatus: loadMore
+            ? TeacherLeaveStatus.loadMore
+            : TeacherLeaveStatus.loadMore));
+
+    if (loadMore) {
+      DisplayUtils.showLoader();
+    } else {
+      employeeLeaves.clear();
+    }
     try {
       EmployeeLeavesResponse response =
-          await _repository.getGetEmployeeLeaves();
+          await _repository.getGetEmployeeLeaves(offSet: offSet, next: next);
+      employeeLeaves.addAll(response.data);
       emit(
         state.copyWith(
           studentAttendanceStatus: TeacherLeaveStatus.success,
-          employeeLeaves: response.data,
+          employeeLeaves: employeeLeaves,
         ),
       );
       DisplayUtils.removeLoader();
     } on BaseFailure catch (e) {
       DisplayUtils.removeLoader();
-      emit(
-        state.copyWith(
+      emit(state.copyWith(
           studentAttendanceStatus: TeacherLeaveStatus.failure,
-          failure: HighPriorityException(e.message),
-        ),
-      );
+          failure: HighPriorityException(e.message)));
     } catch (_) {
       DisplayUtils.removeLoader();
     }
@@ -55,12 +64,9 @@ class TeacherLeaveCubit extends Cubit<TeacherLeaveState> {
       DisplayUtils.removeLoader();
     } on BaseFailure catch (e) {
       DisplayUtils.removeLoader();
-      emit(
-        state.copyWith(
+      emit(state.copyWith(
           studentAttendanceStatus: TeacherLeaveStatus.failure,
-          failure: HighPriorityException(e.message),
-        ),
-      );
+          failure: HighPriorityException(e.message)));
     } catch (_) {
       DisplayUtils.removeLoader();
     }
@@ -70,19 +76,20 @@ class TeacherLeaveCubit extends Cubit<TeacherLeaveState> {
     DisplayUtils.showLoader();
     emit(state.copyWith(studentAttendanceStatus: TeacherLeaveStatus.loading));
     try {
-      BaseResponseModel response = await _repository.addUpdateEmployeeLeave(
-        input: input,
+      BaseResponseModel? response =
+          await _repository.addUpdateEmployeeLeave(input);
+
+      emit(
+        state.copyWith(
+          studentAttendanceStatus: TeacherLeaveStatus.success,
+        ),
       );
-      emit(state.copyWith(studentAttendanceStatus: TeacherLeaveStatus.success));
       DisplayUtils.removeLoader();
     } on BaseFailure catch (e) {
       DisplayUtils.removeLoader();
-      emit(
-        state.copyWith(
+      emit(state.copyWith(
           studentAttendanceStatus: TeacherLeaveStatus.failure,
-          failure: HighPriorityException(e.message),
-        ),
-      );
+          failure: HighPriorityException(e.message)));
     } catch (_) {
       DisplayUtils.removeLoader();
     }
@@ -93,16 +100,17 @@ class TeacherLeaveCubit extends Cubit<TeacherLeaveState> {
     emit(state.copyWith(studentAttendanceStatus: TeacherLeaveStatus.loading));
     try {
       BaseResponseModel response = await _repository.deleteLeave(id: id);
-      emit(state.copyWith(studentAttendanceStatus: TeacherLeaveStatus.success));
+      emit(
+        state.copyWith(
+          studentAttendanceStatus: TeacherLeaveStatus.success,
+        ),
+      );
       DisplayUtils.removeLoader();
     } on BaseFailure catch (e) {
       DisplayUtils.removeLoader();
-      emit(
-        state.copyWith(
+      emit(state.copyWith(
           studentAttendanceStatus: TeacherLeaveStatus.failure,
-          failure: HighPriorityException(e.message),
-        ),
-      );
+          failure: HighPriorityException(e.message)));
     } catch (_) {
       DisplayUtils.removeLoader();
     }
