@@ -3,6 +3,7 @@ import 'package:rts/module/kgs_teacher_module/daily_diary/models/add_diary_input
 import 'package:rts/module/kgs_teacher_module/daily_diary/models/add_diary_response.dart';
 import 'package:rts/module/kgs_teacher_module/daily_diary/models/class_student_input.dart';
 import 'package:rts/module/kgs_teacher_module/daily_diary/models/diary_description_input.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/students_model.dart';
 import 'package:rts/module/kgs_teacher_module/daily_diary/repo/diary_repo.dart';
 
 import '../../../../../core/api_result.dart';
@@ -24,14 +25,20 @@ class AddDiaryCubit extends Cubit<AddDiaryState> {
       if (response.result == ApiResult.success) {
         emit(state.copyWith(addDiaryStatus: AddDiaryStatus.success));
       } else {
-        emit(state.copyWith(
+        emit(
+          state.copyWith(
             addDiaryStatus: AddDiaryStatus.failure,
-            failure: HighPriorityException(response.message)));
+            failure: HighPriorityException(response.message),
+          ),
+        );
       }
     } on BaseFailure catch (e) {
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           addDiaryStatus: AddDiaryStatus.failure,
-          failure: HighPriorityException(e.message)));
+          failure: HighPriorityException(e.message),
+        ),
+      );
     } catch (_) {}
   }
 
@@ -43,56 +50,78 @@ class AddDiaryCubit extends Cubit<AddDiaryState> {
         emit(state.copyWith(addDiaryStatus: AddDiaryStatus.success));
         return true;
       } else {
-        emit(state.copyWith(
+        emit(
+          state.copyWith(
             addDiaryStatus: AddDiaryStatus.failure,
-            failure: HighPriorityException(response.message)));
+            failure: HighPriorityException(response.message),
+          ),
+        );
       }
     } on BaseFailure catch (e) {
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           addDiaryStatus: AddDiaryStatus.failure,
-          failure: HighPriorityException(e.message)));
+          failure: HighPriorityException(e.message),
+        ),
+      );
     } catch (_) {}
   }
 
   Future uploadTeacherAssignment(DiaryDescriptionInput input) async {
     emit(state.copyWith(addDiaryStatus: AddDiaryStatus.loading));
     try {
-      BaseResponseModel response =
-          await _repository.uploadTeacherAssignment(input);
+      BaseResponseModel response = await _repository.uploadTeacherAssignment(
+        input,
+      );
       if (response.result == ApiResult.success) {
         emit(state.copyWith(addDiaryStatus: AddDiaryStatus.success));
         return true;
       } else {
-        emit(state.copyWith(
+        emit(
+          state.copyWith(
             addDiaryStatus: AddDiaryStatus.failure,
-            failure: HighPriorityException(response.message)));
+            failure: HighPriorityException(response.message),
+          ),
+        );
       }
     } on BaseFailure catch (e) {
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           addDiaryStatus: AddDiaryStatus.failure,
-          failure: HighPriorityException(e.message)));
+          failure: HighPriorityException(e.message),
+        ),
+      );
     } catch (_) {}
   }
 
-  Future fetchDiaryStudentList(ClassStudentInput input) async {
+  Future fetchDiaryStudentList(dynamic input) async {
     emit(state.copyWith(addDiaryStatus: AddDiaryStatus.loading));
     try {
-      DiaryStudentListResponse response =
-          await _repository.getClassStudents(input);
+      StudentsModel response = await _repository.getClassStudents(
+        input,
+      );
       if (response.result == ApiResult.success) {
-        emit(state.copyWith(
-          addDiaryStatus: AddDiaryStatus.success,
-          studentList: response.data,
-        ));
+        emit(
+          state.copyWith(
+            addDiaryStatus: AddDiaryStatus.success,
+            studentList: response.data,
+          ),
+        );
       } else {
-        emit(state.copyWith(
+        emit(
+          state.copyWith(
             addDiaryStatus: AddDiaryStatus.failure,
-            failure: HighPriorityException(response.message)));
+            failure: HighPriorityException(response.message),
+          ),
+        );
       }
     } on BaseFailure catch (e) {
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           addDiaryStatus: AddDiaryStatus.failure,
-          failure: HighPriorityException(e.message)));
+          failure: HighPriorityException(e.message),
+        ),
+      );
     } catch (_) {}
   }
 }

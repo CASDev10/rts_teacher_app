@@ -21,6 +21,8 @@ class Endpoints {
   static const String getEmployeeAssignedGrades = '/GetEmployeeAssignedGrades';
   static const String getEmployeeLeaveBalance = '/GetEmployeeLeaveBalance';
   static const String getEmployeeLeavesByEmpId = '/GetEmployeeLeavesByEmpId';
+  static const String getStudentListByClassAndSection =
+      '/GetStudentListByClassAndSection';
   static const String addUpdateKinderGartenTermOneResultPrep =
       '/AddUpdateKinderGartenTermOneResultPrep';
   static const String insertEmployeeLeave = '/InsertEmployeeLeave';

@@ -69,7 +69,7 @@ class LocalNotificationsApi {
   Future<void> _initSetting() async {
     // android
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@drawable/app_icon');
 
     // darwin/IOS
     final DarwinInitializationSettings initializationSettingsDarwin =

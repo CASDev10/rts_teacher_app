@@ -3,6 +3,7 @@ import 'package:rts/components/custom_button.dart';
 import 'package:rts/components/custom_textfield.dart';
 import 'package:rts/config/config.dart';
 import 'package:rts/constants/app_colors.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/students_model.dart';
 import 'package:rts/module/kgs_teacher_module/daily_diary/widgets/student_selectable_tile.dart';
 import 'package:rts/utils/extensions/extended_context.dart';
 
@@ -16,7 +17,7 @@ class SelectStudentsDialogue extends StatefulWidget {
     this.selectedStudents,
   });
 
-  final List<DiaryStudentModel> studentsList;
+  final List<StudentsResponse> studentsList;
   final Function(String)? onSave;
   final String? selectedStudents;
 
@@ -26,7 +27,7 @@ class SelectStudentsDialogue extends StatefulWidget {
 
 class _SelectStudentsDialogueState extends State<SelectStudentsDialogue> {
   List<int> studentIds = [];
-  List<DiaryStudentModel> filteredStudents = [];
+  List<StudentsResponse> filteredStudents = [];
   final TextEditingController _searchStudentController =
       TextEditingController();
 
@@ -127,9 +128,7 @@ class _SelectStudentsDialogueState extends State<SelectStudentsDialogue> {
                   ),
                 ],
               ),
-              SizedBox(
-                height: 4.0,
-              ),
+              SizedBox(height: 4.0),
               CustomTextField(
                 borderColor: AppColors.primaryGreen,
                 enableBorderColor: AppColors.primaryGreen,
@@ -140,18 +139,11 @@ class _SelectStudentsDialogueState extends State<SelectStudentsDialogue> {
                 inputType: TextInputType.text,
                 controller: _searchStudentController,
                 fillColor: AppColors.lightGreyColor,
-                suffixWidget: Icon(
-                  Icons.search,
-                  color: AppColors.primaryGreen,
-                ),
+                suffixWidget: Icon(Icons.search, color: AppColors.primaryGreen),
               ),
-              SizedBox(
-                height: 4.0,
-              ),
+              SizedBox(height: 4.0),
               Divider(),
-              SizedBox(
-                height: 4.0,
-              ),
+              SizedBox(height: 4.0),
               filteredStudents.isNotEmpty
                   ? ListView.builder(
                       shrinkWrap: true,
@@ -159,9 +151,7 @@ class _SelectStudentsDialogueState extends State<SelectStudentsDialogue> {
                       itemBuilder: (context, index) {
                         var student = filteredStudents[index];
                         return Padding(
-                          padding: const EdgeInsets.only(
-                            bottom: 12.0,
-                          ),
+                          padding: const EdgeInsets.only(bottom: 12.0),
                           child: InkWell(
                             onTap: () {
                               toggleStudentId(student.studentId);
@@ -173,20 +163,17 @@ class _SelectStudentsDialogueState extends State<SelectStudentsDialogue> {
                             ),
                           ),
                         );
-                      })
+                      },
+                    )
                   : Text(
                       "No Student with this name",
                       style: context.textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-              SizedBox(
-                height: 4.0,
-              ),
+              SizedBox(height: 4.0),
               Divider(),
-              SizedBox(
-                height: 4.0,
-              ),
+              SizedBox(height: 4.0),
               Row(
                 children: [
                   Expanded(child: Container()),
@@ -210,9 +197,7 @@ class _SelectStudentsDialogueState extends State<SelectStudentsDialogue> {
                             fontSize: 14.0,
                           ),
                         ),
-                        SizedBox(
-                          width: 12.0,
-                        ),
+                        SizedBox(width: 12.0),
                         Expanded(
                           child: CustomButton(
                             onPressed: () {
@@ -229,7 +214,7 @@ class _SelectStudentsDialogueState extends State<SelectStudentsDialogue> {
                     ),
                   ),
                 ],
-              )
+              ),
             ],
           ),
         ),

@@ -1,5 +1,6 @@
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/students_model.dart';
+
 import '../../../../../core/failures/base_failures/base_failure.dart';
-import '../../models/student_diary_list_response.dart';
 
 enum AddDiaryStatus {
   none,
@@ -11,7 +12,7 @@ enum AddDiaryStatus {
 class AddDiaryState {
   final AddDiaryStatus addDiaryStatus;
   final BaseFailure failure;
-  final List<DiaryStudentModel> studentList;
+  final List<StudentsResponse> studentList;
 
   AddDiaryState({
     required this.addDiaryStatus,
@@ -30,7 +31,7 @@ class AddDiaryState {
   AddDiaryState copyWith({
     AddDiaryStatus? addDiaryStatus,
     BaseFailure? failure,
-    List<DiaryStudentModel>? studentList,
+    List<StudentsResponse>? studentList,
   }) {
     return AddDiaryState(
       addDiaryStatus: addDiaryStatus ?? this.addDiaryStatus,

@@ -234,7 +234,7 @@ class _AttendanceHistoryScreenViewState
                               input: AttendanceHistoryInput(
                                   startDate: startDate,
                                   endDate: endDate,
-                                  offset: returnOffset(),
+                                  offset: offset,
                                   next: _next));
                     } else {
                       DisplayUtils.showToast(

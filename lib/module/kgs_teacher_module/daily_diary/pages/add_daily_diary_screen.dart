@@ -50,8 +50,10 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
   String selectedStudents = "";
 
   Future<MultipartFile> changeMulti(File file) async {
-    MultipartFile multipartFile =
-        await MultipartFile.fromFile(file.path, filename: file.path);
+    MultipartFile multipartFile = await MultipartFile.fromFile(
+      file.path,
+      filename: file.path,
+    );
     return multipartFile;
   }
 
@@ -71,21 +73,22 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
 
   DiaryDescriptionInput _onApiHit() {
     DiaryDescriptionInput input = DiaryDescriptionInput(
-        dateFrom: fromDateController.text,
-        dateTo: toDateController.text,
-        classIdFk: int.parse(classId!),
-        subjectIdFk: int.parse(subjectId!),
-        text: selectedAssignmentType != null
-            ? "$selectedAssignmentType" + textBoxController.text
-            : textBoxController.text,
-        ucSchoolId: authRepository.user.schoolId.toString(),
-        studentIDs: selectedStudents,
-        sectionIdFk: int.parse(sectionId!),
-        description: selectedAssignmentType != null
-            ? "$selectedAssignmentType${textBoxController.text}"
-            : textBoxController.text,
-        schoold: authRepository.user.schoolId!,
-        createdBy: authRepository.user.userId);
+      dateFrom: fromDateController.text,
+      dateTo: toDateController.text,
+      classIdFk: int.parse(classId!),
+      subjectIdFk: int.parse(subjectId!),
+      text: selectedAssignmentType != null
+          ? "$selectedAssignmentType" + textBoxController.text
+          : textBoxController.text,
+      ucSchoolId: authRepository.user.schoolId.toString(),
+      studentIDs: selectedStudents,
+      sectionIdFk: int.parse(sectionId!),
+      description: selectedAssignmentType != null
+          ? "$selectedAssignmentType${textBoxController.text}"
+          : textBoxController.text,
+      schoold: authRepository.user.schoolId!,
+      createdBy: authRepository.user.userId,
+    );
 
     print(jsonEncode(input));
     return input;
@@ -95,16 +98,17 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
     // DateTime fromDate = DateFormat("dd/MM/yyyy").parse(fromDateController.text);
     // DateTime toDate = DateFormat("dd/MM/yyyy").parse(toDateController.text);
     AddDiaryInput input = AddDiaryInput(
-        dateFrom: fromDateController.text,
-        dateTo: toDateController.text,
-        sectionIdFk: sectionId.toString(),
-        classIdFk: classId.toString(),
-        subjectIdFk: subjectId.toString(),
-        text: selectedAssignmentType != null
-            ? "$selectedAssignmentType${textBoxController.text}"
-            : textBoxController.text,
-        ucSchoolId: authRepository.user.schoolId.toString(),
-        ucLoginUserId: authRepository.user.userId.toString());
+      dateFrom: fromDateController.text,
+      dateTo: toDateController.text,
+      sectionIdFk: sectionId.toString(),
+      classIdFk: classId.toString(),
+      subjectIdFk: subjectId.toString(),
+      text: selectedAssignmentType != null
+          ? "$selectedAssignmentType${textBoxController.text}"
+          : textBoxController.text,
+      ucSchoolId: authRepository.user.schoolId.toString(),
+      ucLoginUserId: authRepository.user.userId.toString(),
+    );
     return input;
   }
 
@@ -112,18 +116,10 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => ClassesCubit(sl())..fetchClasses(),
-        ),
-        BlocProvider(
-          create: (context) => SectionsCubit(sl()),
-        ),
-        BlocProvider(
-          create: (context) => SubjectsCubit(sl()),
-        ),
-        BlocProvider(
-          create: (context) => AddDiaryCubit(sl()),
-        ),
+        BlocProvider(create: (context) => ClassesCubit(sl())..fetchClasses()),
+        BlocProvider(create: (context) => SectionsCubit(sl())),
+        BlocProvider(create: (context) => SubjectsCubit(sl())),
+        BlocProvider(create: (context) => AddDiaryCubit(sl())),
       ],
       child: BaseScaffold(
         appBar: const CustomAppbar(
@@ -131,27 +127,26 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
           centerTitle: true,
         ),
         body: Container(
-          padding: const EdgeInsets.symmetric(horizontal: 20) +
+          padding:
+              const EdgeInsets.symmetric(horizontal: 20) +
               const EdgeInsets.symmetric(vertical: 30),
           width: double.infinity,
           decoration: const BoxDecoration(
             color: AppColors.whiteColor,
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(50), topRight: Radius.circular(50)),
+              topLeft: Radius.circular(50),
+              topRight: Radius.circular(50),
+            ),
           ),
           child: BlocBuilder<ClassesCubit, ClassesState>(
             builder: (context, classState) {
               if (classState.classesStatus == ClassesStatus.loading) {
-                return Center(
-                  child: LoadingIndicator(),
-                );
+                return Center(child: LoadingIndicator());
               }
               if (classState.classesStatus == ClassesStatus.success) {
                 return ListView(
                   children: [
-                    const SizedBox(
-                      height: 12,
-                    ),
+                    const SizedBox(height: 12),
                     AddResultDatePicker(
                       stringFunction: (v) {
                         setState(() {
@@ -160,9 +155,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                       },
                       hintText: 'From Date',
                     ),
-                    SizedBox(
-                      height: 12.0,
-                    ),
+                    SizedBox(height: 12.0),
                     AddResultDatePicker(
                       stringFunction: (v) {
                         setState(() {
@@ -171,9 +164,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                       },
                       hintText: 'To Date',
                     ),
-                    SizedBox(
-                      height: 12.0,
-                    ),
+                    SizedBox(height: 12.0),
 
                     CustomDropDown(
                       allPadding: 0,
@@ -188,19 +179,18 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                           .toList(),
                       onSelect: (String value) {
                         Class selectedClass = classState.classes.firstWhere(
-                            (element) => element.className == value);
+                          (element) => element.className == value,
+                        );
                         setState(() {
                           classId = selectedClass.classId.toString();
                           dropdownValueClass = value;
-                          context
-                              .read<SectionsCubit>()
-                              .fetchSections(selectedClass.classId.toString());
+                          context.read<SectionsCubit>().fetchSections(
+                            selectedClass.classId.toString(),
+                          );
                         });
                       },
                     ),
-                    const SizedBox(
-                      height: 12,
-                    ),
+                    const SizedBox(height: 12),
                     BlocConsumer<SectionsCubit, SectionsState>(
                       listener: (context, sectionStatus) {
                         if (sectionStatus.sectionsStatus ==
@@ -213,7 +203,9 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                             SectionsStatus.failure) {
                           DisplayUtils.removeLoader();
                           DisplayUtils.showSnackBar(
-                              context, sectionStatus.failure.message);
+                            context,
+                            sectionStatus.failure.message,
+                          );
                         }
                       },
                       builder: (context, sectionState) {
@@ -222,7 +214,9 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                           onTap: dropdownValueClass == null
                               ? () {
                                   DisplayUtils.showSnackBar(
-                                      context, "Please select Class First");
+                                    context,
+                                    "Please select Class First",
+                                  );
                                 }
                               : null,
                           child: CustomDropDown(
@@ -240,21 +234,31 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                               setState(() {
                                 dropdownValueSection = value;
                                 Section selectedSection = sectionState.sections
-                                    .firstWhere((element) =>
-                                        element.sectionName == value);
-                                sectionId =
-                                    selectedSection.sectionId.toString();
+                                    .firstWhere(
+                                      (element) => element.sectionName == value,
+                                    );
+                                sectionId = selectedSection.sectionId
+                                    .toString();
                                 Class selectedClass = classState.classes
-                                    .firstWhere((element) =>
-                                        element.className ==
-                                        dropdownValueClass);
+                                    .firstWhere(
+                                      (element) =>
+                                          element.className ==
+                                          dropdownValueClass,
+                                    );
                                 context.read<SubjectsCubit>().fetchSubjects(
-                                    selectedClass.classId.toString());
-
-                                ClassStudentInput input = ClassStudentInput(
-                                    classId: int.parse(classId!),
-                                    sectionId: int.parse(sectionId!),
-                                    ucSchoolId: authRepository.user.schoolId!);
+                                  selectedClass.classId.toString(),
+                                );
+                                dynamic input = {
+                                  "UC_EntityId": authRepository.user.entityId,
+                                  "ClassIdFk": int.parse(classId!),
+                                  "SectionIdFk": int.parse(sectionId!),
+                                  "UC_SchoolId": authRepository.user.schoolId!,
+                                };
+                                // ClassStudentInput input = ClassStudentInput(
+                                //   classId: int.parse(classId!),
+                                //   sectionId: int.parse(sectionId!),
+                                //   ucSchoolId: authRepository.user.schoolId!,
+                                // );
                                 context
                                     .read<AddDiaryCubit>()
                                     .fetchDiaryStudentList(input);
@@ -264,41 +268,41 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                         );
                       },
                     ),
-                    const SizedBox(
-                      height: 12,
-                    ),
+                    const SizedBox(height: 12),
                     BlocBuilder<AddDiaryCubit, AddDiaryState>(
                       builder: (context, state) {
                         return GestureDetector(
                           onTap: state.studentList.isEmpty
                               ? () {
-                                  DisplayUtils.showSnackBar(context,
-                                      "Select Class and Section First");
+                                  DisplayUtils.showSnackBar(
+                                    context,
+                                    "Select Class and Section First",
+                                  );
                                 }
                               : () {
                                   showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return SelectStudentsDialogue(
-                                          studentsList: state.studentList,
-                                          selectedStudents: selectedStudents,
-                                          onSave: (v) {
-                                            setState(() {
-                                              selectedStudents = v;
-                                            });
-                                          },
-                                        );
-                                      });
+                                    context: context,
+                                    builder: (context) {
+                                      return SelectStudentsDialogue(
+                                        studentsList: state.studentList,
+                                        selectedStudents: selectedStudents,
+                                        onSave: (v) {
+                                          setState(() {
+                                            selectedStudents = v;
+                                          });
+                                        },
+                                      );
+                                    },
+                                  );
                                 },
                           child: Container(
                             height: 50,
                             width: double.infinity,
                             decoration: BoxDecoration(
-                                color: AppColors.lightGreyColor,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: Colors.transparent,
-                                )),
+                              color: AppColors.lightGreyColor,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.transparent),
+                            ),
                             padding: EdgeInsets.all(8.0),
                             child: Center(
                               child: Row(
@@ -320,9 +324,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                         );
                       },
                     ),
-                    SizedBox(
-                      height: 12.0,
-                    ),
+                    SizedBox(height: 12.0),
                     BlocConsumer<SubjectsCubit, SubjectsState>(
                       listener: (context, subjectsState) {
                         if (subjectsState.subjectsStatus ==
@@ -335,7 +337,9 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                             SectionsStatus.failure) {
                           DisplayUtils.removeLoader();
                           DisplayUtils.showSnackBar(
-                              context, subjectsState.failure.message);
+                            context,
+                            subjectsState.failure.message,
+                          );
                         }
                       },
                       builder: (context, subjectsState) {
@@ -344,7 +348,9 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                           onTap: dropdownValueSection == null
                               ? () {
                                   DisplayUtils.showSnackBar(
-                                      context, "Please select section First");
+                                    context,
+                                    "Please select section First",
+                                  );
                                 }
                               : null,
                           child: CustomDropDown(
@@ -362,10 +368,11 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                               setState(() {
                                 SubjectModel selectedSubject = subjectsState
                                     .subjects
-                                    .firstWhere((element) =>
-                                        element.subjectName == value);
-                                subjectId =
-                                    selectedSubject.subjectId.toString();
+                                    .firstWhere(
+                                      (element) => element.subjectName == value,
+                                    );
+                                subjectId = selectedSubject.subjectId
+                                    .toString();
                                 dropdownValueSubject = value;
                               });
                             },
@@ -373,9 +380,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                         );
                       },
                     ),
-                    const SizedBox(
-                      height: 12,
-                    ),
+                    const SizedBox(height: 12),
                     GeneralCustomDropDown<String>(
                       allPadding: 0,
                       horizontalPadding: 15,
@@ -395,9 +400,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                       },
                     ),
 
-                    const SizedBox(
-                      height: 12,
-                    ),
+                    const SizedBox(height: 12),
 
                     if (selectedWorkType == "Assignment" &&
                         selectedWorkType != null) ...[
@@ -416,9 +419,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                           });
                         },
                       ),
-                      const SizedBox(
-                        height: 12,
-                      ),
+                      const SizedBox(height: 12),
                     ],
 
                     CustomTextField(
@@ -430,120 +431,124 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                       controller: textBoxController,
                       hintColor: AppColors.primaryGreen,
                     ),
-                    //////
 
+                    //////
                     Container(
                       decoration: const BoxDecoration(
-                          color: AppColors.lightGreyColor,
-                          borderRadius: BorderRadius.all(Radius.circular(12))),
+                        color: AppColors.lightGreyColor,
+                        borderRadius: BorderRadius.all(Radius.circular(12)),
+                      ),
                       child: Row(
                         children: [
                           Expanded(
                             child: CustomTextField(
-                                hintText: 'Upload Attachment',
-                                height: 50,
-                                readOnly: true,
-                                bottomMargin: 0,
-                                fontSize: 14,
-                                controller: fileNameController,
-                                fontWeight: FontWeight.normal,
-                                inputType: TextInputType.text,
-                                fillColor: AppColors.lightGreyColor,
-                                hintColor: AppColors.primaryGreen,
-                                onTap: () async {
-                                  showModalBottomSheet(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return SafeArea(
-                                        child: Wrap(
-                                          children: [
-                                            ListTile(
-                                              leading: Icon(Icons.camera_alt),
-                                              title: Text('Take Photo'),
-                                              onTap: () async {
-                                                Navigator.pop(context);
-                                                await checkCameraPermission(); // Close the bottom sheet
-                                                final pickedFile =
-                                                    await ImagePicker()
-                                                        .pickImage(
-                                                  source: ImageSource.camera,
+                              hintText: 'Upload Attachment',
+                              height: 50,
+                              readOnly: true,
+                              bottomMargin: 0,
+                              fontSize: 14,
+                              controller: fileNameController,
+                              fontWeight: FontWeight.normal,
+                              inputType: TextInputType.text,
+                              fillColor: AppColors.lightGreyColor,
+                              hintColor: AppColors.primaryGreen,
+                              onTap: () async {
+                                showModalBottomSheet(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return SafeArea(
+                                      child: Wrap(
+                                        children: [
+                                          ListTile(
+                                            leading: Icon(Icons.camera_alt),
+                                            title: Text('Take Photo'),
+                                            onTap: () async {
+                                              Navigator.pop(context);
+                                              await checkCameraPermission(); // Close the bottom sheet
+                                              final pickedFile =
+                                                  await ImagePicker().pickImage(
+                                                    source: ImageSource.camera,
+                                                  );
+                                              if (pickedFile != null) {
+                                                file = File(pickedFile.path);
+
+                                                // Format current date/time
+                                                String formattedDate =
+                                                    DateFormat(
+                                                      'yyyy-MM-dd-hh-mm-a',
+                                                    ).format(DateTime.now());
+
+                                                // Get extension from the original file
+                                                String extension = pickedFile
+                                                    .path
+                                                    .split('.')
+                                                    .last;
+
+                                                // Combine formatted date with extension
+                                                fileNameController.text =
+                                                    '$formattedDate.$extension';
+
+                                                setState(() {});
+                                              } else {
+                                                DisplayUtils.showToast(
+                                                  context,
+                                                  "No photo taken",
                                                 );
-                                                if (pickedFile != null) {
-                                                  file = File(pickedFile.path);
-
-                                                  // Format current date/time
-                                                  String formattedDate =
-                                                      DateFormat(
-                                                              'yyyy-MM-dd-hh-mm-a')
-                                                          .format(
-                                                              DateTime.now());
-
-                                                  // Get extension from the original file
-                                                  String extension = pickedFile
-                                                      .path
-                                                      .split('.')
-                                                      .last;
-
-                                                  // Combine formatted date with extension
-                                                  fileNameController.text =
-                                                      '$formattedDate.$extension';
-
-                                                  setState(() {});
-                                                } else {
-                                                  DisplayUtils.showToast(
-                                                      context,
-                                                      "No photo taken");
-                                                }
-                                              },
+                                              }
+                                            },
+                                          ),
+                                          ListTile(
+                                            leading: Icon(
+                                              Icons.insert_drive_file,
                                             ),
-                                            ListTile(
-                                              leading:
-                                                  Icon(Icons.insert_drive_file),
-                                              title: Text('Pick File'),
-                                              onTap: () async {
-                                                Navigator.pop(
-                                                    context); // Close the bottom sheet
-                                                result = await FilePicker
-                                                    .platform
-                                                    .pickFiles(
-                                                  type: FileType.custom,
-                                                  allowMultiple: false,
-                                                  allowedExtensions: [
-                                                    'pdf',
-                                                    'doc',
-                                                    'docx',
-                                                    'txt',
-                                                    'jpg',
-                                                    'jpeg',
-                                                    'png',
-                                                    'xlsx',
-                                                    'xlsm',
-                                                    'xlsb',
-                                                    'xltx',
-                                                    'ppt',
-                                                    'pptx'
-                                                  ],
+                                            title: Text('Pick File'),
+                                            onTap: () async {
+                                              Navigator.pop(
+                                                context,
+                                              ); // Close the bottom sheet
+                                              result = await FilePicker.platform
+                                                  .pickFiles(
+                                                    type: FileType.custom,
+                                                    allowMultiple: false,
+                                                    allowedExtensions: [
+                                                      'pdf',
+                                                      'doc',
+                                                      'docx',
+                                                      'txt',
+                                                      'jpg',
+                                                      'jpeg',
+                                                      'png',
+                                                      'xlsx',
+                                                      'xlsm',
+                                                      'xlsb',
+                                                      'xltx',
+                                                      'ppt',
+                                                      'pptx',
+                                                    ],
+                                                  );
+                                              if (result == null) {
+                                                DisplayUtils.showToast(
+                                                  context,
+                                                  "No file selected",
                                                 );
-                                                if (result == null) {
-                                                  DisplayUtils.showToast(
-                                                      context,
-                                                      "No file selected");
-                                                } else {
-                                                  file = File(result!
-                                                      .files.single.path
-                                                      .toString());
-                                                  fileNameController.text =
-                                                      result!.files.single.name;
-                                                  setState(() {});
-                                                }
-                                              },
-                                            ),
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  );
-                                }),
+                                              } else {
+                                                file = File(
+                                                  result!.files.single.path
+                                                      .toString(),
+                                                );
+                                                fileNameController.text =
+                                                    result!.files.single.name;
+                                                setState(() {});
+                                              }
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            ),
                           ),
                           CustomButton(
                             height: 50,
@@ -552,27 +557,26 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                             onPressed: () {
                               if (result != null) {
                                 DialogUtils.confirmationDialog(
-                                    context: context,
-                                    title: 'Confirmation!',
-                                    content:
-                                        'Are you sure you want to remove the file?',
-                                    onPressYes: () {
-                                      fileNameController.clear();
-                                      result = null;
-                                      setState(() {});
-                                      NavRouter.pop(context);
-                                    });
+                                  context: context,
+                                  title: 'Confirmation!',
+                                  content:
+                                      'Are you sure you want to remove the file?',
+                                  onPressYes: () {
+                                    fileNameController.clear();
+                                    result = null;
+                                    setState(() {});
+                                    NavRouter.pop(context);
+                                  },
+                                );
                               }
                             },
                             title: 'Remove',
                             isEnabled: true,
-                          )
+                          ),
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 16,
-                    ),
+                    const SizedBox(height: 16),
 
                     //////
                     BlocConsumer<AddDiaryCubit, AddDiaryState>(
@@ -586,16 +590,16 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                             AddDiaryStatus.failure) {
                           DisplayUtils.removeLoader();
                           DisplayUtils.showSnackBar(
-                              context, state.failure.message);
+                            context,
+                            state.failure.message,
+                          );
                         }
                       },
                       builder: (context, state) {
                         return Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            SizedBox(
-                              height: 12.0,
-                            ),
+                            SizedBox(height: 12.0),
                             CustomButton(
                               height: 50,
                               borderRadius: 15,
@@ -614,15 +618,19 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                                         .read<AddDiaryCubit>()
                                         .uploadTeacherFileDiary(input)
                                         .then((v) {
-                                      if (v) {
-                                        DisplayUtils.showToast(context,
-                                            "Diary Added Successfully");
-                                        NavRouter.pop(context);
-                                      }
-                                    });
+                                          if (v) {
+                                            DisplayUtils.showToast(
+                                              context,
+                                              "Diary Added Successfully",
+                                            );
+                                            NavRouter.pop(context);
+                                          }
+                                        });
                                   } else {
-                                    DisplayUtils.showSnackBar(context,
-                                        "Required all Fields for Diary");
+                                    DisplayUtils.showSnackBar(
+                                      context,
+                                      "Required all Fields for Diary",
+                                    );
                                   }
                                 } else {
                                   if (fromDateController.text.isNotEmpty &&
@@ -635,15 +643,19 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                                         .read<AddDiaryCubit>()
                                         .uploadTeacherAssignment(input)
                                         .then((v) {
-                                      if (v) {
-                                        DisplayUtils.showToast(context,
-                                            "Assignment Added Successfully");
-                                        NavRouter.pop(context);
-                                      }
-                                    });
+                                          if (v) {
+                                            DisplayUtils.showToast(
+                                              context,
+                                              "Assignment Added Successfully",
+                                            );
+                                            NavRouter.pop(context);
+                                          }
+                                        });
                                   } else {
-                                    DisplayUtils.showSnackBar(context,
-                                        "Required all Fields for Assignment");
+                                    DisplayUtils.showSnackBar(
+                                      context,
+                                      "Required all Fields for Assignment",
+                                    );
                                   }
                                 }
                               },
@@ -658,9 +670,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                 );
               }
               if (classState.classesStatus == ClassesStatus.failure) {
-                return Center(
-                  child: Text(classState.failure.message),
-                );
+                return Center(child: Text(classState.failure.message));
               }
               return SizedBox();
             },

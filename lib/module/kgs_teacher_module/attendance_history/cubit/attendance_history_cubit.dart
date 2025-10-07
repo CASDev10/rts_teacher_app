@@ -10,39 +10,50 @@ import 'attendance_history_state.dart';
 
 class AttendanceHistoryCubit extends Cubit<AttendanceHistoryState> {
   AttendanceHistoryCubit(this._repository)
-      : super(AttendanceHistoryState.initial());
+    : super(AttendanceHistoryState.initial());
   AttendanceHistoryRepository _repository;
 
   List<AttendanceHistoryModel> attendanceHistoryList = [];
 
-  Future fetchAttendanceHistoryList(
-      {required AttendanceHistoryInput input, bool loadMore = false}) async {
+  Future fetchAttendanceHistoryList({
+    required AttendanceHistoryInput input,
+    bool loadMore = false,
+  }) async {
     DisplayUtils.showLoader();
 
-    emit(state.copyWith(
+    emit(
+      state.copyWith(
         studentAttendanceStatus: loadMore
             ? AttendanceHistoryStatus.loadMore
-            : AttendanceHistoryStatus.loading));
+            : AttendanceHistoryStatus.loading,
+      ),
+    );
     if (loadMore) {
       DisplayUtils.showLoader();
     } else {
       attendanceHistoryList.clear();
     }
     try {
-      AttendanceHistoryResponse attendanceHistoryResponse =
-          await _repository.getEmployeeAttendance(input: input);
+      print("Input Start Date: ${input.toJson()}, ");
+      AttendanceHistoryResponse attendanceHistoryResponse = await _repository
+          .getEmployeeAttendance(input: input);
       attendanceHistoryList.addAll(attendanceHistoryResponse.data);
 
-      emit(state.copyWith(
-        studentAttendanceStatus: AttendanceHistoryStatus.success,
-        attendanceHistoryList: attendanceHistoryList,
-      ));
+      emit(
+        state.copyWith(
+          studentAttendanceStatus: AttendanceHistoryStatus.success,
+          attendanceHistoryList: attendanceHistoryList,
+        ),
+      );
       DisplayUtils.removeLoader();
     } on BaseFailure catch (e) {
       DisplayUtils.removeLoader();
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           studentAttendanceStatus: AttendanceHistoryStatus.success,
-          failure: HighPriorityException(e.message)));
+          failure: HighPriorityException(e.message),
+        ),
+      );
     } catch (_) {
       DisplayUtils.removeLoader();
     }

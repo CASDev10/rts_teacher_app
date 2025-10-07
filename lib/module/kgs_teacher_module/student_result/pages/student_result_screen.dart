@@ -62,10 +62,7 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
   Widget build(BuildContext context) {
     return BaseScaffold(
       hMargin: 0,
-      appBar: CustomAppbar(
-        "Student Result",
-        centerTitle: true,
-      ),
+      appBar: CustomAppbar("Student Result", centerTitle: true),
       backgroundColor: AppColors.primaryGreen,
       body: BlocBuilder<StudentResultCubit, StudentResultState>(
         builder: (context, state) {
@@ -75,9 +72,12 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
             decoration: const BoxDecoration(
               color: AppColors.whiteColor,
               borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(50), topRight: Radius.circular(50)),
+                topLeft: Radius.circular(50),
+                topRight: Radius.circular(50),
+              ),
             ),
-            padding: const EdgeInsets.symmetric(horizontal: 20) +
+            padding:
+                const EdgeInsets.symmetric(horizontal: 20) +
                 const EdgeInsets.symmetric(vertical: 30),
             child: SingleChildScrollView(
               child: Column(
@@ -106,14 +106,12 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                               selectedSection = null;
                               selectedSubject = null;
                             });
-                            context
-                                .read<StudentResultCubit>()
-                                .fetchClassNames(gradeId: value.gradeId);
+                            context.read<StudentResultCubit>().fetchClassNames(
+                              gradeId: value.gradeId,
+                            );
                           },
                         ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
+                  SizedBox(height: 12.0),
                   state.studentAttendanceStatus == StudentResultStatus.loading
                       ? DropdownPlaceHolder(
                           name: selectedClassName != null
@@ -142,13 +140,12 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                               context
                                   .read<StudentResultCubit>()
                                   .fetchSectionsAndSubjects(
-                                      classId: value.classId);
+                                    classId: value.classId,
+                                  );
                             });
                           },
                         ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
+                  SizedBox(height: 12.0),
                   state.studentAttendanceStatus == StudentResultStatus.loading
                       ? DropdownPlaceHolder(
                           name: selectedSection != null
@@ -174,9 +171,7 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                             });
                           },
                         ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
+                  SizedBox(height: 12.0),
                   state.studentAttendanceStatus == StudentResultStatus.loading
                       ? DropdownPlaceHolder(
                           name: selectedSubject != null
@@ -192,7 +187,7 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                           iconColor: AppColors.primaryGreen,
                           suffixIconPath: '',
                           displayField: (item) => item.subjectName,
-                          hint: 'Select Section',
+                          hint: 'Select Subject',
                           items: state.subjectsName,
                           onSelect: (value) {
                             setState(() {
@@ -202,9 +197,7 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                             });
                           },
                         ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
+                  SizedBox(height: 12.0),
                   state.studentAttendanceStatus == StudentResultStatus.loading
                       ? DropdownPlaceHolder(
                           name: selectedEvaluatedType != null
@@ -230,13 +223,12 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                               context
                                   .read<StudentResultCubit>()
                                   .fetchEvaluation(
-                                      evaluationTypeId: value.evaluationTypeId);
+                                    evaluationTypeId: value.evaluationTypeId,
+                                  );
                             });
                           },
                         ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
+                  SizedBox(height: 12.0),
                   state.studentAttendanceStatus == StudentResultStatus.loading
                       ? DropdownPlaceHolder(
                           name: selectedEvaluated != null
@@ -262,9 +254,7 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                             });
                           },
                         ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
+                  SizedBox(height: 12.0),
                   AddResultDatePicker(
                     stringFunction: (v) {
                       setState(() {
@@ -273,9 +263,7 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                     },
                     hintText: 'Select Exam Date',
                   ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
+                  SizedBox(height: 12.0),
                   AddResultDatePicker(
                     stringFunction: (v) {
                       setState(() {
@@ -284,9 +272,7 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                     },
                     hintText: 'Select Submission Date',
                   ),
-                  SizedBox(
-                    height: 12.0,
-                  ),
+                  SizedBox(height: 12.0),
                   CustomTextField(
                     hintText: 'Total Marks',
                     hintColor: AppColors.primaryGreen,
@@ -294,9 +280,7 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                     controller: _totalMarksController,
                     fillColor: AppColors.lightGreyColor,
                   ),
-                  SizedBox(
-                    height: 24.0,
-                  ),
+                  SizedBox(height: 24.0),
                   CustomButton(
                     onPressed: () async {
                       if (selectedGrade != null &&
@@ -309,16 +293,16 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                           examDate.isNotEmpty &&
                           submissionDate.isNotEmpty) {
                         StudentListInput input = StudentListInput(
-                            examDate: examDate,
-                            classIdFk: selectedClassName!.classId,
-                            sectionIdFk: selectedSection!.sectionId,
-                            subjectIdFk: selectedSubject!.subjectId,
-                            evaluationIdFk: selectedEvaluated!.evaluationId,
-                            evaluationGroupId:
-                                selectedEvaluatedType!.evaluationTypeId,
-                            submissionDate: submissionDate,
-                            totalMarks:
-                                double.parse(_totalMarksController.text));
+                          examDate: examDate,
+                          classIdFk: selectedClassName!.classId,
+                          sectionIdFk: selectedSection!.sectionId,
+                          subjectIdFk: selectedSubject!.subjectId,
+                          evaluationIdFk: selectedEvaluated!.evaluationId,
+                          evaluationGroupId:
+                              selectedEvaluatedType!.evaluationTypeId,
+                          submissionDate: submissionDate,
+                          totalMarks: double.parse(_totalMarksController.text),
+                        );
 
                         StudentListResponse? response = await context
                             .read<StudentResultCubit>()
@@ -326,21 +310,28 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
 
                         if (response != null) {
                           NavRouter.push(
-                              context,
-                              ResultMarkingScreen(
-                                  input: input, response: response));
+                            context,
+                            ResultMarkingScreen(
+                              input: input,
+                              response: response,
+                            ),
+                          );
                         } else {
                           DisplayUtils.showSnackBar(
-                              context, "Something Went Wrong");
+                            context,
+                            "Something Went Wrong",
+                          );
                         }
                       } else {
                         DisplayUtils.showSnackBar(
-                            context, "All Fields are Required");
+                          context,
+                          "All Fields are Required",
+                        );
                       }
                     },
                     title: "Get Students List",
                     height: 50.0,
-                  )
+                  ),
                 ],
               ),
             ),
