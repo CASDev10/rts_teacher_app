@@ -84,6 +84,6 @@ class StudentListInput {
     "UC_EntityId": _repository.user.entityId,
     "TotalMarks": totalMarks?.toInt(),
     "SubmissionDate": submissionDate,
-    // "AssessmentTypeId": assessmentId,
+    "AssessmentTypeId": assessmentId,
   };
 }
