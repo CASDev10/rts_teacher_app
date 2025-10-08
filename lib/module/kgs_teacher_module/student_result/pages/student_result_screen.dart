@@ -65,7 +65,7 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
 
   EvaluationTypeModel? selectedEvaluatedType;
   EvaluationModel? selectedEvaluated;
-  // final TextEditingController _totalMarksController = TextEditingController();
+  final TextEditingController _totalMarksController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -230,6 +230,7 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                               setState(() {
                                 selectedAssessmentId = null;
                                 selectedEvaluatedGroup = null;
+                                selectedEvaluated = null;
                                 selectedEvaluatedType = value;
                               });
                               context
@@ -246,6 +247,32 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                                           );
                                     }
                                   });
+                            });
+                          },
+                        ),
+                  SizedBox(height: 12.0),
+                  state.studentAttendanceStatus == StudentResultStatus.loading
+                      ? DropdownPlaceHolder(
+                          name: selectedEvaluated != null
+                              ? selectedEvaluated!.name
+                              : "Select Evaluation",
+                        )
+                      : GeneralCustomDropDown<EvaluationModel>(
+                          allPadding: 0,
+                          selectedValue: selectedEvaluated,
+                          horizontalPadding: 15,
+                          isOutline: false,
+                          hintColor: AppColors.primaryGreen,
+                          iconColor: AppColors.primaryGreen,
+                          suffixIconPath: '',
+                          displayField: (item) => item.name,
+                          hint: 'Select Evaluation',
+                          items: state.evaluations,
+                          onSelect: (value) {
+                            setState(() {
+                              setState(() {
+                                selectedEvaluated = value;
+                              });
                             });
                           },
                         ),
@@ -280,32 +307,6 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                   selectedEvaluatedType?.evaluationTypeId.toInt() == 2
                       ? SizedBox(height: 12)
                       : SizedBox(),
-                  state.studentAttendanceStatus == StudentResultStatus.loading
-                      ? DropdownPlaceHolder(
-                          name: selectedEvaluated != null
-                              ? selectedEvaluated!.name
-                              : "Select Evaluation",
-                        )
-                      : GeneralCustomDropDown<EvaluationModel>(
-                          allPadding: 0,
-                          selectedValue: selectedEvaluated,
-                          horizontalPadding: 15,
-                          isOutline: false,
-                          hintColor: AppColors.primaryGreen,
-                          iconColor: AppColors.primaryGreen,
-                          suffixIconPath: '',
-                          displayField: (item) => item.name,
-                          hint: 'Select Evaluation',
-                          items: state.evaluations,
-                          onSelect: (value) {
-                            setState(() {
-                              setState(() {
-                                selectedEvaluated = value;
-                              });
-                            });
-                          },
-                        ),
-                  SizedBox(height: 12.0),
 
                   selectedEvaluatedType?.evaluationTypeId.toInt() == 2
                       ? GeneralCustomDropDown<int>(
@@ -347,14 +348,14 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                     hintText: 'Select Submission Date',
                   ),
                   SizedBox(height: 12.0),
-                  // CustomTextField(
-                  //   hintText: 'Total Marks',
-                  //   hintColor: AppColors.primaryGreen,
-                  //   inputType: TextInputType.number,
-                  //   controller: _totalMarksController,
-                  //   fillColor: AppColors.lightGreyColor,
-                  // ),
-                  // SizedBox(height: 24.0),
+                  CustomTextField(
+                    hintText: 'Total Marks',
+                    hintColor: AppColors.primaryGreen,
+                    inputType: TextInputType.number,
+                    controller: _totalMarksController,
+                    fillColor: AppColors.lightGreyColor,
+                  ),
+                  SizedBox(height: 24.0),
                   CustomButton(
                     onPressed: () async {
                       print(
@@ -364,7 +365,7 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                         "Subject:$selectedSubject, "
                         "EvalType:$selectedEvaluatedType, "
                         "Eval:$selectedEvaluated, "
-                        // "Marks:${_totalMarksController.text}, "
+                        "Marks:${_totalMarksController.text}, "
                         "ExamDate:$examDate, "
                         "SubmissionDate:$submissionDate",
                       );
@@ -374,8 +375,8 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                           selectedSubject != null &&
                           selectedEvaluatedType != null &&
                           selectedEvaluated != null &&
-                          // _totalMarksController.text.isNotEmpty &&
-                          // examDate.isNotEmpty &&
+                          _totalMarksController.text.isNotEmpty &&
+                          examDate.isNotEmpty &&
                           submissionDate.isNotEmpty) {
                         StudentListInput input = StudentListInput(
                           examDate: examDate,
@@ -387,7 +388,7 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                               selectedEvaluatedGroup?.evaluationGroupId ?? 0,
                           submissionDate: submissionDate,
                           assessmentId: selectedAssessmentId ?? 0,
-                          // totalMarks: double.parse(_totalMarksController.text),
+                          totalMarks: double.parse(_totalMarksController.text),
                         );
 
                         StudentListResponse? response = await context
