@@ -4,6 +4,7 @@ import 'package:rts/module/kgs_teacher_module/student_result/cubit/student_resul
 import 'package:rts/module/kgs_teacher_module/student_result/models/class_name_response.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/evaluation_type_response.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/grade_response.dart';
+import 'package:rts/module/kgs_teacher_module/student_result/models/group_evaluation_response.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/sections_name_response.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/student_list_input.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/student_list_response.dart';
@@ -33,18 +34,49 @@ class StudentResultCubit extends Cubit<StudentResultState> {
       print(" Grade List Length ${gradesList.length}");
       emit(
         state.copyWith(
-            studentAttendanceStatus: StudentResultStatus.success,
-            grades: gradesList,
-            classNames: [],
-            sectionsNames: [],
-            subjectsName: []),
+          studentAttendanceStatus: StudentResultStatus.success,
+          grades: gradesList,
+          classNames: [],
+          sectionsNames: [],
+          subjectsName: [],
+        ),
       );
       DisplayUtils.removeLoader();
     } on BaseFailure catch (e) {
       DisplayUtils.removeLoader();
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           studentAttendanceStatus: StudentResultStatus.failure,
-          failure: HighPriorityException(e.message)));
+          failure: HighPriorityException(e.message),
+        ),
+      );
+    } catch (_) {
+      DisplayUtils.removeLoader();
+    }
+  }
+
+  Future fetchGroupEvaluation({required int evaluationTypeId}) async {
+    DisplayUtils.showLoader();
+    emit(state.copyWith(studentAttendanceStatus: StudentResultStatus.loading));
+    try {
+      GroupEvaluationResponse evaluationTypeResponse = await _repository
+          .getEvaluationGroups(evaluationTypeId: evaluationTypeId);
+
+      emit(
+        state.copyWith(
+          studentAttendanceStatus: StudentResultStatus.success,
+          evaluationsGroups: evaluationTypeResponse.data,
+        ),
+      );
+      DisplayUtils.removeLoader();
+    } on BaseFailure catch (e) {
+      DisplayUtils.removeLoader();
+      emit(
+        state.copyWith(
+          studentAttendanceStatus: StudentResultStatus.failure,
+          failure: HighPriorityException(e.message),
+        ),
+      );
     } catch (_) {
       DisplayUtils.removeLoader();
     }
@@ -54,20 +86,24 @@ class StudentResultCubit extends Cubit<StudentResultState> {
     DisplayUtils.showLoader();
     emit(state.copyWith(studentAttendanceStatus: StudentResultStatus.loading));
     try {
-      EvaluationTypeResponse evaluationTypeResponse =
-          await _repository.getEvaluationType();
+      EvaluationTypeResponse evaluationTypeResponse = await _repository
+          .getEvaluationType();
 
       emit(
         state.copyWith(
-            studentAttendanceStatus: StudentResultStatus.success,
-            evaluationTypes: evaluationTypeResponse.data),
+          studentAttendanceStatus: StudentResultStatus.success,
+          evaluationTypes: evaluationTypeResponse.data,
+        ),
       );
       DisplayUtils.removeLoader();
     } on BaseFailure catch (e) {
       DisplayUtils.removeLoader();
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           studentAttendanceStatus: StudentResultStatus.failure,
-          failure: HighPriorityException(e.message)));
+          failure: HighPriorityException(e.message),
+        ),
+      );
     } catch (_) {
       DisplayUtils.removeLoader();
     }
@@ -77,8 +113,8 @@ class StudentResultCubit extends Cubit<StudentResultState> {
     DisplayUtils.showLoader();
     emit(state.copyWith(studentAttendanceStatus: StudentResultStatus.loading));
     try {
-      EvaluationResponse evaluationTypeResponse =
-          await _repository.getEvaluation(evaluationTypeId: evaluationTypeId);
+      EvaluationResponse evaluationTypeResponse = await _repository
+          .getEvaluation(evaluationTypeId: evaluationTypeId);
 
       emit(
         state.copyWith(
@@ -89,9 +125,12 @@ class StudentResultCubit extends Cubit<StudentResultState> {
       DisplayUtils.removeLoader();
     } on BaseFailure catch (e) {
       DisplayUtils.removeLoader();
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           studentAttendanceStatus: StudentResultStatus.failure,
-          failure: HighPriorityException(e.message)));
+          failure: HighPriorityException(e.message),
+        ),
+      );
     } catch (_) {
       DisplayUtils.removeLoader();
     }
@@ -101,8 +140,8 @@ class StudentResultCubit extends Cubit<StudentResultState> {
     DisplayUtils.showLoader();
     emit(state.copyWith(studentAttendanceStatus: StudentResultStatus.loading));
     try {
-      ClassNamesResponse classNamesResponse =
-          await _repository.getClassesResponse(gradeId: gradeId);
+      ClassNamesResponse classNamesResponse = await _repository
+          .getClassesResponse(gradeId: gradeId);
 
       emit(
         state.copyWith(
@@ -113,9 +152,12 @@ class StudentResultCubit extends Cubit<StudentResultState> {
       DisplayUtils.removeLoader();
     } on BaseFailure catch (e) {
       DisplayUtils.removeLoader();
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           studentAttendanceStatus: StudentResultStatus.failure,
-          failure: HighPriorityException(e.message)));
+          failure: HighPriorityException(e.message),
+        ),
+      );
     } catch (_) {
       DisplayUtils.removeLoader();
     }
@@ -143,18 +185,21 @@ class StudentResultCubit extends Cubit<StudentResultState> {
       await Future.wait([getSections(), getSubjects()]);
       emit(
         state.copyWith(
-            studentAttendanceStatus: StudentResultStatus.success,
-            sectionsNames: sectionsListResponse.data.sectionsList,
-            subjectsName: subjectsResponse
-                .data // Default to empty list if it's null or empty,
-            ),
+          studentAttendanceStatus: StudentResultStatus.success,
+          sectionsNames: sectionsListResponse.data.sectionsList,
+          subjectsName: subjectsResponse
+              .data, // Default to empty list if it's null or empty,
+        ),
       );
       DisplayUtils.removeLoader();
     } on BaseFailure catch (e) {
       DisplayUtils.removeLoader();
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           studentAttendanceStatus: StudentResultStatus.failure,
-          failure: HighPriorityException(e.message)));
+          failure: HighPriorityException(e.message),
+        ),
+      );
     } catch (_) {
       DisplayUtils.removeLoader();
     }
@@ -165,20 +210,21 @@ class StudentResultCubit extends Cubit<StudentResultState> {
     emit(state.copyWith(studentAttendanceStatus: StudentResultStatus.loading));
 
     try {
-      StudentListResponse studentListResponse =
-          await _repository.getStudentList(input: input);
+      StudentListResponse studentListResponse = await _repository
+          .getStudentList(input: input);
       emit(
-        state.copyWith(
-          studentAttendanceStatus: StudentResultStatus.success,
-        ),
+        state.copyWith(studentAttendanceStatus: StudentResultStatus.success),
       );
       DisplayUtils.removeLoader();
       return studentListResponse;
     } on BaseFailure catch (e) {
       DisplayUtils.removeLoader();
-      emit(state.copyWith(
+      emit(
+        state.copyWith(
           studentAttendanceStatus: StudentResultStatus.failure,
-          failure: HighPriorityException(e.message)));
+          failure: HighPriorityException(e.message),
+        ),
+      );
     } catch (_) {
       DisplayUtils.removeLoader();
     }

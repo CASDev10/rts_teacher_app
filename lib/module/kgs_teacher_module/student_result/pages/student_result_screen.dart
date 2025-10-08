@@ -7,6 +7,7 @@ import 'package:rts/module/kgs_teacher_module/student_result/cubit/student_resul
 import 'package:rts/module/kgs_teacher_module/student_result/models/class_name_response.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/evaluation_type_response.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/grade_response.dart';
+import 'package:rts/module/kgs_teacher_module/student_result/models/group_evaluation_response.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/sections_name_response.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/student_list_input.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/student_list_response.dart';
@@ -53,10 +54,18 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
   ClassNameModel? selectedClassName;
   SectionsList? selectedSection;
   SubjectsListExam? selectedSubject;
+  EvaluationGroupModel? selectedEvaluatedGroup;
+  final Map<int, String> assessmentOptions = {
+    1: 'Class Test',
+    2: 'Monthly',
+    3: 'Practical',
+  };
+
+  int? selectedAssessmentId;
 
   EvaluationTypeModel? selectedEvaluatedType;
   EvaluationModel? selectedEvaluated;
-  final TextEditingController _totalMarksController = TextEditingController();
+  // final TextEditingController _totalMarksController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -197,6 +206,7 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                             });
                           },
                         ),
+
                   SizedBox(height: 12.0),
                   state.studentAttendanceStatus == StudentResultStatus.loading
                       ? DropdownPlaceHolder(
@@ -218,17 +228,58 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                           onSelect: (value) {
                             setState(() {
                               setState(() {
+                                selectedAssessmentId = null;
+                                selectedEvaluatedGroup = null;
                                 selectedEvaluatedType = value;
                               });
                               context
                                   .read<StudentResultCubit>()
                                   .fetchEvaluation(
                                     evaluationTypeId: value.evaluationTypeId,
-                                  );
+                                  )
+                                  .then((_) {
+                                    if (value.evaluationTypeId == 2) {
+                                      context
+                                          .read<StudentResultCubit>()
+                                          .fetchGroupEvaluation(
+                                            evaluationTypeId: 0,
+                                          );
+                                    }
+                                  });
                             });
                           },
                         ),
                   SizedBox(height: 12.0),
+                  selectedEvaluatedType?.evaluationTypeId.toInt() == 2
+                      ? //Group Evaluation Type Dropdown
+                        state.studentAttendanceStatus ==
+                                StudentResultStatus.loading
+                            ? DropdownPlaceHolder(
+                                name:
+                                    selectedEvaluatedGroup?.name ??
+                                    "Select Group Evaluation Type",
+                              )
+                            : GeneralCustomDropDown<EvaluationGroupModel>(
+                                allPadding: 0,
+                                selectedValue: selectedEvaluatedGroup,
+                                horizontalPadding: 15,
+                                isOutline: false,
+                                hintColor: AppColors.primaryGreen,
+                                iconColor: AppColors.primaryGreen,
+                                suffixIconPath: '',
+                                displayField: (item) => item.name,
+                                hint: 'Select Group Evaluation Type',
+                                items: state.evaluationsGroups,
+                                onSelect: (value) {
+                                  setState(() {
+                                    selectedEvaluatedGroup = value;
+                                  });
+                                },
+                              )
+                      : SizedBox(),
+                  selectedEvaluatedType?.evaluationTypeId.toInt() == 2
+                      ? SizedBox(height: 12)
+                      : SizedBox(),
                   state.studentAttendanceStatus == StudentResultStatus.loading
                       ? DropdownPlaceHolder(
                           name: selectedEvaluated != null
@@ -255,6 +306,29 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                           },
                         ),
                   SizedBox(height: 12.0),
+
+                  selectedEvaluatedType?.evaluationTypeId.toInt() == 2
+                      ? GeneralCustomDropDown<int>(
+                          allPadding: 0,
+                          selectedValue: selectedAssessmentId,
+                          horizontalPadding: 15,
+                          isOutline: false,
+                          hintColor: AppColors.primaryGreen,
+                          iconColor: AppColors.primaryGreen,
+                          suffixIconPath: '',
+                          displayField: (id) => assessmentOptions[id]!,
+                          hint: 'Select Assessment',
+                          items: assessmentOptions.keys.toList(),
+                          onSelect: (value) {
+                            setState(() {
+                              selectedAssessmentId = value;
+                            });
+                          },
+                        )
+                      : SizedBox(),
+                  selectedEvaluatedType?.evaluationTypeId.toInt() == 2
+                      ? SizedBox(height: 12)
+                      : SizedBox(),
                   AddResultDatePicker(
                     stringFunction: (v) {
                       setState(() {
@@ -273,24 +347,35 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                     hintText: 'Select Submission Date',
                   ),
                   SizedBox(height: 12.0),
-                  CustomTextField(
-                    hintText: 'Total Marks',
-                    hintColor: AppColors.primaryGreen,
-                    inputType: TextInputType.number,
-                    controller: _totalMarksController,
-                    fillColor: AppColors.lightGreyColor,
-                  ),
-                  SizedBox(height: 24.0),
+                  // CustomTextField(
+                  //   hintText: 'Total Marks',
+                  //   hintColor: AppColors.primaryGreen,
+                  //   inputType: TextInputType.number,
+                  //   controller: _totalMarksController,
+                  //   fillColor: AppColors.lightGreyColor,
+                  // ),
+                  // SizedBox(height: 24.0),
                   CustomButton(
                     onPressed: () async {
+                      print(
+                        "DEBUG => Grade:$selectedGrade, "
+                        "Class:$selectedClassName, "
+                        "Section:$selectedSection, "
+                        "Subject:$selectedSubject, "
+                        "EvalType:$selectedEvaluatedType, "
+                        "Eval:$selectedEvaluated, "
+                        // "Marks:${_totalMarksController.text}, "
+                        "ExamDate:$examDate, "
+                        "SubmissionDate:$submissionDate",
+                      );
                       if (selectedGrade != null &&
                           selectedClassName != null &&
                           selectedSection != null &&
                           selectedSubject != null &&
                           selectedEvaluatedType != null &&
                           selectedEvaluated != null &&
-                          _totalMarksController.text.isNotEmpty &&
-                          examDate.isNotEmpty &&
+                          // _totalMarksController.text.isNotEmpty &&
+                          // examDate.isNotEmpty &&
                           submissionDate.isNotEmpty) {
                         StudentListInput input = StudentListInput(
                           examDate: examDate,
@@ -299,9 +384,10 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                           subjectIdFk: selectedSubject!.subjectId,
                           evaluationIdFk: selectedEvaluated!.evaluationId,
                           evaluationGroupId:
-                              selectedEvaluatedType!.evaluationTypeId,
+                              selectedEvaluatedGroup?.evaluationGroupId ?? 0,
                           submissionDate: submissionDate,
-                          totalMarks: double.parse(_totalMarksController.text),
+                          assessmentId: selectedAssessmentId ?? 0,
+                          // totalMarks: double.parse(_totalMarksController.text),
                         );
 
                         StudentListResponse? response = await context

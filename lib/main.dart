@@ -41,19 +41,26 @@ void main() async {
         BlocProvider<LoginCubit>(create: (_) => LoginCubit(sl(), sl())),
         BlocProvider<SignupCubit>(create: (_) => SignupCubit(sl())),
         BlocProvider<ForgetPasswordCubit>(
-            create: (_) => ForgetPasswordCubit(sl())),
+          create: (_) => ForgetPasswordCubit(sl()),
+        ),
         BlocProvider<AddEvaluationRemarksCubit>(
-            create: (_) => AddEvaluationRemarksCubit(sl())),
+          create: (_) => AddEvaluationRemarksCubit(sl()),
+        ),
         BlocProvider<StudentsEvaluationCubit>(
-            create: (_) => StudentsEvaluationCubit(sl())),
+          create: (_) => StudentsEvaluationCubit(sl()),
+        ),
         BlocProvider<EvaluationAreasCubit>(
-            create: (_) => EvaluationAreasCubit(sl())),
+          create: (_) => EvaluationAreasCubit(sl()),
+        ),
         BlocProvider<ObservationLevelCubit>(
-            create: (_) => ObservationLevelCubit(sl())),
+          create: (_) => ObservationLevelCubit(sl()),
+        ),
         BlocProvider<AddUpdateDeleteLevelCubit>(
-            create: (_) => AddUpdateDeleteLevelCubit(sl())),
+          create: (_) => AddUpdateDeleteLevelCubit(sl()),
+        ),
         BlocProvider<EmployeeDetailCubit>(
-            create: (_) => EmployeeDetailCubit(sl())),
+          create: (_) => EmployeeDetailCubit(sl()),
+        ),
       ],
       child: const App(),
     ),

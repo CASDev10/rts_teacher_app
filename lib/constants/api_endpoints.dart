@@ -12,6 +12,7 @@ class Endpoints {
   static const String createUpdateAwardList = '/CreateUpdateAwardList';
   static const String getEvaluationRemarksList = '/GetEvaluationRemarksList';
   static const String getEvaluationTypes = '/GetEvaluationTypes';
+  static const String getEvaluationGroups = '/GetEvaluationGroups';
   static const String getEvaluation = '/GetEvaluation';
   static const String getSectionStudentListForResult =
       '/GetSectionStudentListForResult';

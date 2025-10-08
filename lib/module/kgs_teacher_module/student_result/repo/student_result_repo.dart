@@ -7,6 +7,7 @@ import 'package:rts/module/kgs_teacher_module/student_result/models/class_name_r
 import 'package:rts/module/kgs_teacher_module/student_result/models/create_update_award_input.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/evaluation_type_response.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/grade_response.dart';
+import 'package:rts/module/kgs_teacher_module/student_result/models/group_evaluation_response.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/student_list_input.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/student_list_response.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/subjects_response.dart';
@@ -28,9 +29,36 @@ class StudentResultRepository {
         Endpoints.getEmployeeAssignedGrades,
         data: {"UC_LoginUserId": _authRepository.user.userId},
       );
-      GradesResponse gradesResponse =
-          await compute(gradesResponseFromJson, response);
+      GradesResponse gradesResponse = await compute(
+        gradesResponseFromJson,
+        response,
+      );
       return gradesResponse;
+    } on BaseFailure catch (_) {
+      rethrow;
+    } on TypeError catch (e) {
+      log('TYPE error stackTrace :: ${e.stackTrace}');
+      rethrow;
+    }
+  }
+
+  Future<GroupEvaluationResponse> getEvaluationGroups({
+    required int evaluationTypeId,
+  }) async {
+    try {
+      var response = await _networkService.get(
+        Endpoints.getEvaluationGroups,
+        data: {
+          "EvaluationGroupId": evaluationTypeId,
+          "IsActive": 0,
+          "UC_SchoolId": _authRepository.user.schoolId,
+        },
+      );
+      GroupEvaluationResponse groupEvaluationResponse = await compute(
+        groupEvaluationResponseFromJson,
+        response,
+      );
+      return groupEvaluationResponse;
     } on BaseFailure catch (_) {
       rethrow;
     } on TypeError catch (e) {
@@ -45,11 +73,13 @@ class StudentResultRepository {
         Endpoints.getSchoolClassesByGradeId,
         data: {
           "UC_SchoolId": _authRepository.user.schoolId,
-          "GradeId": gradeId
+          "GradeId": gradeId,
         },
       );
-      ClassNamesResponse classNamesResponse =
-          await compute(classNamesResponseFromJson, response);
+      ClassNamesResponse classNamesResponse = await compute(
+        classNamesResponseFromJson,
+        response,
+      );
       return classNamesResponse;
     } on BaseFailure catch (_) {
       rethrow;
@@ -59,16 +89,16 @@ class StudentResultRepository {
     }
   }
 
-  Future<SectionsListResponse> getClassSection({
-    required int classId,
-  }) async {
+  Future<SectionsListResponse> getClassSection({required int classId}) async {
     try {
       var response = await _networkService.get(
         Endpoints.getClassSections,
         data: {"SchoolId": _authRepository.user.schoolId, "ClassId": classId},
       );
-      SectionsListResponse sectionsListResponse =
-          await compute(sectionsListResponseFromJson, response);
+      SectionsListResponse sectionsListResponse = await compute(
+        sectionsListResponseFromJson,
+        response,
+      );
       // List<SectionsModel>? sections = sectionsResponse.data.sectionsList;
       return sectionsListResponse;
     } on BaseFailure catch (_) {
@@ -79,20 +109,20 @@ class StudentResultRepository {
     }
   }
 
-  Future<SubjectsResponse> getSubjectsOfClass({
-    required int classId,
-  }) async {
+  Future<SubjectsResponse> getSubjectsOfClass({required int classId}) async {
     try {
       var response = await _networkService.get(
         Endpoints.getSubjectOfClass,
         data: {
           "UC_SchoolId": _authRepository.user.schoolId,
           "ClassIdFk": classId,
-          "UC_EntityId": _authRepository.user.entityId
+          "UC_EntityId": _authRepository.user.entityId,
         },
       );
-      SubjectsResponse subjectsResponse =
-          await compute(subjectsResponseFromJson, response);
+      SubjectsResponse subjectsResponse = await compute(
+        subjectsResponseFromJson,
+        response,
+      );
       return subjectsResponse;
     } on BaseFailure catch (_) {
       rethrow;
@@ -104,11 +134,11 @@ class StudentResultRepository {
 
   Future<EvaluationTypeResponse> getEvaluationType() async {
     try {
-      var response = await _networkService.get(
-        Endpoints.getEvaluationTypes,
+      var response = await _networkService.get(Endpoints.getEvaluationTypes);
+      EvaluationTypeResponse evaluationTypeResponse = await compute(
+        evaluationTypeResponseFromJson,
+        response,
       );
-      EvaluationTypeResponse evaluationTypeResponse =
-          await compute(evaluationTypeResponseFromJson, response);
       return evaluationTypeResponse;
     } on BaseFailure catch (_) {
       rethrow;
@@ -118,16 +148,22 @@ class StudentResultRepository {
     }
   }
 
-  Future<EvaluationResponse> getEvaluation(
-      {required int evaluationTypeId}) async {
+  Future<EvaluationResponse> getEvaluation({
+    required int evaluationTypeId,
+  }) async {
     try {
-      var response = await _networkService.get(Endpoints.getEvaluation, data: {
-        "UC_EntityId": _authRepository.user.entityId,
-        "EvaluationTypeId": evaluationTypeId,
-        "UC_SchoolId": _authRepository.user.schoolId
-      });
-      EvaluationResponse evaluationResponse =
-          await compute(evaluationResponseFromJson, response);
+      var response = await _networkService.get(
+        Endpoints.getEvaluation,
+        data: {
+          "UC_EntityId": _authRepository.user.entityId,
+          "EvaluationTypeId": evaluationTypeId,
+          "UC_SchoolId": _authRepository.user.schoolId,
+        },
+      );
+      EvaluationResponse evaluationResponse = await compute(
+        evaluationResponseFromJson,
+        response,
+      );
       return evaluationResponse;
     } on BaseFailure catch (_) {
       rethrow;
@@ -137,16 +173,19 @@ class StudentResultRepository {
     }
   }
 
-  Future<StudentListResponse> getStudentList(
-      {required StudentListInput input}) async {
+  Future<StudentListResponse> getStudentList({
+    required StudentListInput input,
+  }) async {
     try {
       var response = await _networkService.get(
         Endpoints.getSectionStudentListForResult,
         data: input.toJson(),
         // data: input.toResultSubmission(),
       );
-      StudentListResponse studentListResponse =
-          await compute(studentListResponseFromJson, response);
+      StudentListResponse studentListResponse = await compute(
+        studentListResponseFromJson,
+        response,
+      );
       return studentListResponse;
     } on BaseFailure catch (_) {
       rethrow;
@@ -164,8 +203,10 @@ class StudentResultRepository {
         Endpoints.createUpdateAwardList,
         data: input.toJson(),
       );
-      BaseResponseModel baseResponseModel =
-          await compute(baseResponseModelFromJson, response);
+      BaseResponseModel baseResponseModel = await compute(
+        baseResponseModelFromJson,
+        response,
+      );
       return baseResponseModel;
     } on BaseFailure catch (_) {
       rethrow;

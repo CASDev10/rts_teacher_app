@@ -1,18 +1,13 @@
 import 'package:rts/module/kgs_teacher_module/student_result/models/class_name_response.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/evaluation_type_response.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/grade_response.dart';
+import 'package:rts/module/kgs_teacher_module/student_result/models/group_evaluation_response.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/sections_name_response.dart';
-
 import '../../../../../../core/failures/base_failures/base_failure.dart';
 import '../../models/evaluation_response.dart';
 import '../../models/subjects_response.dart';
 
-enum StudentResultStatus {
-  none,
-  loading,
-  success,
-  failure,
-}
+enum StudentResultStatus { none, loading, success, failure }
 
 class StudentResultState {
   final StudentResultStatus studentAttendanceStatus;
@@ -24,6 +19,7 @@ class StudentResultState {
   final List<SubjectsListExam> subjectsName;
   final List<EvaluationTypeModel> evaluationTypes;
   final List<EvaluationModel> evaluations;
+  final List<EvaluationGroupModel> evaluationsGroups;
   StudentResultState({
     required this.studentAttendanceStatus,
     required this.failure,
@@ -33,6 +29,7 @@ class StudentResultState {
     required this.subjectsName,
     required this.evaluationTypes,
     required this.evaluations,
+    required this.evaluationsGroups,
   });
 
   factory StudentResultState.initial() {
@@ -45,6 +42,7 @@ class StudentResultState {
       subjectsName: [],
       evaluationTypes: [],
       evaluations: [],
+      evaluationsGroups: [],
     );
   }
 
@@ -57,6 +55,7 @@ class StudentResultState {
     List<SubjectsListExam>? subjectsName,
     List<EvaluationTypeModel>? evaluationTypes,
     List<EvaluationModel>? evaluations,
+    List<EvaluationGroupModel>? evaluationsGroups,
   }) {
     return StudentResultState(
       studentAttendanceStatus:
@@ -68,6 +67,7 @@ class StudentResultState {
       subjectsName: subjectsName ?? this.subjectsName,
       evaluationTypes: evaluationTypes ?? this.evaluationTypes,
       evaluations: evaluations ?? this.evaluations,
+      evaluationsGroups: evaluationsGroups ?? this.evaluationsGroups,
     );
   }
 }
