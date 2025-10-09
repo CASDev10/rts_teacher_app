@@ -606,8 +606,12 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                               onPressed: () async {
                                 DiaryDescriptionInput input = _onApiHit();
                                 input.file = await changeMulti(file!);
-
+                                print('###worktype $selectedWorkType');
+                                print(
+                                  '###assignmenttype $selectedAssignmentType',
+                                );
                                 if (selectedWorkType != "Assignment") {
+                                  print('###object Diary ');
                                   //   For uploading diary
                                   if (fromDateController.text.isNotEmpty &&
                                       toDateController.text.isNotEmpty &&
@@ -633,6 +637,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                                     );
                                   }
                                 } else {
+                                  print('###object Diary ');
                                   if (fromDateController.text.isNotEmpty &&
                                       toDateController.text.isNotEmpty &&
                                       subjectId != null &&

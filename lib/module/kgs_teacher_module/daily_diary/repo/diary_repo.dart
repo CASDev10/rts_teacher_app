@@ -71,7 +71,7 @@ class DiaryRepository {
         "TeacherFile": input.file,
       });
       var response = await _networkService.post(
-        Endpoints.uploadTeacherFile,
+        Endpoints.addDiary,
         data: toFormData(),
       );
 
