@@ -33,7 +33,7 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
   List<Section>? sections;
 
   bool loadFromManual = false;
-
+  bool isTrue = false;
   AuthRepository authRepository = sl<AuthRepository>();
 
   @override
@@ -42,35 +42,29 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
     String formattedDate = DateFormat('d, MMMM yyyy').format(now);
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (context) => ClassesCubit(sl())..fetchClasses(),
-        ),
-        BlocProvider(
-          create: (context) => SectionsCubit(sl()),
-        ),
+        BlocProvider(create: (context) => ClassesCubit(sl())..fetchClasses()),
+        BlocProvider(create: (context) => SectionsCubit(sl())),
       ],
       child: BaseScaffold(
-        appBar: const CustomAppbar(
-          'Attendance',
-          centerTitle: true,
-        ),
+        appBar: const CustomAppbar('Attendance', centerTitle: true),
         body: Container(
           width: double.infinity,
           decoration: const BoxDecoration(
             color: AppColors.whiteColor,
             borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(50), topRight: Radius.circular(50)),
+              topLeft: Radius.circular(50),
+              topRight: Radius.circular(50),
+            ),
           ),
           child: BlocBuilder<ClassesCubit, ClassesState>(
             builder: (context, classState) {
               if (classState.classesStatus == ClassesStatus.loading) {
-                return Center(
-                  child: LoadingIndicator(),
-                );
+                return Center(child: LoadingIndicator());
               }
               if (classState.classesStatus == ClassesStatus.success) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20) +
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20) +
                       const EdgeInsets.symmetric(vertical: 30),
                   child: Stack(
                     children: [
@@ -93,36 +87,33 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     SvgPicture.asset(
-                                        "assets/images/svg/ic_calendar.svg"),
-                                    const SizedBox(
-                                      width: 5,
+                                      "assets/images/svg/ic_calendar.svg",
                                     ),
+                                    const SizedBox(width: 5),
                                     TextView(
                                       formattedDate,
                                       textAlign: TextAlign.end,
                                       color: AppColors.darkGreyColor,
                                       fontSize: 10,
                                       fontWeight: FontWeight.w400,
-                                    )
+                                    ),
                                   ],
                                 ),
                               ),
                             ],
                           ),
-                          const SizedBox(
-                            height: 35,
-                          ),
+                          const SizedBox(height: 35),
                           Container(
                             padding: const EdgeInsets.symmetric(vertical: 15),
                             decoration: const BoxDecoration(
-                                color: AppColors.lightGreyColor,
-                                borderRadius:
-                                    BorderRadius.all(Radius.circular(12))),
+                              color: AppColors.lightGreyColor,
+                              borderRadius: BorderRadius.all(
+                                Radius.circular(12),
+                              ),
+                            ),
                             child: HorizontalCalendarView(),
                           ),
-                          const SizedBox(
-                            height: 25,
-                          ),
+                          const SizedBox(height: 25),
                           CustomDropDown(
                             allPadding: 0,
                             horizontalPadding: 15,
@@ -137,17 +128,17 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
                             onSelect: (String value) {
                               Class selectedClass = classState.classes
                                   .firstWhere(
-                                      (element) => element.className == value);
+                                    (element) => element.className == value,
+                                  );
                               setState(() {
                                 dropdownValueClass = value;
                                 context.read<SectionsCubit>().fetchSections(
-                                    selectedClass.classId.toString());
+                                  selectedClass.classId.toString(),
+                                );
                               });
                             },
                           ),
-                          const SizedBox(
-                            height: 25,
-                          ),
+                          const SizedBox(height: 25),
                           BlocConsumer<SectionsCubit, SectionsState>(
                             listener: (context, sectionStatus) {
                               if (sectionStatus.sectionsStatus ==
@@ -160,7 +151,9 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
                                   SectionsStatus.failure) {
                                 DisplayUtils.removeLoader();
                                 DisplayUtils.showSnackBar(
-                                    context, sectionStatus.failure.message);
+                                  context,
+                                  sectionStatus.failure.message,
+                                );
                               }
                             },
                             builder: (context, sectionStatus) {
@@ -168,8 +161,10 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
                               return GestureDetector(
                                 onTap: dropdownValueClass == null
                                     ? () {
-                                        DisplayUtils.showSnackBar(context,
-                                            "Please select Class First");
+                                        DisplayUtils.showSnackBar(
+                                          context,
+                                          "Please select Class First",
+                                        );
                                       }
                                     : null,
                                 child: CustomDropDown(
@@ -192,9 +187,7 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
                               );
                             },
                           ),
-                          SizedBox(
-                            height: 22,
-                          ),
+                          SizedBox(height: 22),
                           // GestureDetector(
                           //   onTap: () {
                           //     setState(() {
@@ -239,52 +232,114 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
                         bottom: 0,
                         left: 0,
                         right: 0,
-                        child: CustomButton(
-                          height: 50,
-                          borderRadius: 15,
-                          onPressed: () {
-                            if (dropdownValueSection == null &&
-                                dropdownValueClass == null) {
-                              DisplayUtils.showSnackBar(
-                                  context, "Please select Class & Section");
-                            } else if (dropdownValueClass == null) {
-                              DisplayUtils.showSnackBar(
-                                  context, "Please select Class");
-                            } else if (dropdownValueSection == null) {
-                              DisplayUtils.showSnackBar(
-                                  context, "Please select Section");
-                            } else {
-                              print("Class --- $dropdownValueClass");
-                              print("Section --- $dropdownValueSection");
+                        child: Column(
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isTrue = !isTrue;
+                                });
+                              },
+                              child: Row(
+                                children: [
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.rectangle,
+                                      borderRadius: BorderRadius.circular(5),
+                                      border: Border.all(
+                                        color: AppColors.lightGreyColor,
+                                      ),
+                                      color: AppColors.lightGreyColor,
+                                    ),
+                                    height: 28,
+                                    width: 28,
+                                    margin: EdgeInsets.only(left: 5),
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.check,
+                                        color: isTrue
+                                            ? AppColors.primaryGreen
+                                            : Colors.transparent,
+                                        size: 20,
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  const TextView(
+                                    'Load students for manual attendance',
+                                    fontSize: 14,
+                                    color: AppColors.grey,
+                                    fontWeight: FontWeight.w400,
+                                  ),
+                                ],
+                              ),
+                            ),
 
-                              Class selectedClass = classState.classes
-                                  .firstWhere((element) =>
-                                      element.className == dropdownValueClass);
-                              Section? selectedSection = sections?.firstWhere(
-                                  (element) =>
-                                      element.sectionName ==
-                                      dropdownValueSection);
-                              AttendanceInput attendanceInput = AttendanceInput(
-                                  sectionIdFk:
-                                      selectedSection?.sectionId.toString(),
-                                  classIdFk: selectedClass.classId.toString(),
-                                  attendanceDate:
-                                      DateFormat('yyyy-MM-dd').format(now),
-                                  isOnRollStudents: false,
-                                  uCSchoolId:
-                                      authRepository.user.schoolId.toString(),
-                                  uCEntityId:
-                                      authRepository.user.entityId.toString());
+                            SizedBox(height: 10),
+                            CustomButton(
+                              height: 50,
+                              borderRadius: 15,
+                              onPressed: () {
+                                if (dropdownValueSection == null &&
+                                    dropdownValueClass == null) {
+                                  DisplayUtils.showSnackBar(
+                                    context,
+                                    "Please select Class & Section",
+                                  );
+                                } else if (dropdownValueClass == null) {
+                                  DisplayUtils.showSnackBar(
+                                    context,
+                                    "Please select Class",
+                                  );
+                                } else if (dropdownValueSection == null) {
+                                  DisplayUtils.showSnackBar(
+                                    context,
+                                    "Please select Section",
+                                  );
+                                } else {
+                                  print("Class --- $dropdownValueClass");
+                                  print("Section --- $dropdownValueSection");
 
-                              NavRouter.push(
-                                  context,
-                                  AttendanceScreen(
-                                    attendanceInput: attendanceInput,
-                                  ));
-                            }
-                          },
-                          title: 'Submit',
-                          isEnabled: true,
+                                  Class selectedClass = classState.classes
+                                      .firstWhere(
+                                        (element) =>
+                                            element.className ==
+                                            dropdownValueClass,
+                                      );
+                                  Section? selectedSection = sections
+                                      ?.firstWhere(
+                                        (element) =>
+                                            element.sectionName ==
+                                            dropdownValueSection,
+                                      );
+                                  AttendanceInput attendanceInput =
+                                      AttendanceInput(
+                                        sectionIdFk: selectedSection?.sectionId
+                                            .toString(),
+                                        classIdFk: selectedClass.classId
+                                            .toString(),
+                                        attendanceDate: DateFormat(
+                                          'yyyy-MM-dd',
+                                        ).format(now),
+                                        isOnRollStudents: isTrue,
+                                        uCSchoolId: authRepository.user.schoolId
+                                            .toString(),
+                                        uCEntityId: authRepository.user.entityId
+                                            .toString(),
+                                      );
+
+                                  NavRouter.push(
+                                    context,
+                                    AttendanceScreen(
+                                      attendanceInput: attendanceInput,
+                                    ),
+                                  );
+                                }
+                              },
+                              title: 'Submit',
+                              isEnabled: true,
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -292,9 +347,7 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
                 );
               }
               if (classState.classesStatus == ClassesStatus.failure) {
-                return Center(
-                  child: Text(classState.failure.message),
-                );
+                return Center(child: Text(classState.failure.message));
               }
               return SizedBox();
             },
