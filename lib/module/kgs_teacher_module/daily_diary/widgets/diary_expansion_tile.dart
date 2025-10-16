@@ -28,49 +28,24 @@ class DiaryExpansionTile extends StatelessWidget {
           shape: RoundedRectangleBorder(),
           title: Text(
             model.subjectName,
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 14.0,
-            ),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14.0),
           ),
-          childrenPadding: EdgeInsets.symmetric(
-                horizontal: 12.0,
-              ) +
-              EdgeInsets.only(
-                bottom: 14.0,
-              ),
+          childrenPadding:
+              EdgeInsets.symmetric(horizontal: 12.0) +
+              EdgeInsets.only(bottom: 14.0),
           children: [
-            Divider(
-              thickness: 1.5,
-            ),
-            DetailRowWidget(
-              name: 'Date From',
-              value: model.dateFromString,
-            ),
-            Divider(
-              thickness: 0.7,
-            ),
-            DetailRowWidget(
-              name: 'Date To',
-              value: model.dateToString,
-            ),
-            Divider(
-              thickness: 0.7,
-            ),
+            Divider(thickness: 1.5),
+            DetailRowWidget(name: 'Date From', value: model.dateFromString),
+            Divider(thickness: 0.7),
+            DetailRowWidget(name: 'Date To', value: model.dateToString),
+            Divider(thickness: 0.7),
             DetailRowWidget(
               name: 'Class Name',
               value: "${model.className} - ${model.sectionName}",
             ),
-            Divider(
-              thickness: 0.7,
-            ),
-            DetailRowWidget(
-              name: 'Diary Text',
-              value: model.text,
-            ),
-            Divider(
-              thickness: 0.7,
-            ),
+            Divider(thickness: 0.7),
+            DetailRowWidget(name: 'Diary Text', value: model.text),
+            Divider(thickness: 0.7),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -88,22 +63,24 @@ class DiaryExpansionTile extends StatelessWidget {
                       shortenText(model.userFileName),
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 12.0,
-                          color: Colors.blue),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12.0,
+                        color: Colors.blue,
+                      ),
                     ),
                     onTap: () {
                       if (model.logoContent != null) {
                         saveBase64ToFile2(
-                            base64String: model.logoContent,
-                            fileName: model.userFileName);
+                          base64String: model.logoContent,
+                          fileName: model.userFileName,
+                        );
                       } else if (model.uploadFilePath != null) {
                         openUrlInBrowser(model.uploadFilePath);
                       }
                     },
                   ),
               ],
-            )
+            ),
           ],
         ),
       ),

@@ -18,14 +18,16 @@ class DetailRowWidget extends StatelessWidget {
             fontSize: 12.0,
           ),
         ),
-        Text(
-          value,
-          overflow: TextOverflow.ellipsis,
-          maxLines: 3,
-          style: TextStyle(
-            // color: Colors.grey.shade600,
-            fontWeight: FontWeight.bold,
-            fontSize: 12.0,
+        Flexible(
+          child: Text(
+            value,
+            overflow: TextOverflow.ellipsis,
+            maxLines: 1,
+            style: TextStyle(
+              // color: Colors.grey.shade600,
+              fontWeight: FontWeight.bold,
+              fontSize: 12.0,
+            ),
           ),
         ),
       ],

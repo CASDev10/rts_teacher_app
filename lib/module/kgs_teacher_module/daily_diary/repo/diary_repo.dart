@@ -27,7 +27,7 @@ class DiaryRepository {
 
   Future<DiaryListResponseModel> getDiaryList(GetDiaryInput input) async {
     try {
-      var response = await _networkService.get(
+      var response = await _networkService.post(
         Endpoints.getDiaryList,
         data: input.toJson(),
       );

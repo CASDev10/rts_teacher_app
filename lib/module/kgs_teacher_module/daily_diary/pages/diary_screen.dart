@@ -21,7 +21,6 @@ import 'package:rts/module/kgs_teacher_module/daily_diary/models/diary_descripti
 import 'package:rts/module/kgs_teacher_module/daily_diary/models/diary_input.dart';
 // import 'package:rts/module/kgs_teacher_module/daily_diary/models/diary_input.dart';
 import 'package:rts/module/kgs_teacher_module/daily_diary/models/subjects_response.dart';
-import 'package:rts/module/kgs_teacher_module/student_result/widgets/dropdown_place_holder.dart';
 import 'package:rts/widgets/helper_function.dart';
 
 import '../../../../components/loading_indicator.dart';
@@ -60,8 +59,8 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
     return multipartFile;
   }
 
-  Class? dropdownValueClass;
-  Section? dropdownValueSection;
+  String? dropdownValueClass;
+  String? dropdownValueSection;
   String? dropdownValueSubject;
   String? classId;
   String? selectedWorkType;
@@ -216,35 +215,30 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                     ),
                     SizedBox(height: 12.0),
 
-                    GeneralCustomDropDown(
+                    CustomDropDown(
                       allPadding: 0,
                       horizontalPadding: 15,
                       isOutline: false,
                       hintColor: AppColors.primaryGreen,
                       iconColor: AppColors.primaryGreen,
                       suffixIconPath: '',
-                      displayField: (v) => v.className,
-                      hint: "Select Class",
-                      items: classState.classes,
-                      onSelect: (v) {
+                      hint: 'Class',
+                      items: classState.classes
+                          .map((selectClass) => selectClass.className)
+                          .toList(),
+                      onSelect: (String value) {
                         Class selectedClass = classState.classes.firstWhere(
-                          (element) => element.className == v.className,
+                          (element) => element.className == value,
                         );
                         setState(() {
                           classId = selectedClass.classId.toString();
-                          dropdownValueClass = v;
-                          dropdownValueSection = null; // ✅ reset section
-                          // sectionId = null; // ✅ reset sectionId too
-                          // subjectId = null; // optional, if dependent
+                          dropdownValueClass = value;
+                          context.read<SectionsCubit>().fetchSections(
+                            selectedClass.classId.toString(),
+                          );
                         });
-
-                        // Fetch new sections for the selected class
-                        context.read<SectionsCubit>().fetchSections(
-                          v.classId.toString(),
-                        );
                       },
                     ),
-
                     const SizedBox(height: 12),
                     BlocConsumer<SectionsCubit, SectionsState>(
                       listener: (context, sectionStatus) {
@@ -264,8 +258,9 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                         }
                       },
                       builder: (context, sectionState) {
+                        sections = sectionState.sections;
                         return GestureDetector(
-                          onTap: dropdownValueSection == null
+                          onTap: dropdownValueClass == null
                               ? () {
                                   DisplayUtils.showSnackBar(
                                     context,
@@ -273,72 +268,52 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                                   );
                                 }
                               : null,
-                          child: dropdownValueSection != null
-                              ? DropdownPlaceHolder(
-                                  name: dropdownValueSection != null
-                                      ? dropdownValueSection!.sectionName
-                                      : "Select Section",
-                                )
-                              : GeneralCustomDropDown(
-                                  allPadding: 0,
-                                  horizontalPadding: 15,
-                                  isOutline: false,
-                                  hintColor: AppColors.primaryGreen,
-                                  iconColor: AppColors.primaryGreen,
-                                  suffixIconPath: '',
-                                  displayField: (v) => v.sectionName,
-                                  hint: "Select Section",
-                                  items: sectionState.sections,
-                                  onSelect: (v) {
-                                    setState(() {
-                                      dropdownValueSection = v;
-                                    });
-                                    Section selectedSection = sectionState
-                                        .sections
-                                        .firstWhere(
-                                          (element) =>
-                                              element.sectionName ==
-                                              v.sectionName.toString(),
-                                        );
-                                    sectionId = selectedSection.sectionId
-                                        .toString();
-                                    Class selectedClass = classState.classes
-                                        .firstWhere(
-                                          (element) =>
-                                              element.className ==
-                                              dropdownValueClass?.className
-                                                  .toString(),
-                                        );
-                                    context.read<SubjectsCubit>().fetchSubjects(
-                                      selectedClass.classId.toString(),
+                          child: CustomDropDown(
+                            allPadding: 0,
+                            horizontalPadding: 15,
+                            isOutline: false,
+                            hintColor: AppColors.primaryGreen,
+                            iconColor: AppColors.primaryGreen,
+                            suffixIconPath: '',
+                            hint: 'Section',
+                            items: sectionState.sections
+                                .map((section) => section.sectionName)
+                                .toList(),
+                            onSelect: (String value) {
+                              setState(() {
+                                dropdownValueSection = value;
+                                Section selectedSection = sectionState.sections
+                                    .firstWhere(
+                                      (element) => element.sectionName == value,
                                     );
-                                    dynamic input = {
-                                      "UC_EntityId":
-                                          authRepository.user.entityId,
-                                      "ClassIdFk": int.parse(classId!),
-                                      "SectionIdFk": int.parse(sectionId!),
-                                      "UC_SchoolId":
-                                          authRepository.user.schoolId!,
-                                    };
-                                    print('####${input.toString()}');
-                                    // ClassStudentInput input = ClassStudentInput(
-                                    //   classId: int.parse(classId!),
-                                    //   sectionId: int.parse(sectionId!),
-                                    //   ucSchoolId: authRepository.user.schoolId!,
-                                    // );
-                                    if ((selectedWorkType == "Assignment" &&
-                                        selectedWorkType != null)) {
-                                      context
-                                          .read<AddDiaryCubit>()
-                                          .fetchDiaryStudentList(input);
-                                    }
-                                  },
-                                  // onSelect: (v) {
-                                  //   setState(() {
-                                  //     dropdownValueSection = v;
-                                  //   });
-                                  // },
-                                ),
+                                sectionId = selectedSection.sectionId
+                                    .toString();
+                                Class selectedClass = classState.classes
+                                    .firstWhere(
+                                      (element) =>
+                                          element.className ==
+                                          dropdownValueClass,
+                                    );
+                                context.read<SubjectsCubit>().fetchSubjects(
+                                  selectedClass.classId.toString(),
+                                );
+                                dynamic input = {
+                                  "UC_EntityId": authRepository.user.entityId,
+                                  "ClassIdFk": int.parse(classId!),
+                                  "SectionIdFk": int.parse(sectionId!),
+                                  "UC_SchoolId": authRepository.user.schoolId!,
+                                };
+                                // ClassStudentInput input = ClassStudentInput(
+                                //   classId: int.parse(classId!),
+                                //   sectionId: int.parse(sectionId!),
+                                //   ucSchoolId: authRepository.user.schoolId!,
+                                // );
+                                context
+                                    .read<AddDiaryCubit>()
+                                    .fetchDiaryStudentList(input);
+                              });
+                            },
+                          ),
                         );
                       },
                     ),
@@ -430,7 +405,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                                   );
                                 }
                               : null,
-                          child: GeneralCustomDropDown<SubjectModel>(
+                          child: CustomDropDown(
                             allPadding: 0,
                             horizontalPadding: 15,
                             isOutline: false,
@@ -438,20 +413,26 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                             iconColor: AppColors.primaryGreen,
                             suffixIconPath: '',
                             hint: 'Subject',
-                            items: subjectsState.subjects,
-                            displayField: (item) => item.subjectName,
-                            onSelect: (selectedSubject) {
+                            items: subjectsState.subjects
+                                .map((section) => section.subjectName)
+                                .toList(),
+                            onSelect: (String value) {
                               setState(() {
+                                SubjectModel selectedSubject = subjectsState
+                                    .subjects
+                                    .firstWhere(
+                                      (element) => element.subjectName == value,
+                                    );
                                 subjectId = selectedSubject.subjectId
                                     .toString();
-                                dropdownValueSubject =
-                                    selectedSubject.subjectName;
+                                dropdownValueSubject = value;
                               });
                             },
                           ),
                         );
                       },
                     ),
+
                     const SizedBox(height: 12),
 
                     if (selectedWorkType == "Assignment" &&
