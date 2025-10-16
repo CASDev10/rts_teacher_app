@@ -18,6 +18,8 @@ import 'package:rts/module/kgs_teacher_module/daily_diary/cubit/add_diary_cubit/
 import 'package:rts/module/kgs_teacher_module/daily_diary/cubit/subject_cubit/subjects_cubit.dart';
 import 'package:rts/module/kgs_teacher_module/daily_diary/models/add_diary_input.dart';
 import 'package:rts/module/kgs_teacher_module/daily_diary/models/diary_description_input.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/diary_input.dart';
+// import 'package:rts/module/kgs_teacher_module/daily_diary/models/diary_input.dart';
 import 'package:rts/module/kgs_teacher_module/daily_diary/models/subjects_response.dart';
 import 'package:rts/widgets/helper_function.dart';
 
@@ -91,6 +93,34 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
     );
 
     print(jsonEncode(input));
+    print(input.toJson());
+
+    return input;
+  }
+
+  DiaryInput _onDiaryApiHit() {
+    DiaryInput input = DiaryInput(
+      dateFrom: fromDateController.text,
+      dateTo: toDateController.text,
+      classIdFk: int.parse(classId!),
+      subjectIdFk: int.parse(subjectId!),
+      text: selectedAssignmentType != null
+          ? "$selectedAssignmentType${textBoxController.text}"
+          : textBoxController.text,
+      ucSchoolId: authRepository.user.schoolId?.toInt() ?? 0,
+      sectionIdFk: int.parse(sectionId!),
+      ucLoginUserId: authRepository.user.userId?.toInt() ?? 0,
+      // file: file != null
+      //     ? MultipartFile.fromFileSync(
+      //         file!.path,
+      //         filename: fileNameController.text,
+      //       )
+      //     : null,
+    );
+
+    print(jsonEncode(input));
+    print(input.toJson());
+
     return input;
   }
 
@@ -163,6 +193,25 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                         });
                       },
                       hintText: 'To Date',
+                    ),
+                    const SizedBox(height: 12),
+                    GeneralCustomDropDown<String>(
+                      allPadding: 0,
+                      horizontalPadding: 15,
+                      isOutline: false,
+                      hintColor: AppColors.primaryGreen,
+                      iconColor: AppColors.primaryGreen,
+                      suffixIconPath: '',
+                      hint: "Select Work Type",
+                      items: ["Assignment", "Diary"],
+                      onSelect: (v) {
+                        setState(() {
+                          selectedWorkType = v;
+                          if (selectedWorkType != "Assignment") {
+                            selectedAssignmentType = null;
+                          }
+                        });
+                      },
                     ),
                     SizedBox(height: 12.0),
 
@@ -269,72 +318,75 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                       },
                     ),
                     const SizedBox(height: 12),
-                    BlocBuilder<AddDiaryCubit, AddDiaryState>(
-                      builder: (context, state) {
-                        return GestureDetector(
-                          onTap: state.studentList.isEmpty
-                              ? () {
-                                  DisplayUtils.showSnackBar(
-                                    context,
-                                    "Select Class and Section First",
-                                  );
-                                }
-                              : () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return SelectStudentsDialogue(
-                                        studentsList: state.studentList,
-                                        selectedStudents: selectedStudents,
-                                        onSave: (v) {
-                                          setState(() {
-                                            selectedStudents = v;
-                                          });
-                                        },
-                                      );
-                                    },
-                                  );
-                                },
-                          child: Container(
-                            height: 50,
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              color: AppColors.lightGreyColor,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Colors.transparent),
-                            ),
-                            padding: EdgeInsets.all(8.0),
-                            child: Center(
-                              child: Row(
-                                children: [
-                                  Text(
-                                    selectedStudents.isNotEmpty
-                                        ? selectedStudents
-                                        : "Select Students",
-                                    // textAlign: ,
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: AppColors.primaryGreen,
+                    if (selectedWorkType == "Assignment" &&
+                        selectedWorkType != null) ...[
+                      BlocBuilder<AddDiaryCubit, AddDiaryState>(
+                        builder: (context, state) {
+                          return GestureDetector(
+                            onTap: state.studentList.isEmpty
+                                ? () {
+                                    DisplayUtils.showSnackBar(
+                                      context,
+                                      "Select Class and Section First",
+                                    );
+                                  }
+                                : () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return SelectStudentsDialogue(
+                                          studentsList: state.studentList,
+                                          selectedStudents: selectedStudents,
+                                          onSave: (v) {
+                                            setState(() {
+                                              selectedStudents = v;
+                                            });
+                                          },
+                                        );
+                                      },
+                                    );
+                                  },
+                            child: Container(
+                              height: 50,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                color: AppColors.lightGreyColor,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(color: Colors.transparent),
+                              ),
+                              padding: EdgeInsets.all(8.0),
+                              child: Center(
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      selectedStudents.isNotEmpty
+                                          ? selectedStudents
+                                          : "Select Students",
+                                      // textAlign: ,
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: AppColors.primaryGreen,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        );
-                      },
-                    ),
-                    SizedBox(height: 12.0),
+                          );
+                        },
+                      ),
+                      SizedBox(height: 12.0),
+                    ],
                     BlocConsumer<SubjectsCubit, SubjectsState>(
                       listener: (context, subjectsState) {
                         if (subjectsState.subjectsStatus ==
-                            SectionsStatus.loading) {
+                            SubjectsStatus.loading) {
                           DisplayUtils.showLoader();
                         } else if (subjectsState.subjectsStatus ==
-                            SectionsStatus.success) {
+                            SubjectsStatus.success) {
                           DisplayUtils.removeLoader();
                         } else if (subjectsState.subjectsStatus ==
-                            SectionsStatus.failure) {
+                            SubjectsStatus.failure) {
                           DisplayUtils.removeLoader();
                           DisplayUtils.showSnackBar(
                             context,
@@ -378,25 +430,6 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                             },
                           ),
                         );
-                      },
-                    ),
-                    const SizedBox(height: 12),
-                    GeneralCustomDropDown<String>(
-                      allPadding: 0,
-                      horizontalPadding: 15,
-                      isOutline: false,
-                      hintColor: AppColors.primaryGreen,
-                      iconColor: AppColors.primaryGreen,
-                      suffixIconPath: '',
-                      hint: "Select Work Type",
-                      items: ["Assignment", "Diary"],
-                      onSelect: (v) {
-                        setState(() {
-                          selectedWorkType = v;
-                          if (selectedWorkType != "Assignment") {
-                            selectedAssignmentType = null;
-                          }
-                        });
                       },
                     ),
 
@@ -605,7 +638,9 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                               borderRadius: 15,
                               onPressed: () async {
                                 DiaryDescriptionInput input = _onApiHit();
+                                DiaryInput diaryInput = _onDiaryApiHit();
                                 input.file = await changeMulti(file!);
+                                final diaryFile = await changeMulti(file!);
                                 print('###worktype $selectedWorkType');
                                 print(
                                   '###assignmenttype $selectedAssignmentType',
@@ -620,7 +655,10 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                                       sectionId != null) {
                                     await context
                                         .read<AddDiaryCubit>()
-                                        .uploadTeacherFileDiary(input)
+                                        .uploadTeacherFileDiary(
+                                          diaryInput,
+                                          diaryFile,
+                                        )
                                         .then((v) {
                                           if (v) {
                                             DisplayUtils.showToast(
@@ -637,7 +675,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                                     );
                                   }
                                 } else {
-                                  print('###object Diary ');
+                                  print('###object Assignment ');
                                   if (fromDateController.text.isNotEmpty &&
                                       toDateController.text.isNotEmpty &&
                                       subjectId != null &&

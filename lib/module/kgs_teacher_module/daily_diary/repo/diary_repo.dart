@@ -7,6 +7,7 @@ import 'package:rts/module/kgs_teacher_module/daily_diary/models/add_diary_respo
 import 'package:rts/module/kgs_teacher_module/daily_diary/models/assignment_input.dart';
 import 'package:rts/module/kgs_teacher_module/daily_diary/models/class_student_input.dart';
 import 'package:rts/module/kgs_teacher_module/daily_diary/models/diary_description_input.dart';
+import 'package:rts/module/kgs_teacher_module/daily_diary/models/diary_input.dart';
 import 'package:rts/module/kgs_teacher_module/daily_diary/models/diary_list_response.dart';
 import 'package:rts/module/kgs_teacher_module/daily_diary/models/get_diary_input.dart';
 import 'package:rts/module/kgs_teacher_module/daily_diary/models/punishment_assignment_repsonse.dart';
@@ -43,33 +44,40 @@ class DiaryRepository {
     }
   }
 
-  Future<AddDiaryResponseModel> addDiary(AddDiaryInput input) async {
-    try {
-      var response = await _networkService.post(
-        Endpoints.addDiary,
-        data: input.toJson(),
-      );
-      AddDiaryResponseModel responseModel = await compute(
-        addDiaryResponseModelFromJson,
-        response,
-      );
-      return responseModel;
-    } on BaseFailure catch (_) {
-      rethrow;
-    } on TypeError catch (e) {
-      log('TYPE error stackTrace :: ${e.stackTrace}');
-      rethrow;
-    }
-  }
+  // Future<AddDiaryResponseModel> addDiary(AddDiaryInput input) async {
+  //   try {
+  //     var response = await _networkService.post(
+  //       Endpoints.addDiary,
+  //       data: input.toJson(),
+  //     );
+  //     AddDiaryResponseModel responseModel = await compute(
+  //       addDiaryResponseModelFromJson,
+  //       response,
+  //     );
+  //     return responseModel;
+  //   } on BaseFailure catch (_) {
+  //     rethrow;
+  //   } on TypeError catch (e) {
+  //     log('TYPE error stackTrace :: ${e.stackTrace}');
+  //     rethrow;
+  //   }
+  // }
 
   Future<BaseResponseModel> uploadTeacherFile(
-    DiaryDescriptionInput input,
+    DiaryInput input,
+    MultipartFile file,
   ) async {
     try {
+      print('Diary Repo');
+      print('Diary Repo ###${input.toJson()}');
+
       FormData toFormData() => FormData.fromMap({
-        "Description": jsonEncode(input),
-        "TeacherFile": input.file,
+        "Description": jsonEncode(
+          input,
+        ), // or input.toJson() depending on backend
+        "TeacherFile": file,
       });
+
       var response = await _networkService.post(
         Endpoints.addDiary,
         data: toFormData(),
