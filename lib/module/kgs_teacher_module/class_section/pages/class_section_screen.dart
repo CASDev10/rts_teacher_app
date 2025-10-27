@@ -28,14 +28,15 @@ class ClassSectionScreen extends StatefulWidget {
 }
 
 class _ClassSectionScreenState extends State<ClassSectionScreen> {
-  String? dropdownValueClass;
-  String? dropdownValueSection;
+  // String? selectedClass;
+  // String? selectedSection;
   List<Section>? sections;
 
   bool loadFromManual = false;
   bool isTrue = false;
   AuthRepository authRepository = sl<AuthRepository>();
-
+  Class? selectedClass;
+  Section? selectedSection;
   @override
   Widget build(BuildContext context) {
     DateTime now = DateTime.now();
@@ -114,30 +115,51 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
                             child: HorizontalCalendarView(),
                           ),
                           const SizedBox(height: 25),
-                          CustomDropDown(
+                          GeneralCustomDropDown<Class>(
                             allPadding: 0,
                             horizontalPadding: 15,
+                            // selectedValue: selectedClass,
                             isOutline: false,
                             hintColor: AppColors.primaryGreen,
                             iconColor: AppColors.primaryGreen,
                             suffixIconPath: '',
+                            displayField: (item) => item.className,
                             hint: 'Select Class',
-                            items: classState.classes
-                                .map((selectClass) => selectClass.className)
-                                .toList(),
-                            onSelect: (String value) {
-                              Class selectedClass = classState.classes
-                                  .firstWhere(
-                                    (element) => element.className == value,
-                                  );
+                            items: classState.classes,
+                            onSelect: (value) {
                               setState(() {
-                                dropdownValueClass = value;
-                                context.read<SectionsCubit>().fetchSections(
-                                  selectedClass.classId.toString(),
-                                );
+                                selectedClass = value;
+                                selectedSection = null;
                               });
+                              context.read<SectionsCubit>().fetchSections(
+                                selectedClass?.classId.toString() ?? '',
+                              );
                             },
                           ),
+                          // CustomDropDown(
+                          //   allPadding: 0,
+                          //   horizontalPadding: 15,
+                          //   isOutline: false,
+                          //   hintColor: AppColors.primaryGreen,
+                          //   iconColor: AppColors.primaryGreen,
+                          //   suffixIconPath: '',
+                          //   hint: 'Select Class',
+                          //   items: classState.classes
+                          //       .map((selectClass) => selectClass.className)
+                          //       .toList(),
+                          //   onSelect: (String value) {
+                          //     Class selectedClass = classState.classes
+                          //         .firstWhere(
+                          //           (element) => element.className == value,
+                          //         );
+                          //     setState(() {
+                          //       selectedClass = value;
+                          // context.read<SectionsCubit>().fetchSections(
+                          //   selectedClass.classId.toString(),
+                          // );
+                          //     });
+                          //   },
+                          // ),
                           const SizedBox(height: 25),
                           BlocConsumer<SectionsCubit, SectionsState>(
                             listener: (context, sectionStatus) {
@@ -156,37 +178,75 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
                                 );
                               }
                             },
-                            builder: (context, sectionStatus) {
-                              sections = sectionStatus.sections;
-                              return GestureDetector(
-                                onTap: dropdownValueClass == null
-                                    ? () {
-                                        DisplayUtils.showSnackBar(
-                                          context,
-                                          "Please select Class First",
-                                        );
-                                      }
-                                    : null,
-                                child: CustomDropDown(
-                                  allPadding: 0,
-                                  horizontalPadding: 15,
-                                  isOutline: false,
-                                  hintColor: AppColors.primaryGreen,
-                                  iconColor: AppColors.primaryGreen,
-                                  suffixIconPath: '',
-                                  hint: 'Select Section',
-                                  items: sectionStatus.sections
-                                      .map((section) => section.sectionName)
-                                      .toList(),
-                                  onSelect: (String value) {
-                                    setState(() {
-                                      dropdownValueSection = value;
-                                    });
-                                  },
-                                ),
+                            builder: (context, state) {
+                              return GeneralCustomDropDown<Section>(
+                                allPadding: 0,
+                                horizontalPadding: 15,
+                                selectedValue: selectedSection,
+                                isOutline: false,
+                                hintColor: AppColors.primaryGreen,
+                                iconColor: AppColors.primaryGreen,
+                                suffixIconPath: '',
+                                displayField: (item) => item.sectionName,
+                                hint: 'Select Section',
+                                items: state.sections,
+                                onSelect: (value) {
+                                  setState(() {
+                                    selectedSection = value;
+                                  });
+                                },
                               );
                             },
                           ),
+
+                          // BlocConsumer<SectionsCubit, SectionsState>(
+                          // listener: (context, sectionStatus) {
+                          //   if (sectionStatus.sectionsStatus ==
+                          //       SectionsStatus.loading) {
+                          //     DisplayUtils.showLoader();
+                          //   } else if (sectionStatus.sectionsStatus ==
+                          //       SectionsStatus.success) {
+                          //     DisplayUtils.removeLoader();
+                          //   } else if (sectionStatus.sectionsStatus ==
+                          //       SectionsStatus.failure) {
+                          //     DisplayUtils.removeLoader();
+                          //     DisplayUtils.showSnackBar(
+                          //       context,
+                          //       sectionStatus.failure.message,
+                          //     );
+                          //   }
+                          // },
+                          //   builder: (context, sectionStatus) {
+                          //     sections = sectionStatus.sections;
+                          //     return GestureDetector(
+                          //       onTap: selectedClass == null
+                          //           ? () {
+                          //               DisplayUtils.showSnackBar(
+                          //                 context,
+                          //                 "Please select Class First",
+                          //               );
+                          //             }
+                          //           : null,
+                          //       child: CustomDropDown(
+                          //         allPadding: 0,
+                          //         horizontalPadding: 15,
+                          //         isOutline: false,
+                          //         hintColor: AppColors.primaryGreen,
+                          //         iconColor: AppColors.primaryGreen,
+                          //         suffixIconPath: '',
+                          //         hint: 'Select Section',
+                          //         items: sectionStatus.sections
+                          //             .map((section) => section.sectionName)
+                          //             .toList(),
+                          //         onSelect: (String value) {
+                          //           setState(() {
+                          //             selectedSection = value;
+                          //           });
+                          //         },
+                          //       ),
+                          //     );
+                          //   },
+                          // ),
                           SizedBox(height: 22),
                           // GestureDetector(
                           //   onTap: () {
@@ -280,43 +340,43 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
                               height: 50,
                               borderRadius: 15,
                               onPressed: () {
-                                if (dropdownValueSection == null &&
-                                    dropdownValueClass == null) {
+                                if (selectedSection == null &&
+                                    selectedClass == null) {
                                   DisplayUtils.showSnackBar(
                                     context,
                                     "Please select Class & Section",
                                   );
-                                } else if (dropdownValueClass == null) {
+                                } else if (selectedClass == null) {
                                   DisplayUtils.showSnackBar(
                                     context,
                                     "Please select Class",
                                   );
-                                } else if (dropdownValueSection == null) {
+                                } else if (selectedSection == null) {
                                   DisplayUtils.showSnackBar(
                                     context,
                                     "Please select Section",
                                   );
                                 } else {
-                                  print("Class --- $dropdownValueClass");
-                                  print("Section --- $dropdownValueSection");
+                                  // print("Class --- $selectedClass");
+                                  // print("Section --- $selectedSection");
 
-                                  Class selectedClass = classState.classes
-                                      .firstWhere(
-                                        (element) =>
-                                            element.className ==
-                                            dropdownValueClass,
-                                      );
-                                  Section? selectedSection = sections
-                                      ?.firstWhere(
-                                        (element) =>
-                                            element.sectionName ==
-                                            dropdownValueSection,
-                                      );
+                                  // Class selectedClass = classState.classes
+                                  //     .firstWhere(
+                                  //       (element) =>
+                                  //           element.className ==
+                                  //           selectedClass.className,
+                                  //     );
+                                  // Section? selectedSection = sections
+                                  //     ?.firstWhere(
+                                  //       (element) =>
+                                  //           element.sectionName ==
+                                  //           selectedSection.sectionName,
+                                  //     );
                                   AttendanceInput attendanceInput =
                                       AttendanceInput(
                                         sectionIdFk: selectedSection?.sectionId
                                             .toString(),
-                                        classIdFk: selectedClass.classId
+                                        classIdFk: selectedClass?.classId
                                             .toString(),
                                         attendanceDate: DateFormat(
                                           'yyyy-MM-dd',
