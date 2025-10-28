@@ -22,7 +22,8 @@ class CustomDropDown extends StatefulWidget {
   final double height;
   final double width;
 
-  const CustomDropDown({Key? key,
+  const CustomDropDown({
+    Key? key,
     required this.hint,
     required this.items,
     this.height = 50,
@@ -38,8 +39,8 @@ class CustomDropDown extends StatefulWidget {
     this.allPadding = 10,
     this.fontWeight = FontWeight.w400,
     this.horizontalPadding = 16,
-    this.verticalPadding = 0})
-      : super(key: key);
+    this.verticalPadding = 0,
+  }) : super(key: key);
 
   @override
   State<CustomDropDown> createState() => _CustomDropDownState();
@@ -80,16 +81,20 @@ class _CustomDropDownState extends State<CustomDropDown> {
             ),
             decoration: InputDecoration(
               hintStyle: TextStyle(
-                  fontSize: widget.fontSize,
-                  color: AppColors.primaryGreen,
-                  fontWeight: widget.fontWeight),
+                fontSize: widget.fontSize,
+                color: AppColors.primaryGreen,
+                fontWeight: widget.fontWeight,
+              ),
               enabled: false,
               filled: true,
               fillColor: AppColors.lightGreyColor,
-              contentPadding: EdgeInsets.all(widget.allPadding) +
+              contentPadding:
+                  EdgeInsets.all(widget.allPadding) +
                   EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
-              suffixIconConstraints:
-              const BoxConstraints(maxHeight: 24, maxWidth: 24),
+              suffixIconConstraints: const BoxConstraints(
+                maxHeight: 24,
+                maxWidth: 24,
+              ),
               border: _outlineInputBorder,
               enabledBorder: _outlineInputBorder,
               disabledBorder: _outlineInputBorder,
@@ -208,31 +213,37 @@ class _GeneralCustomDropDownState<T> extends State<GeneralCustomDropDown<T>> {
             ),
             decoration: InputDecoration(
               hintStyle: TextStyle(
-                  fontSize: widget.fontSize,
-                  color: AppColors.primaryGreen,
-                  fontWeight: widget.fontWeight),
+                fontSize: widget.fontSize,
+                color: AppColors.primaryGreen,
+                fontWeight: widget.fontWeight,
+              ),
               enabled: false,
               filled: true,
               fillColor: AppColors.lightGreyColor,
-              contentPadding: EdgeInsets.all(widget.allPadding) +
+              contentPadding:
+                  EdgeInsets.all(widget.allPadding) +
                   EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
-              suffixIconConstraints:
-              const BoxConstraints(maxHeight: 24, maxWidth: 24),
+              suffixIconConstraints: const BoxConstraints(
+                maxHeight: 24,
+                maxWidth: 24,
+              ),
               border: _outlineInputBorder,
               enabledBorder: _outlineInputBorder,
               disabledBorder: _outlineInputBorder,
             ),
             dropdownColor: const Color(0xffF4F4F4),
-            value: widget.items.isNotEmpty ? widget.selectedValue : null,
+            value: widget.selectedValue,
+
+            // value: widget.items.isNotEmpty ? widget.selectedValue : null,
             items: widget.items.map<DropdownMenuItem<T>>((T value) {
               return DropdownMenuItem<T>(
                 value: value,
                 child: Text(
                   widget.displayField != null
-                      ? widget
-                      .displayField!(value) // Use the displayField function
-                      : value
-                      .toString(),
+                      ? widget.displayField!(
+                          value,
+                        ) // Use the displayField function
+                      : value.toString(),
                   // Default to toString() if no displayField is provided
                   style: TextStyle(
                     fontSize: widget.fontSize,
@@ -244,13 +255,13 @@ class _GeneralCustomDropDownState<T> extends State<GeneralCustomDropDown<T>> {
             onChanged: widget.disable
                 ? null
                 : (T? newValue) {
-              // setState(() {
-              //   widget.selectedValue = newValue;
-              // });
-              if (widget.onSelect != null && newValue != null) {
-                widget.onSelect!(newValue);
-              }
-            },
+                    // setState(() {
+                    //   widget.selectedValue = newValue;
+                    // });
+                    if (widget.onSelect != null && newValue != null) {
+                      widget.onSelect!(newValue);
+                    }
+                  },
           ),
         ),
       ),
@@ -266,14 +277,16 @@ OutlineInputBorder _outlineInputBorder = OutlineInputBorder(
 BoxDecoration _boxDecoration(bool isOutline) {
   if (isOutline) {
     return BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: AppColors.primaryGreen,
-          width: 1, //                   <--- border width here
-        ));
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(
+        color: AppColors.primaryGreen,
+        width: 1, //                   <--- border width here
+      ),
+    );
   } else {
     return const BoxDecoration(
-        color: AppColors.lightGreyColor,
-        borderRadius: BorderRadius.all(Radius.circular(12)));
+      color: AppColors.lightGreyColor,
+      borderRadius: BorderRadius.all(Radius.circular(12)),
+    );
   }
 }

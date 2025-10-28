@@ -292,46 +292,55 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                                   onSelect: (v) {
                                     setState(() {
                                       dropdownValueSection = v;
+                                      print(
+                                        '######${dropdownValueSection?.sectionId}',
+                                      );
                                     });
-                                    Section selectedSection = sectionState
-                                        .sections
-                                        .firstWhere(
-                                          (element) =>
-                                              element.sectionName ==
-                                              v.sectionName.toString(),
-                                        );
-                                    sectionId = selectedSection.sectionId
-                                        .toString();
-                                    Class selectedClass = classState.classes
-                                        .firstWhere(
-                                          (element) =>
-                                              element.className ==
-                                              dropdownValueClass?.className
-                                                  .toString(),
-                                        );
-                                    context.read<SubjectsCubit>().fetchSubjects(
-                                      selectedClass.classId.toString(),
-                                    );
-                                    dynamic input = {
-                                      "UC_EntityId":
-                                          authRepository.user.entityId,
-                                      "ClassIdFk": int.parse(classId!),
-                                      "SectionIdFk": int.parse(sectionId!),
-                                      "UC_SchoolId":
-                                          authRepository.user.schoolId!,
-                                    };
-                                    print('####${input.toString()}');
+                                    if (dropdownValueSection != null) {
+                                      sectionId = dropdownValueSection
+                                          ?.sectionId
+                                          .toString();
+                                      Class selectedClass = classState.classes
+                                          .firstWhere(
+                                            (element) =>
+                                                element.className ==
+                                                dropdownValueClass?.className
+                                                    .toString(),
+                                          );
+                                      context
+                                          .read<SubjectsCubit>()
+                                          .fetchSubjects(
+                                            selectedClass.classId.toString(),
+                                          );
+                                      dynamic input = {
+                                        "UC_EntityId":
+                                            authRepository.user.entityId,
+                                        "ClassIdFk": int.parse(classId!),
+                                        "SectionIdFk": int.parse(sectionId!),
+                                        "UC_SchoolId":
+                                            authRepository.user.schoolId!,
+                                      };
+                                      print('####${input.toString()}');
+                                      if ((selectedWorkType == "Assignment" &&
+                                          selectedWorkType != null)) {
+                                        context
+                                            .read<AddDiaryCubit>()
+                                            .fetchDiaryStudentList(input);
+                                      }
+                                    }
+                                    // Section selectedSection = sectionState
+                                    //     .sections
+                                    //     .firstWhere(
+                                    //       (element) =>
+                                    //           element.sectionName ==
+                                    //           v.sectionName.toString(),
+                                    //     );
+
                                     // ClassStudentInput input = ClassStudentInput(
                                     //   classId: int.parse(classId!),
                                     //   sectionId: int.parse(sectionId!),
                                     //   ucSchoolId: authRepository.user.schoolId!,
                                     // );
-                                    if ((selectedWorkType == "Assignment" &&
-                                        selectedWorkType != null)) {
-                                      context
-                                          .read<AddDiaryCubit>()
-                                          .fetchDiaryStudentList(input);
-                                    }
                                   },
                                   // onSelect: (v) {
                                   //   setState(() {

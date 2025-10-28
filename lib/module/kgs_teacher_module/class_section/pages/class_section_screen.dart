@@ -193,6 +193,9 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
                                 onSelect: (value) {
                                   setState(() {
                                     selectedSection = value;
+                                    print(
+                                      '###@@@@@@@@#${selectedSection?.sectionName}',
+                                    );
                                   });
                                 },
                               );

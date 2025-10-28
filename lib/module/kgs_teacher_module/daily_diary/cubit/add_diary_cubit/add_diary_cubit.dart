@@ -100,6 +100,7 @@ class AddDiaryCubit extends Cubit<AddDiaryState> {
   }
 
   Future fetchDiaryStudentList(dynamic input) async {
+    print('Inside cubit:${input}}');
     emit(state.copyWith(addDiaryStatus: AddDiaryStatus.loading));
     try {
       StudentsModel response = await _repository.getClassStudents(input);
