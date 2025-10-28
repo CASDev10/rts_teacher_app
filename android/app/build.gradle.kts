@@ -35,7 +35,7 @@ android {
         create("release") {
             keyAlias = "rts"
             keyPassword = "rts123*"
-            storeFile = file("E:/rts_teacher_app/android/app/rts-key.jks")
+            storeFile = file("/Users/usmansaeed/CAS/RtsTeacherApp/rts_teacher_app/android/app/rts-key.jks")
             storePassword ="rts123*"
         }
     }

@@ -17,15 +17,14 @@ import '../../module/kgs_teacher_module/kgs_teacher_auth/repo/auth_repository.da
 import '../../module/kgs_teacher_module/leaves/repo/leaves_repo.dart';
 import '../../module/kgs_teacher_module/student_evaluation/repo/student_evaluation_repository.dart';
 import '../core.dart';
-import '../notifications/cloud_messaging_api.dart';
-import '../notifications/local_notification_api.dart';
 
 final sl = GetIt.instance;
 
 Future<void> initDependencies(AppEnv appEnv) async {
   sl.registerSingleton(Flavors()..initConfig(appEnv));
   sl.registerSingletonAsync<SharedPreferences>(
-      () => SharedPreferences.getInstance());
+    () => SharedPreferences.getInstance(),
+  );
 
   // modules
   sl.registerSingletonWithDependencies<StorageService>(
@@ -37,29 +36,35 @@ Future<void> initDependencies(AppEnv appEnv) async {
   );
 
   /// ==================== Notifications =========================
-  sl.registerLazySingleton<CloudMessagingApi>(() => CloudMessagingApi());
-  sl.registerLazySingleton<LocalNotificationsApi>(
-      () => LocalNotificationsApi());
+  // sl.registerLazySingleton<CloudMessagingApi>(() => CloudMessagingApi());
+  // sl.registerLazySingleton<LocalNotificationsApi>(
+  //     () => LocalNotificationsApi());
 
   sl.registerLazySingleton<AuthRepository>(() => AuthRepository(sl(), sl()));
   sl.registerLazySingleton<UserSchoolsRepository>(
-      () => UserSchoolsRepository());
+    () => UserSchoolsRepository(),
+  );
   sl.registerLazySingleton<LeavesRepository>(() => LeavesRepository());
 
   sl.registerLazySingleton<AttendanceHistoryRepository>(
-      () => AttendanceHistoryRepository());
+    () => AttendanceHistoryRepository(),
+  );
 
   sl.registerLazySingleton<StudentResultRepository>(
-      () => StudentResultRepository());
+    () => StudentResultRepository(),
+  );
   sl.registerLazySingleton<ClassesSectionsRepository>(
-      () => ClassesSectionsRepository());
+    () => ClassesSectionsRepository(),
+  );
   sl.registerLazySingleton<StudentEvaluationRepository>(
-      () => StudentEvaluationRepository());
+    () => StudentEvaluationRepository(),
+  );
   sl.registerLazySingleton<AttendanceRepository>(() => AttendanceRepository());
   sl.registerLazySingleton<DiaryRepository>(() => DiaryRepository());
   sl.registerLazySingleton<HomeRepository>(() => HomeRepository());
   sl.registerLazySingleton<EvaluationRepository>(() => EvaluationRepository());
   sl.registerLazySingleton<ExamResultRepository>(() => ExamResultRepository());
   sl.registerLazySingleton<ObservationRepository>(
-      () => ObservationRepository());
+    () => ObservationRepository(),
+  );
 }

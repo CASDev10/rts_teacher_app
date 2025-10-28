@@ -63,6 +63,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '1020067861375',
     projectId: 'fir-4-ab276',
     storageBucket: 'fir-4-ab276.firebasestorage.app',
-    iosBundleId: 'com.cas.teamsStaff',
+    iosBundleId: 'com.cas.rtsTeacher',
   );
 }

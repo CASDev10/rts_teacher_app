@@ -1,9 +1,8 @@
 import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:rts/app/splash/splash_screen.dart';
 import 'package:month_year_picker/month_year_picker.dart';
-import 'package:upgrader/upgrader.dart';
+import 'package:rts/app/splash/splash_screen.dart';
 
 import 'components/unfocus.dart';
 import 'config/routes/nav_router.dart';
@@ -14,7 +13,7 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Team Staff App',
+      title: 'RES Staff ',
       localizationsDelegates: [
         GlobalWidgetsLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
@@ -28,7 +27,7 @@ class App extends StatelessWidget {
         return child;
       },
       navigatorObservers: [BotToastNavigatorObserver()],
-      home: UpgradeAlert(child: SplashScreen()),
+      home: SplashScreen(),
     );
   }
 }

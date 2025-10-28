@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:rts/module/kgs_teacher_module/kgs_teacher_auth/cubit/forget_password_cubit/forget_password_cubit.dart';
@@ -12,7 +11,6 @@ import 'config/flavors/flavors.dart';
 import 'core/app_bloc_observer.dart';
 import 'core/di/service_locator.dart';
 import 'core/initializer/init_app.dart';
-import 'firebase_options.dart';
 import 'module/kgs_teacher_module/evaluation/cubit/add_evaluation_remarks_cubit/add_evaluation_remarks_cubit.dart';
 import 'module/kgs_teacher_module/evaluation/cubit/evaluation_areas_cubit/evaluation_areas_cubit.dart';
 import 'module/kgs_teacher_module/kgs_teacher_auth/cubit/kgs_teacher_auth_cubit/kgs_teacher_auth_cubit.dart';
@@ -25,7 +23,7 @@ import 'module/kgs_teacher_module/teacher_observation/cubit/employee_detail_cubi
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   Bloc.observer = AppBlocObserver();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await initApp(AppEnv.dev);
   FlutterError.onError = (details) {
     log(details.exceptionAsString(), stackTrace: details.stack);
@@ -38,7 +36,7 @@ void main() async {
         BlocProvider<TeacherLeaveCubit>(
           create: (context) => TeacherLeaveCubit(sl()),
         ),
-        BlocProvider<LoginCubit>(create: (_) => LoginCubit(sl(), sl())),
+        BlocProvider<LoginCubit>(create: (_) => LoginCubit(sl())),
         BlocProvider<SignupCubit>(create: (_) => SignupCubit(sl())),
         BlocProvider<ForgetPasswordCubit>(
           create: (_) => ForgetPasswordCubit(sl()),
