@@ -103,6 +103,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
     DiaryInput input = DiaryInput(
       dateFrom: fromDateController.text,
       dateTo: toDateController.text,
+      studentIds: selectedStudents,
       classIdFk: int.parse(classId!),
       subjectIdFk: int.parse(subjectId!),
       text: selectedAssignmentType != null
@@ -321,12 +322,13 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                                             authRepository.user.schoolId!,
                                       };
                                       print('####${input.toString()}');
-                                      if ((selectedWorkType == "Assignment" &&
-                                          selectedWorkType != null)) {
-                                        context
-                                            .read<AddDiaryCubit>()
-                                            .fetchDiaryStudentList(input);
-                                      }
+                                      // if ((selectedWorkType == "Assignment" &&
+                                      //     selectedWorkType != null))
+                                      //  {
+                                      context
+                                          .read<AddDiaryCubit>()
+                                          .fetchDiaryStudentList(input);
+                                      // }
                                     }
                                     // Section selectedSection = sectionState
                                     //     .sections
@@ -352,65 +354,65 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                       },
                     ),
                     const SizedBox(height: 12),
-                    if (selectedWorkType == "Assignment" &&
-                        selectedWorkType != null) ...[
-                      BlocBuilder<AddDiaryCubit, AddDiaryState>(
-                        builder: (context, state) {
-                          return GestureDetector(
-                            onTap: state.studentList.isEmpty
-                                ? () {
-                                    DisplayUtils.showSnackBar(
-                                      context,
-                                      "Select Class and Section First",
-                                    );
-                                  }
-                                : () {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) {
-                                        return SelectStudentsDialogue(
-                                          studentsList: state.studentList,
-                                          selectedStudents: selectedStudents,
-                                          onSave: (v) {
-                                            setState(() {
-                                              selectedStudents = v;
-                                            });
-                                          },
-                                        );
-                                      },
-                                    );
-                                  },
-                            child: Container(
-                              height: 50,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                color: AppColors.lightGreyColor,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(color: Colors.transparent),
-                              ),
-                              padding: EdgeInsets.all(8.0),
-                              child: Center(
-                                child: Row(
-                                  children: [
-                                    Text(
-                                      selectedStudents.isNotEmpty
-                                          ? selectedStudents
-                                          : "Select Students",
-                                      // textAlign: ,
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: AppColors.primaryGreen,
-                                      ),
+                    // if (selectedWorkType == "Assignment" &&
+                    //     selectedWorkType != null) ...[
+                    BlocBuilder<AddDiaryCubit, AddDiaryState>(
+                      builder: (context, state) {
+                        return GestureDetector(
+                          onTap: state.studentList.isEmpty
+                              ? () {
+                                  DisplayUtils.showSnackBar(
+                                    context,
+                                    "Select Class and Section First",
+                                  );
+                                }
+                              : () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return SelectStudentsDialogue(
+                                        studentsList: state.studentList,
+                                        selectedStudents: selectedStudents,
+                                        onSave: (v) {
+                                          setState(() {
+                                            selectedStudents = v;
+                                          });
+                                        },
+                                      );
+                                    },
+                                  );
+                                },
+                          child: Container(
+                            height: 50,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              color: AppColors.lightGreyColor,
+                              borderRadius: BorderRadius.circular(10),
+                              border: Border.all(color: Colors.transparent),
+                            ),
+                            padding: EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Row(
+                                children: [
+                                  Text(
+                                    selectedStudents.isNotEmpty
+                                        ? selectedStudents
+                                        : "Select Students",
+                                    // textAlign: ,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: AppColors.primaryGreen,
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
                             ),
-                          );
-                        },
-                      ),
-                      SizedBox(height: 12.0),
-                    ],
+                          ),
+                        );
+                      },
+                    ),
+                    SizedBox(height: 12.0),
+                    // ],
                     BlocConsumer<SubjectsCubit, SubjectsState>(
                       listener: (context, subjectsState) {
                         if (subjectsState.subjectsStatus ==

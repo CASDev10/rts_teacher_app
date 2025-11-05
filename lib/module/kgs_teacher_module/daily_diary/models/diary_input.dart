@@ -8,6 +8,7 @@ class DiaryInput {
   int sectionIdFk;
   int classIdFk;
   int subjectIdFk;
+  String studentIds; // 👈 NEW FIELD
   String text;
   int ucSchoolId;
   int ucLoginUserId;
@@ -18,6 +19,7 @@ class DiaryInput {
     required this.sectionIdFk,
     required this.classIdFk,
     required this.subjectIdFk,
+    required this.studentIds, // 👈 added
     required this.text,
     required this.ucSchoolId,
     required this.ucLoginUserId,
@@ -29,6 +31,7 @@ class DiaryInput {
     int? sectionIdFk,
     int? classIdFk,
     int? subjectIdFk,
+    String? studentIds, // 👈 added
     String? text,
     int? ucSchoolId,
     int? ucLoginUserId,
@@ -38,6 +41,7 @@ class DiaryInput {
     sectionIdFk: sectionIdFk ?? this.sectionIdFk,
     classIdFk: classIdFk ?? this.classIdFk,
     subjectIdFk: subjectIdFk ?? this.subjectIdFk,
+    studentIds: studentIds ?? this.studentIds,
     text: text ?? this.text,
     ucSchoolId: ucSchoolId ?? this.ucSchoolId,
     ucLoginUserId: ucLoginUserId ?? this.ucLoginUserId,
@@ -48,9 +52,10 @@ class DiaryInput {
     "DateTo": dateTo,
     "SectionIdFk": sectionIdFk,
     "ClassIdFk": classIdFk,
-    "SubjectIdFk": subjectIdFk,
+    "SubjectidFk": subjectIdFk, // 👈 matches your endpoint exactly
+    "StudentIds": studentIds, // 👈 new field
     "Text": text,
-    "UC_SchoolId": ucSchoolId,
+    "UC_Schoolid": ucSchoolId, // 👈 lowercase "id" as per your sample JSON
     "UC_LoginUserId": ucLoginUserId,
   };
 }

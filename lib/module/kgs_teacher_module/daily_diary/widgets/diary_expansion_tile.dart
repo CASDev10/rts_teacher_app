@@ -71,6 +71,7 @@ class DiaryExpansionTile extends StatelessWidget {
                     onTap: () {
                       if (model.logoContent != null) {
                         saveBase64ToFile2(
+                          context,
                           base64String: model.logoContent,
                           fileName: model.userFileName,
                         );
