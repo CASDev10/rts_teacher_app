@@ -26,50 +26,27 @@ Future<void> checkCameraPermission() async {
 
 Future<void> saveBase64ToFile2(
   BuildContext context, {
-
   required String base64String,
   required String fileName,
 }) async {
   try {
-    if (Platform.isAndroid) {
-      var status = await Permission.manageExternalStorage.status;
-      if (!status.isGranted) {
-        status = await Permission.manageExternalStorage.request();
-        if (!status.isGranted) {
-          DisplayUtils.showToast(
-            context,
-            'Storage permission is required to save files.',
-          );
-          return;
-        }
-      }
-    }
-
     // Decode Base64 to bytes
-    List<int> bytes = base64Decode(base64String);
+    final List<int> bytes = base64Decode(base64String);
 
-    // Get Downloads directory
-    Directory? downloadsDir = await getDownloadsDirectory();
-    if (downloadsDir == null) {
-      print('Downloads directory not available.');
-      return;
-    }
+    // Use app-specific documents directory to avoid external storage permissions
+    final Directory appDocsDir = await getApplicationDocumentsDirectory();
+    final String filePath = '${appDocsDir.path}/$fileName';
+    final File file = File(filePath);
 
-    // Construct full file path
-    String filePath = '${downloadsDir.path}/$fileName';
-    File file = File(filePath);
-
-    // Save file
     await file.writeAsBytes(bytes);
     print('✅ File saved at: $filePath');
 
     openPdfFile(filePath);
   } catch (e) {
     print('❌ Error saving Base64 to file: $e');
+    DisplayUtils.showToast(context, 'Failed to save file');
   }
 }
-
-enum ResultType { done, fileNotFound, noAppToOpen, permissionDenied, error }
 
 Future<void> openUrlInBrowser(String url) async {
   final Uri uri = Uri.parse(url);
@@ -77,24 +54,7 @@ Future<void> openUrlInBrowser(String url) async {
 }
 
 Future<void> openPdfFile(String filePath) async {
-  // Check for storage permission before proceeding
-  PermissionStatus permissionStatus = await Permission.storage.request();
-
-  // If permission is not granted, show an alert or handle it accordingly
-  if (permissionStatus.isGranted) {
-    // Permission is granted, now attempt to open the file
-    final result = await OpenFile.open(filePath);
-
-    // Optionally handle the result, such as showing a message if the file can't be opened
-    if (result.type == ResultType.error) {
-      print('Error opening file: ${result.message}');
-    } else {
-      print('File opened successfully');
-    }
-  } else {
-    // If permission is denied, show a message or prompt user to allow permission
-    print(
-      'Storage permission denied. Please grant permission to access the file.',
-    );
-  }
+  // Files in app-specific storage do not require runtime storage permissions
+  final result = await OpenFile.open(filePath);
+  print('OpenFile result: ${result.type} ${result.message}');
 }
