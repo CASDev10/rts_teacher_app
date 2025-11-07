@@ -4,6 +4,8 @@ import 'package:rts/components/base_scaffold.dart';
 import 'package:rts/components/custom_button.dart';
 import 'package:rts/config/config.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/cubit/student_result/student_result_cubit.dart';
+import 'package:rts/module/kgs_teacher_module/student_result/cubit/student_result_list/student_result_list_cubit.dart'
+    show StudentResultListCubit;
 import 'package:rts/module/kgs_teacher_module/student_result/models/class_name_response.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/evaluation_type_response.dart';
 import 'package:rts/module/kgs_teacher_module/student_result/models/grade_response.dart';
@@ -22,6 +24,7 @@ import '../../../../components/custom_textfield.dart';
 import '../../../../constants/app_colors.dart';
 import '../../../../core/di/service_locator.dart';
 import '../cubit/student_result/student_result_state.dart';
+import '../cubit/student_result_list/student_result_list_state.dart';
 import '../models/evaluation_response.dart';
 import '../widgets/dropdown_place_holder.dart';
 
@@ -30,10 +33,15 @@ class StudentResultScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => StudentResultCubit(sl())
-        ..fetchGradesList()
-        ..fetchEvaluationType(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => StudentResultCubit(sl())
+            ..fetchGradesList()
+            ..fetchEvaluationType(),
+        ),
+        BlocProvider(create: (context) => StudentResultListCubit(sl())),
+      ],
       child: StudentResultScreenView(),
     );
   }
@@ -66,7 +74,7 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
   EvaluationTypeModel? selectedEvaluatedType;
   EvaluationModel? selectedEvaluated;
   final TextEditingController _totalMarksController = TextEditingController();
-
+  StudentListResponse? response;
   @override
   Widget build(BuildContext context) {
     return BaseScaffold(
@@ -356,68 +364,97 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                     fillColor: AppColors.lightGreyColor,
                   ),
                   SizedBox(height: 24.0),
-                  CustomButton(
-                    onPressed: () async {
-                      print(
-                        "DEBUG => Grade:$selectedGrade, "
-                        "Class:$selectedClassName, "
-                        "Section:$selectedSection, "
-                        "Subject:$selectedSubject, "
-                        "EvalType:$selectedEvaluatedType, "
-                        "Eval:$selectedEvaluated, "
-                        "Marks:${_totalMarksController.text}, "
-                        "ExamDate:$examDate, "
-                        "SubmissionDate:$submissionDate",
+                  BlocConsumer<StudentResultListCubit, StudentResultListState>(
+                    listener: (context, state) {
+                      StudentListInput input = StudentListInput(
+                        examDate: examDate,
+                        classIdFk: selectedClassName!.classId,
+                        sectionIdFk: selectedSection!.sectionId,
+                        subjectIdFk: selectedSubject!.subjectId,
+                        evaluationIdFk: selectedEvaluated!.evaluationId,
+                        evaluationGroupId:
+                            selectedEvaluatedGroup?.evaluationGroupId ?? 0,
+                        submissionDate: submissionDate,
+                        assessmentId: selectedAssessmentId ?? 0,
+                        totalMarks: double.parse(_totalMarksController.text),
                       );
-                      if (selectedGrade != null &&
-                          selectedClassName != null &&
-                          selectedSection != null &&
-                          selectedSubject != null &&
-                          selectedEvaluatedType != null &&
-                          selectedEvaluated != null &&
-                          _totalMarksController.text.isNotEmpty &&
-                          examDate.isNotEmpty &&
-                          submissionDate.isNotEmpty) {
-                        StudentListInput input = StudentListInput(
-                          examDate: examDate,
-                          classIdFk: selectedClassName!.classId,
-                          sectionIdFk: selectedSection!.sectionId,
-                          subjectIdFk: selectedSubject!.subjectId,
-                          evaluationIdFk: selectedEvaluated!.evaluationId,
-                          evaluationGroupId:
-                              selectedEvaluatedGroup?.evaluationGroupId ?? 0,
-                          submissionDate: submissionDate,
-                          assessmentId: selectedAssessmentId ?? 0,
-                          totalMarks: double.parse(_totalMarksController.text),
-                        );
-
-                        StudentListResponse? response = await context
-                            .read<StudentResultCubit>()
-                            .fetchStudentList(input: input);
-
+                      if (state.studentAttendanceStatus ==
+                          StudentResultListStatus.loading) {
+                        DisplayUtils.showLoader();
+                      } else if (state.studentAttendanceStatus ==
+                          StudentResultListStatus.success) {
+                        DisplayUtils.removeLoader();
                         if (response != null) {
                           NavRouter.push(
                             context,
                             ResultMarkingScreen(
                               input: input,
-                              response: response,
+                              response: response!,
                             ),
                           );
                         } else {
-                          DisplayUtils.showSnackBar(
-                            context,
-                            "Something Went Wrong",
-                          );
+                          DisplayUtils.showToast(context, "No Students Found");
                         }
-                      } else {
-                        DisplayUtils.showSnackBar(
-                          context,
-                          "All Fields are Required",
-                        );
+                      } else if (state.studentAttendanceStatus ==
+                          StudentResultListStatus.failure) {
+                        DisplayUtils.removeLoader();
+                        DisplayUtils.showToast(context, state.failure.message);
                       }
                     },
-                    title: "Get Students List",
-                    height: 50.0,
+
+                    builder: (context, state) {
+                      return CustomButton(
+                        onPressed: () async {
+                          print(
+                            "DEBUG => Grade:$selectedGrade, "
+                            "Class:$selectedClassName, "
+                            "Section:$selectedSection, "
+                            "Subject:$selectedSubject, "
+                            "EvalType:$selectedEvaluatedType, "
+                            "Eval:$selectedEvaluated, "
+                            "Marks:${_totalMarksController.text}, "
+                            "ExamDate:$examDate, "
+                            "SubmissionDate:$submissionDate",
+                          );
+                          if (selectedGrade != null &&
+                              selectedClassName != null &&
+                              selectedSection != null &&
+                              selectedSubject != null &&
+                              selectedEvaluatedType != null &&
+                              selectedEvaluated != null &&
+                              _totalMarksController.text.isNotEmpty &&
+                              examDate.isNotEmpty &&
+                              submissionDate.isNotEmpty) {
+                            StudentListInput input = StudentListInput(
+                              examDate: examDate,
+                              classIdFk: selectedClassName!.classId,
+                              sectionIdFk: selectedSection!.sectionId,
+                              subjectIdFk: selectedSubject!.subjectId,
+                              evaluationIdFk: selectedEvaluated!.evaluationId,
+                              evaluationGroupId:
+                                  selectedEvaluatedGroup?.evaluationGroupId ??
+                                  0,
+                              submissionDate: submissionDate,
+                              assessmentId: selectedAssessmentId ?? 0,
+                              totalMarks: double.parse(
+                                _totalMarksController.text,
+                              ),
+                            );
+
+                            response = await context
+                                .read<StudentResultListCubit>()
+                                .fetchStudentList(input: input);
+                          } else {
+                            DisplayUtils.showSnackBar(
+                              context,
+                              "All Fields are Required",
+                            );
+                          }
+                        },
+                        title: "Get Students List",
+                        height: 50.0,
+                      );
+                    },
                   ),
                 ],
               ),

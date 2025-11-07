@@ -1,7 +1,7 @@
 import 'package:rts/module/kgs_teacher_module/exam_result/models/exam_class_response.dart';
 
 import '../../../../../core/failures/base_failures/base_failure.dart';
-
+//exam result wali get student ki api hi dairy ma use karni ha for get students
 enum ExamClassesStatus {
   none,
   loading,
