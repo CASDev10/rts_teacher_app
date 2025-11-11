@@ -669,8 +669,12 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                               onPressed: () async {
                                 DiaryDescriptionInput input = _onApiHit();
                                 DiaryInput diaryInput = _onDiaryApiHit();
-                                input.file = await changeMulti(file!);
-                                final diaryFile = await changeMulti(file!);
+                                input.file = file != null
+                                    ? await changeMulti(file!)
+                                    : null;
+                                final diaryFile = file != null
+                                    ? await changeMulti(file!)
+                                    : null;
                                 print('###worktype $selectedWorkType');
                                 print(
                                   '###assignmenttype $selectedAssignmentType',
@@ -716,12 +720,18 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                                         .read<AddDiaryCubit>()
                                         .uploadTeacherAssignment(input)
                                         .then((v) {
-                                          if (v) {
+                                          if (v == true) {
+                                            // Use == true for null safety
                                             DisplayUtils.showToast(
                                               context,
                                               "Assignment Added Successfully",
                                             );
                                             NavRouter.pop(context);
+                                          } else if (v == false) {
+                                            DisplayUtils.showToast(
+                                              context,
+                                              "Failed to add assignment",
+                                            );
                                           }
                                         });
                                   } else {

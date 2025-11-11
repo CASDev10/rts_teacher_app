@@ -57,29 +57,33 @@ class DiaryExpansionTile extends StatelessWidget {
                     fontSize: 12.0,
                   ),
                 ),
-                if (model.logoContent != null || model.uploadFilePath != null)
-                  InkWell(
-                    child: Text(
-                      shortenText(model.userFileName),
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12.0,
-                        color: Colors.blue,
-                      ),
-                    ),
-                    onTap: () {
-                      if (model.logoContent != null) {
-                        saveBase64ToFile2(
-                          context,
-                          base64String: model.logoContent,
-                          fileName: model.userFileName,
-                        );
-                      } else if (model.uploadFilePath != null) {
-                        openUrlInBrowser(model.uploadFilePath);
-                      }
-                    },
-                  ),
+                SizedBox(width: 10),
+                (model.logoContent != null || model.uploadFilePath != null)
+                    ? Flexible(
+                        child: InkWell(
+                          child: Text(
+                            shortenText(model.userFileName),
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 12.0,
+                              color: Colors.blue,
+                            ),
+                          ),
+                          onTap: () {
+                            if (model.logoContent != null) {
+                              saveBase64ToFile2(
+                                context,
+                                base64String: model.logoContent,
+                                fileName: model.userFileName,
+                              );
+                            } else if (model.uploadFilePath != null) {
+                              openUrlInBrowser(model.uploadFilePath);
+                            }
+                          },
+                        ),
+                      )
+                    : Text('N/A'),
               ],
             ),
           ],

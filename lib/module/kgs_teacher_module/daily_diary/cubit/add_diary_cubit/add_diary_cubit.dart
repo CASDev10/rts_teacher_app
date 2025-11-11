@@ -45,12 +45,15 @@ class AddDiaryCubit extends Cubit<AddDiaryState> {
   //   } catch (_) {}
   // }
 
-  Future uploadTeacherFileDiary(DiaryInput input,MultipartFile file) async {
+  Future uploadTeacherFileDiary(DiaryInput input, [MultipartFile? file]) async {
     emit(state.copyWith(addDiaryStatus: AddDiaryStatus.loading));
     try {
       print('Diary cubit');
       print('Diary cubit ###${input.toJson()}');
-      BaseResponseModel response = await _repository.uploadTeacherFile(input,file);
+      BaseResponseModel response = await _repository.uploadTeacherFile(
+        input,
+        file,
+      );
       if (response.result == ApiResult.success) {
         emit(state.copyWith(addDiaryStatus: AddDiaryStatus.success));
         return true;

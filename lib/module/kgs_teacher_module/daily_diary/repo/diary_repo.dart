@@ -65,7 +65,7 @@ class DiaryRepository {
 
   Future<BaseResponseModel> uploadTeacherFile(
     DiaryInput input,
-    MultipartFile file,
+    MultipartFile? file,
   ) async {
     try {
       print('Diary Repo');
