@@ -17,9 +17,13 @@ class DiaryListCubit extends Cubit<DiaryListState> {
   List<DiaryModel> diaryList = [];
 
   Future fetchDiaryList(GetDiaryInput input, {bool loadMore = false}) async {
-    emit(state.copyWith(
-        diaryListStatus:
-            loadMore ? DiaryListStatus.loadMore : DiaryListStatus.loading));
+    emit(
+      state.copyWith(
+        diaryListStatus: loadMore
+            ? DiaryListStatus.loadMore
+            : DiaryListStatus.loading,
+      ),
+    );
     if (loadMore) {
       DisplayUtils.showLoader();
     } else {
@@ -29,19 +33,27 @@ class DiaryListCubit extends Cubit<DiaryListState> {
       DiaryListResponseModel response = await _repository.getDiaryList(input);
       if (response.result == ApiResult.success) {
         diaryList.addAll(response.data);
-        emit(state.copyWith(
-          diaryListStatus: DiaryListStatus.success,
-          diaryList: diaryList,
-        ));
-      } else {
-        emit(state.copyWith(
+        emit(
+          state.copyWith(
             diaryListStatus: DiaryListStatus.success,
-            failure: HighPriorityException(response.message)));
+            diaryList: diaryList,
+          ),
+        );
+      } else {
+        emit(
+          state.copyWith(
+            diaryListStatus: DiaryListStatus.failure,
+            failure: HighPriorityException(response.message),
+          ),
+        );
       }
     } on BaseFailure catch (e) {
-      emit(state.copyWith(
-          diaryListStatus: DiaryListStatus.success,
-          failure: HighPriorityException(e.message)));
+      emit(
+        state.copyWith(
+          diaryListStatus: DiaryListStatus.failure,
+          failure: HighPriorityException(e.message),
+        ),
+      );
     } catch (_) {}
     if (loadMore) {
       DisplayUtils.removeLoader();
