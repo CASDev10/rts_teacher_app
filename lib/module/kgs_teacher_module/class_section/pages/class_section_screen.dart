@@ -172,7 +172,7 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
                               } else if (sectionStatus.sectionsStatus ==
                                   SectionsStatus.failure) {
                                 DisplayUtils.removeLoader();
-                                DisplayUtils.showSnackBar(
+                                DisplayUtils.showToast(
                                   context,
                                   sectionStatus.failure.message,
                                 );
@@ -213,7 +213,7 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
                           //   } else if (sectionStatus.sectionsStatus ==
                           //       SectionsStatus.failure) {
                           //     DisplayUtils.removeLoader();
-                          //     DisplayUtils.showSnackBar(
+                          //     DisplayUtils.showToast(
                           //       context,
                           //       sectionStatus.failure.message,
                           //     );
@@ -224,7 +224,7 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
                           //     return GestureDetector(
                           //       onTap: selectedClass == null
                           //           ? () {
-                          //               DisplayUtils.showSnackBar(
+                          //               DisplayUtils.showToast(
                           //                 context,
                           //                 "Please select Class First",
                           //               );
@@ -345,17 +345,17 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
                               onPressed: () {
                                 if (selectedSection == null &&
                                     selectedClass == null) {
-                                  DisplayUtils.showSnackBar(
+                                  DisplayUtils.showToast(
                                     context,
                                     "Please select Class & Section",
                                   );
                                 } else if (selectedClass == null) {
-                                  DisplayUtils.showSnackBar(
+                                  DisplayUtils.showToast(
                                     context,
                                     "Please select Class",
                                   );
                                 } else if (selectedSection == null) {
-                                  DisplayUtils.showSnackBar(
+                                  DisplayUtils.showToast(
                                     context,
                                     "Please select Section",
                                   );

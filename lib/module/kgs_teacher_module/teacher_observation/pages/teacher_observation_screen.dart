@@ -93,7 +93,7 @@ class _TeacherObservationScreenState extends State<TeacherObservationScreen> {
                       } else if (state.fetchObservationAreasStatus ==
                           FetchObservationAreasStatus.failure) {
                         DisplayUtils.removeLoader();
-                        DisplayUtils.showSnackBar(
+                        DisplayUtils.showToast(
                             context, state.failure.message);
                       }
                     },
@@ -194,7 +194,7 @@ class _TeacherObservationScreenState extends State<TeacherObservationScreen> {
                 } else if (state.employeeDetailStatus ==
                     EmployeeDetailStatus.failure) {
                   DisplayUtils.removeLoader();
-                  DisplayUtils.showSnackBar(context, state.failure.message);
+                  DisplayUtils.showToast(context, state.failure.message);
                 }
               },
               builder: (context, state) {
@@ -272,7 +272,7 @@ class _TeacherObservationScreenState extends State<TeacherObservationScreen> {
                                               .trim()
                                               .toString());
                                   } else {
-                                    DisplayUtils.showSnackBar(
+                                    DisplayUtils.showToast(
                                         context, "Enter Employee ID");
                                   }
                                 },

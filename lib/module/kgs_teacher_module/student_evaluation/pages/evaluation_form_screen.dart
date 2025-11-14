@@ -168,10 +168,10 @@ class _EvaluationFormScreenViewState extends State<EvaluationFormScreenView> {
                 CustomButton(
                     onPressed: () async {
                       if (resultList.length != widget.children.length) {
-                        DisplayUtils.showSnackBar(
+                        DisplayUtils.showToast(
                             context, "Answer All Questions");
                       } else if (_descriptionController.text.isEmpty) {
-                        DisplayUtils.showSnackBar(
+                        DisplayUtils.showToast(
                             context, "Comments Can't be Empty");
                       } else {
                         SaveEvaluationInput input = SaveEvaluationInput(

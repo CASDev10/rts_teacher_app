@@ -258,7 +258,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                         } else if (sectionStatus.sectionsStatus ==
                             SectionsStatus.failure) {
                           DisplayUtils.removeLoader();
-                          DisplayUtils.showSnackBar(
+                          DisplayUtils.showToast(
                             context,
                             sectionStatus.failure.message,
                           );
@@ -268,7 +268,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                         return GestureDetector(
                           onTap: dropdownValueSection == null
                               ? () {
-                                  DisplayUtils.showSnackBar(
+                                  DisplayUtils.showToast(
                                     context,
                                     "Please select Class First",
                                   );
@@ -361,7 +361,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                         return GestureDetector(
                           onTap: state.studentList.isEmpty
                               ? () {
-                                  DisplayUtils.showSnackBar(
+                                  DisplayUtils.showToast(
                                     context,
                                     "Select Class and Section First",
                                   );
@@ -424,7 +424,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                         } else if (subjectsState.subjectsStatus ==
                             SubjectsStatus.failure) {
                           DisplayUtils.removeLoader();
-                          DisplayUtils.showSnackBar(
+                          DisplayUtils.showToast(
                             context,
                             subjectsState.failure.message,
                           );
@@ -435,7 +435,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                         return GestureDetector(
                           onTap: dropdownValueSection == null
                               ? () {
-                                  DisplayUtils.showSnackBar(
+                                  DisplayUtils.showToast(
                                     context,
                                     "Please select section First",
                                   );
@@ -652,7 +652,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                         } else if (state.addDiaryStatus ==
                             AddDiaryStatus.failure) {
                           DisplayUtils.removeLoader();
-                          DisplayUtils.showSnackBar(
+                          DisplayUtils.showToast(
                             context,
                             state.failure.message,
                           );
@@ -703,7 +703,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                                           }
                                         });
                                   } else {
-                                    DisplayUtils.showSnackBar(
+                                    DisplayUtils.showToast(
                                       context,
                                       "Required all Fields for Diary",
                                     );
@@ -735,7 +735,7 @@ class _AddDailyDiaryScreenState extends State<AddDailyDiaryScreen> {
                                           }
                                         });
                                   } else {
-                                    DisplayUtils.showSnackBar(
+                                    DisplayUtils.showToast(
                                       context,
                                       "Required all Fields for Assignment",
                                     );

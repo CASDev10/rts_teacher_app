@@ -424,7 +424,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                                         .evaluationAreasStatus ==
                                     EvaluationAreasStatus.failure) {
                                   DisplayUtils.removeLoader();
-                                  DisplayUtils.showSnackBar(
+                                  DisplayUtils.showToast(
                                     context,
                                     evaluationAreasState.failure.message,
                                   );
@@ -447,7 +447,7 @@ class _HomeScreenViewState extends State<HomeScreenView> {
                                             ),
                                           );
                                     } else {
-                                      DisplayUtils.showSnackBar(
+                                      DisplayUtils.showToast(
                                         context,
                                         "Enter student ID",
                                       );

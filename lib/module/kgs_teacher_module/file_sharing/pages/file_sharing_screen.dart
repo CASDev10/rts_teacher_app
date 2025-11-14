@@ -129,7 +129,7 @@ class _FileSharingScreenState extends State<FileSharingScreen> {
                                 } else if (sectionStatus.sectionsStatus ==
                                     SectionsStatus.failure) {
                                   DisplayUtils.removeLoader();
-                                  DisplayUtils.showSnackBar(
+                                  DisplayUtils.showToast(
                                       context, sectionStatus.failure.message);
                                 }
                               },
@@ -138,7 +138,7 @@ class _FileSharingScreenState extends State<FileSharingScreen> {
                                 return GestureDetector(
                                   onTap: dropdownValueClass == null
                                       ? () {
-                                          DisplayUtils.showSnackBar(context,
+                                          DisplayUtils.showToast(context,
                                               "Please select Class First");
                                         }
                                       : null,
@@ -309,7 +309,7 @@ class _FileSharingScreenState extends State<FileSharingScreen> {
                         } else if (fileSharingState.status ==
                             FileSharingStatus.failure) {
                           DisplayUtils.removeLoader();
-                          DisplayUtils.showSnackBar(
+                          DisplayUtils.showToast(
                               context, fileSharingState.failure.message);
                         }
                       },
@@ -333,12 +333,12 @@ class _FileSharingScreenState extends State<FileSharingScreen> {
                                       .read<FileSharingCubit>()
                                       .uploadTeacherFile(input, file);
                                 } else {
-                                  DisplayUtils.showSnackBar(
+                                  DisplayUtils.showToast(
                                       context, "Please select a file!");
                                   return;
                                 }
                               } else {
-                                DisplayUtils.showSnackBar(
+                                DisplayUtils.showToast(
                                     context, "Please select section first!");
                                 return;
                               }

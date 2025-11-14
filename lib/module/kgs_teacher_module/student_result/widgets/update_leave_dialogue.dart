@@ -37,7 +37,7 @@ class _UpdateLeaveDialogueState extends State<UpdateLeaveDialogue> {
   final TextEditingController _reasonController = TextEditingController();
   int calculateDaysBetweenDates() {
     if (fromDate == null || toDate == null) {
-      DisplayUtils.showSnackBar(context, "Select Date");
+      DisplayUtils.showToast(context, "Select Date");
       return 0;
     }
     DateTime from = DateTime.parse(fromDate!);

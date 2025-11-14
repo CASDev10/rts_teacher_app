@@ -177,7 +177,7 @@ class _AddResultScreenState extends State<AddResultScreen> {
                                       .examClassSectionsStatus ==
                                   ExamClassSectionsStatus.failure) {
                                 DisplayUtils.removeLoader();
-                                DisplayUtils.showSnackBar(context,
+                                DisplayUtils.showToast(context,
                                     examClassSectionsState.failure.message);
                               }
                             },
@@ -186,7 +186,7 @@ class _AddResultScreenState extends State<AddResultScreen> {
                               return GestureDetector(
                                 onTap: dropdownValueClass == null
                                     ? () {
-                                        DisplayUtils.showSnackBar(context,
+                                        DisplayUtils.showToast(context,
                                             "Please select Class First");
                                       }
                                     : null,
@@ -364,7 +364,7 @@ class _AddResultScreenState extends State<AddResultScreen> {
                               NavRouter.pop(context);
                             }else if(examResultState.importExamResultStatus == ImportExamResultStatus.failure){
                               DisplayUtils.removeLoader();
-                              DisplayUtils.showSnackBar(context, examResultState.failure.message);
+                              DisplayUtils.showToast(context, examResultState.failure.message);
                             }
                           },
                           builder: (context, state) {
@@ -383,19 +383,19 @@ class _AddResultScreenState extends State<AddResultScreen> {
                                         context.read<ImportExamResultCubit>()
                                           ..importExamResult(input);
                                       } else {
-                                        DisplayUtils.showSnackBar(
+                                        DisplayUtils.showToast(
                                             context, "Exam report is empty!");
                                       }
                                     } else {
-                                      DisplayUtils.showSnackBar(context,
+                                      DisplayUtils.showToast(context,
                                           "Please import the exam report!");
                                     }
                                   } else {
-                                    DisplayUtils.showSnackBar(
+                                    DisplayUtils.showToast(
                                         context, "Please select month/year!");
                                   }
                                 } else {
-                                  DisplayUtils.showSnackBar(
+                                  DisplayUtils.showToast(
                                       context, "Please select section first!");
                                 }
                               },

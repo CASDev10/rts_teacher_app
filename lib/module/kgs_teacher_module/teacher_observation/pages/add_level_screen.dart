@@ -90,7 +90,7 @@ class _AddLevelScreenState extends State<AddLevelScreen> {
                       } else if (levelState.levelStatus ==
                           AddUpdateDeleteLevelStatus.failure) {
                         DisplayUtils.removeLoader();
-                        DisplayUtils.showSnackBar(
+                        DisplayUtils.showToast(
                             context, levelState.failure.message);
                       }
                     },
@@ -274,7 +274,7 @@ class _AddLevelScreenState extends State<AddLevelScreen> {
                                         .toString());
                                 }
                               } else {
-                                DisplayUtils.showSnackBar(
+                                DisplayUtils.showToast(
                                     context, "Please add level");
                               }
                             },

@@ -445,7 +445,7 @@ class _StudentResultScreenViewState extends State<StudentResultScreenView> {
                                 .read<StudentResultListCubit>()
                                 .fetchStudentList(input: input);
                           } else {
-                            DisplayUtils.showSnackBar(
+                            DisplayUtils.showToast(
                               context,
                               "All Fields are Required",
                             );

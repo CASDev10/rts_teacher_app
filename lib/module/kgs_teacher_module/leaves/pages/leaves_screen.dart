@@ -173,7 +173,7 @@ class _LeavesScreenViewState extends State<LeavesScreenView> {
           },
           listener: (BuildContext context, TeacherLeaveState state) {
             if (state.studentAttendanceStatus == TeacherLeaveStatus.failure) {
-              DisplayUtils.showSnackBar(context, state.failure.message);
+              DisplayUtils.showToast(context, state.failure.message);
             }
           },
         ),

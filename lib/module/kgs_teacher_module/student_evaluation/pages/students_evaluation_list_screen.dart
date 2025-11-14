@@ -128,7 +128,7 @@ class _StudentsEvaluationListScreenViewState
                       if (response != null) {
                         if (response.outcomeParents.isEmpty &&
                             response.outcomeChilds.isEmpty) {
-                          DisplayUtils.showSnackBar(context,
+                          DisplayUtils.showToast(context,
                               "No Outcomes Available for this Student");
                         } else {
                           NavRouter.push(
@@ -146,7 +146,7 @@ class _StudentsEvaluationListScreenViewState
                           });
                         }
                       } else {
-                        DisplayUtils.showSnackBar(
+                        DisplayUtils.showToast(
                             context, "Something Went Wrong");
                       }
                     },

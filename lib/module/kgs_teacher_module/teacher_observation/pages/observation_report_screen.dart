@@ -128,11 +128,11 @@ class _ObservationReportScreenState extends State<ObservationReportScreen>
                           .trim()
                           .toString(), endDate:  endDateTextController.text.trim().toString()));
                     } else {
-                      DisplayUtils.showSnackBar(
+                      DisplayUtils.showToast(
                           context, "Please end date");
                     }
                   } else {
-                    DisplayUtils.showSnackBar(
+                    DisplayUtils.showToast(
                         context, "Please start date");
                   }
                 },

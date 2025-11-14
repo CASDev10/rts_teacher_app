@@ -176,7 +176,7 @@ class _TeacherDiaryViewState extends State<TeacherDiaryView> {
                   } else if (sectionStatus.sectionsStatus ==
                       SectionsStatus.failure) {
                     DisplayUtils.removeLoader();
-                    DisplayUtils.showSnackBar(
+                    DisplayUtils.showToast(
                         context, sectionStatus.failure.message);
                   }
                 },
@@ -184,7 +184,7 @@ class _TeacherDiaryViewState extends State<TeacherDiaryView> {
                   return GestureDetector(
                     onTap: selectedSection == null
                         ? () {
-                            DisplayUtils.showSnackBar(
+                            DisplayUtils.showToast(
                                 context, "Please select Class First");
                           }
                         : null,

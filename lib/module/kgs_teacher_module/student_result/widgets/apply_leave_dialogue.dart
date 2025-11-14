@@ -52,7 +52,7 @@ class _ApplyLeaveDialogueState extends State<ApplyLeaveDialogue> {
 
   int calculateDaysBetweenDates() {
     if (fromDate == null || toDate == null) {
-      DisplayUtils.showSnackBar(context, "Select Date");
+      DisplayUtils.showToast(context, "Select Date");
       return 0;
     }
     DateTime from = DateTime.parse(fromDate!);
@@ -313,7 +313,7 @@ class _ApplyLeaveDialogueState extends State<ApplyLeaveDialogue> {
                           toDate == null ||
                           _reasonController.text.isEmpty) {
                         print(id);
-                        DisplayUtils.showSnackBar(
+                        DisplayUtils.showToast(
                             context, "All Fields are Required");
                       } else {
                         int days = calculateDaysBetweenDates();
