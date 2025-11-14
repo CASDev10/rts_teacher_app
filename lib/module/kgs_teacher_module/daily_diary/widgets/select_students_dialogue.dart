@@ -128,7 +128,9 @@ class _SelectStudentsDialogueState extends State<SelectStudentsDialogue> {
                   ),
                 ],
               ),
-              SizedBox(height: 4.0),
+
+              SizedBox(height: 8),
+
               CustomTextField(
                 borderColor: AppColors.primaryGreen,
                 enableBorderColor: AppColors.primaryGreen,
@@ -141,39 +143,48 @@ class _SelectStudentsDialogueState extends State<SelectStudentsDialogue> {
                 fillColor: AppColors.lightGreyColor,
                 suffixWidget: Icon(Icons.search, color: AppColors.primaryGreen),
               ),
-              SizedBox(height: 4.0),
-              Divider(),
-              SizedBox(height: 4.0),
-              filteredStudents.isNotEmpty
-                  ? ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: filteredStudents.length,
-                      itemBuilder: (context, index) {
-                        var student = filteredStudents[index];
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 12.0),
-                          child: InkWell(
-                            onTap: () {
-                              toggleStudentId(student.studentId);
-                              setState(() {});
-                            },
-                            child: StudentSelectableTile(
-                              name: student.studentName,
-                              isSelected: isStudentInList(student.studentId),
+
+              SizedBox(height: 8),
+              Divider(height: 1),
+              SizedBox(height: 8),
+
+              /// 👇 **MAKE THE LIST SCROLLABLE**
+              Expanded(
+                child: filteredStudents.isNotEmpty
+                    ? ListView.builder(
+                        itemCount: filteredStudents.length,
+                        itemBuilder: (context, index) {
+                          var student = filteredStudents[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(bottom: 12.0),
+                            child: InkWell(
+                              onTap: () {
+                                toggleStudentId(student.studentId);
+                                setState(() {});
+                              },
+                              child: StudentSelectableTile(
+                                name: student.studentName,
+                                isSelected: isStudentInList(student.studentId),
+                              ),
                             ),
+                          );
+                        },
+                      )
+                    : Center(
+                        child: Text(
+                          "No Student with this name",
+                          style: context.textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
-                        );
-                      },
-                    )
-                  : Text(
-                      "No Student with this name",
-                      style: context.textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-              SizedBox(height: 4.0),
-              Divider(),
-              SizedBox(height: 4.0),
+              ),
+
+              SizedBox(height: 8),
+              Divider(height: 1),
+              SizedBox(height: 8),
+
+              /// BUTTONS
               Row(
                 children: [
                   Expanded(child: Container()),
