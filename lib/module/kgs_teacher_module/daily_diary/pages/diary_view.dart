@@ -201,7 +201,8 @@ class _TeacherDiaryViewState extends State<TeacherDiaryView> {
                             hintColor: AppColors.primaryGreen,
                             iconColor: AppColors.primaryGreen,
                             suffixIconPath: '',
-                            displayField: (v) => v.sectionName,
+                             displayField: (v) =>
+                                      "${v.sectionName} (${v.sessionName})",
                             hint: "Select Section",
                             items: sectionState.sections,
                             onSelect: (v) {

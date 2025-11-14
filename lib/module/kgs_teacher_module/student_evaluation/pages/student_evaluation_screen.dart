@@ -119,7 +119,8 @@ class _StudentEvaluationPageViewState extends State<StudentEvaluationPageView> {
                         hintColor: AppColors.primaryGreen,
                         iconColor: AppColors.primaryGreen,
                         suffixIconPath: '',
-                        displayField: (item) => item.sectionName,
+                         displayField: (v) =>
+                                      "${v.sectionName} (${v.sessionName})",
                         hint: 'Select Section',
                         items: state.sections,
                         onSelect: (value) {

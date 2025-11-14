@@ -187,7 +187,8 @@ class _ClassSectionScreenState extends State<ClassSectionScreen> {
                                 hintColor: AppColors.primaryGreen,
                                 iconColor: AppColors.primaryGreen,
                                 suffixIconPath: '',
-                                displayField: (item) => item.sectionName,
+                                displayField: (v) =>
+                                    "${v.sectionName} (${v.sessionName})",
                                 hint: 'Select Section',
                                 items: state.sections,
                                 onSelect: (value) {
